@@ -222,8 +222,71 @@ img { max-width: 100%; display: block; }
 }
 
 /* ---- REVEAL ANIMATION ---- */
-.reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.8s cubic-bezier(0.2, 1, 0.3, 1), transform 0.8s cubic-bezier(0.2, 1, 0.3, 1); will-change: opacity, transform; }
 .reveal.visible { opacity: 1; transform: translateY(0); }
+
+.reveal-left { opacity: 0; transform: translateX(-40px); transition: opacity 0.8s cubic-bezier(0.2, 1, 0.3, 1), transform 0.8s cubic-bezier(0.2, 1, 0.3, 1); will-change: opacity, transform; }
+.reveal-left.visible { opacity: 1; transform: translateX(0); }
+
+.reveal-right { opacity: 0; transform: translateX(40px); transition: opacity 0.8s cubic-bezier(0.2, 1, 0.3, 1), transform 0.8s cubic-bezier(0.2, 1, 0.3, 1); will-change: opacity, transform; }
+.reveal-right.visible { opacity: 1; transform: translateX(0); }
+
+.reveal-scale { opacity: 0; transform: scale(0.9); transition: opacity 0.8s cubic-bezier(0.2, 1, 0.3, 1), transform 0.8s cubic-bezier(0.2, 1, 0.3, 1); will-change: opacity, transform; }
+.reveal-scale.visible { opacity: 1; transform: scale(1); }
+
+/* ---- FLOATING ANIMATION ---- */
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(0); }
+  50% { transform: translateY(-15px) rotate(2deg); }
+}
+.floating { animation: float 6s ease-in-out infinite; }
+.floating-slow { animation: float 10s ease-in-out infinite; }
+.floating-fast { animation: float 3s ease-in-out infinite; }
+
+/* ---- GLOW ANIMATION ---- */
+@keyframes glowPulse {
+  0%, 100% { filter: drop-shadow(0 0 5px rgba(124,58,237,0.3)); }
+  50% { filter: drop-shadow(0 0 15px rgba(124,58,237,0.6)); }
+}
+.glow-pulse { animation: glowPulse 3s ease-in-out infinite; }
+
+/* ---- GRID BACKGROUND ANIMATION ---- */
+@keyframes gridMove {
+  0% { background-position: 0 0; }
+  100% { background-position: 50px 50px; }
+}
+.animated-grid {
+  background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 50px 50px;
+  animation: gridMove 20s linear infinite;
+}
+
+/* ---- SECTION PROGRESS INDICATOR ---- */
+.section-progress {
+  position: fixed; left: 2.5rem; top: 50%; transform: translateY(-50%);
+  display: flex; flex-direction: column; gap: 1.5rem; z-index: 100;
+}
+@media (max-width: 1100px) { .section-progress { display: none; } }
+.progress-dot {
+  width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.2);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative;
+  cursor: pointer;
+}
+.progress-dot::before {
+  content: ''; position: absolute; top: -10px; left: -10px; right: -10px; bottom: -10px;
+}
+.progress-dot.active {
+  background: var(--accent-1); transform: scale(1.8);
+  box-shadow: 0 0 15px var(--accent-1);
+}
+.progress-label {
+  position: absolute; left: 2rem; top: 50%; transform: translateY(-50%);
+  font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-primary);
+  opacity: 0; pointer-events: none; transition: 0.3s; white-space: nowrap;
+  letter-spacing: 1px; text-transform: uppercase;
+}
+.progress-dot:hover .progress-label { opacity: 1; transform: translateY(-50%) translateX(5px); }
 
 /* ============================================================
    HERO SECTION

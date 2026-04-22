@@ -367,6 +367,19 @@ function App() {
       <div className="cursor" ref={cursorRef}></div>
       <div className="cursor-follower" ref={followerRef}></div>
 
+      {/* Section Progress Indicator */}
+      <div className="section-progress">
+        {['home', 'about', 'skills', 'projects', 'experience', 'achievements', 'contact'].map((item) => (
+          <div 
+            key={item}
+            className={`progress-dot ${activeSection === item ? 'active' : ''}`}
+            onClick={() => handleNavClick(item)}
+          >
+            <span className="progress-label">{item}</span>
+          </div>
+        ))}
+      </div>
+
       <nav className={`navbar ${scrolled ? 'scrolled' : ''}`} id="navbar">
         <div className="nav-logo">
           <span className="logo-bracket">&lt;</span>
@@ -399,15 +412,16 @@ function App() {
 
       {/* About Section */}
       <section className="about section" id="about">
+        <div className="hero-bg animated-grid" style={{ position: 'absolute', opacity: 0.4 }}></div>
         <div className="container">
           <div className="section-header">
             <span className="section-tag">01. About Me</span>
             <h2 className="section-title">Who I Am</h2>
           </div>
           <div className="about-grid">
-            <div className="about-image-col">
+            <div className="about-image-col reveal-left">
               <Tilt tiltMaxAngleX={10} tiltMaxAngleY={10} scale={1.05} transitionSpeed={2000} className="about-card glass-card">
-                <div className="about-avatar-wrap">
+                <div className="about-avatar-wrap floating">
                   <div className="about-avatar">
                     <span className="avatar-initials-lg">SS</span>
                   </div>
@@ -426,7 +440,7 @@ function App() {
                 </div>
               </Tilt>
             </div>
-            <div className="about-text-col">
+            <div className="about-text-col reveal-right">
               <p className="about-lead">
                 I'm a <strong>B.E. Electronics & Communication Engineering</strong> student at Sri Eshwar College of Engineering (Batch 2023–2027), with a passion for building things that live on the web and in embedded systems.
               </p>
@@ -434,7 +448,7 @@ function App() {
                 From designing responsive web interfaces to building smart wearable systems with Arduino and React, I enjoy working at the intersection of <em>hardware and software</em>. I've interned at PropelFoundry and Better Tomorrow, where I worked on production-grade web applications using the MERN stack.
               </p>
               <p className="about-body">
-                Outside of engineering, I'm a competitive programmer — I've solved 400+ problems on LeetCode and 630+ on SkillRack. I love hackathons and have cleared rounds at Innohacks, Hacksagon, and won 3rd place at Freshathon.
+                Outside of engineering, I Love hackathons and have cleared rounds at Innohacks, Hacksagon, and won 3rd place at Freshathon.
               </p>
               <div className="education-timeline">
                 <h3 className="sub-heading">Education</h3>
@@ -476,56 +490,56 @@ function App() {
             <h2 className="section-title">My Tech Stack</h2>
           </div>
           <div className="skills-grid">
-            <div className="skill-category glass-card reveal">
+            <div className="skill-category glass-card reveal-scale">
               <div className="skill-cat-icon"><Code size={24} /></div>
               <h3>Programming</h3>
               <div className="skill-chips">
                 <span className="chip">Java</span><span className="chip">C (Basics)</span><span className="chip">React.js</span><span className="chip">Node.js</span>
               </div>
             </div>
-            <div className="skill-category glass-card reveal">
+            <div className="skill-category glass-card reveal-scale">
               <div className="skill-cat-icon"><Monitor size={24} /></div>
               <h3>Web Development</h3>
               <div className="skill-chips">
                 <span className="chip">MERN Stack</span><span className="chip">HTML</span><span className="chip">CSS</span><span className="chip">JavaScript</span>
               </div>
             </div>
-            <div className="skill-category glass-card reveal">
+            <div className="skill-category glass-card reveal-scale">
               <div className="skill-cat-icon"><Globe size={24} /></div>
               <h3>Core</h3>
               <div className="skill-chips">
                 <span className="chip">DSA</span><span className="chip">OOPs</span><span className="chip">Embedded Systems</span><span className="chip">IoT</span>
               </div>
             </div>
-            <div className="skill-category glass-card reveal">
+            <div className="skill-category glass-card reveal-scale">
               <div className="skill-cat-icon"><Database size={24} /></div>
               <h3>Databases</h3>
               <div className="skill-chips">
                 <span className="chip">MySQL</span><span className="chip">MongoDB</span><span className="chip">Firebase</span>
               </div>
             </div>
-            <div className="skill-category glass-card reveal">
+            <div className="skill-category glass-card reveal-scale">
               <div className="skill-cat-icon"><Blocks size={24} /></div>
               <h3>Libraries</h3>
               <div className="skill-chips">
                 <span className="chip">Pandas</span><span className="chip">NumPy</span><span className="chip">Matplotlib</span>
               </div>
             </div>
-            <div className="skill-category glass-card reveal">
+            <div className="skill-category glass-card reveal-scale">
               <div className="skill-cat-icon"><Cpu size={24} /></div>
               <h3>Microcontrollers</h3>
               <div className="skill-chips">
                 <span className="chip">ESP32</span><span className="chip">Arduino Uno</span><span className="chip">8051</span>
               </div>
             </div>
-            <div className="skill-category glass-card reveal">
+            <div className="skill-category glass-card reveal-scale">
               <div className="skill-cat-icon"><Terminal size={24} /></div>
               <h3>Tools & IDE</h3>
               <div className="skill-chips">
                 <span className="chip">VSCode</span><span className="chip">Eclipse</span><span className="chip">Arduino IDE</span><span className="chip">MATLAB</span><span className="chip">GitHub</span><span className="chip">Canva</span><span className="chip">Colab</span>
               </div>
             </div>
-            <div className="skill-category glass-card reveal">
+            <div className="skill-category glass-card reveal-scale">
               <div className="skill-cat-icon"><Edit3 size={24} /></div>
               <h3>Simulation</h3>
               <div className="skill-chips">
@@ -544,7 +558,7 @@ function App() {
             <h2 className="section-title">What I've Built</h2>
           </div>
           <div className="projects-grid">
-            <Tilt tiltMaxAngleX={5} tiltMaxAngleY={5} scale={1.02} transitionSpeed={2500} className="project-card featured glass-card reveal">
+            <Tilt tiltMaxAngleX={5} tiltMaxAngleY={5} scale={1.02} transitionSpeed={2500} className="project-card featured glass-card reveal-scale">
               <div className="project-badge">Featured</div>
               <div className="project-header">
                 <div className="project-icon project-icon-1"><Shield size={28} /></div>
@@ -561,7 +575,7 @@ function App() {
               <div className="project-year">2025</div>
             </Tilt>
 
-            <Tilt tiltMaxAngleX={8} tiltMaxAngleY={8} scale={1.03} transitionSpeed={2500} className="project-card glass-card reveal">
+            <Tilt tiltMaxAngleX={8} tiltMaxAngleY={8} scale={1.03} transitionSpeed={2500} className="project-card glass-card reveal-right">
               <div className="project-header">
                 <div className="project-icon project-icon-2"><Monitor size={28} /></div>
                 <div className="project-links">
@@ -577,7 +591,7 @@ function App() {
               <div className="project-year">2025</div>
             </Tilt>
 
-            <Tilt tiltMaxAngleX={8} tiltMaxAngleY={8} scale={1.03} transitionSpeed={2500} className="project-card glass-card reveal">
+            <Tilt tiltMaxAngleX={8} tiltMaxAngleY={8} scale={1.03} transitionSpeed={2500} className="project-card glass-card reveal-left">
               <div className="project-header">
                 <div className="project-icon project-icon-3"><Database size={28} /></div>
                 <div className="project-links">
@@ -604,7 +618,7 @@ function App() {
             <h2 className="section-title">Internships</h2>
           </div>
           <div className="timeline">
-            <div className="timeline-item reveal">
+            <div className="timeline-item reveal-left">
               <div className="timeline-dot"></div>
               <div className="timeline-content glass-card">
                 <div className="timeline-header">
@@ -620,7 +634,7 @@ function App() {
                 </div>
               </div>
             </div>
-            <div className="timeline-item reveal">
+            <div className="timeline-item reveal-right">
               <div className="timeline-dot"></div>
               <div className="timeline-content glass-card">
                 <div className="timeline-header">
@@ -648,7 +662,7 @@ function App() {
             <h2 className="section-title">Certifications</h2>
           </div>
           <div className="cert-grid">
-            <div className="cert-card glass-card reveal">
+            <div className="cert-card glass-card reveal-scale">
               <div className="cert-icon">🔌</div>
               <div className="cert-info">
                 <h4>Debugging Techniques for Serial Communications (I2C/SPI/UART)</h4>
@@ -656,7 +670,7 @@ function App() {
               </div>
               <span className="cert-year">2025</span>
             </div>
-            <div className="cert-card glass-card reveal">
+            <div className="cert-card glass-card reveal-scale">
               <div className="cert-icon">⚛️</div>
               <div className="cert-info">
                 <h4>Learning React</h4>
@@ -664,7 +678,7 @@ function App() {
               </div>
               <span className="cert-year">2025</span>
             </div>
-            <div className="cert-card glass-card reveal">
+            <div className="cert-card glass-card reveal-scale">
               <div className="cert-icon">☕</div>
               <div className="cert-info">
                 <h4>Programming with Java</h4>
@@ -672,7 +686,7 @@ function App() {
               </div>
               <span className="cert-year">2025</span>
             </div>
-            <div className="cert-card glass-card reveal">
+            <div className="cert-card glass-card reveal-scale">
               <div className="cert-icon">🗄️</div>
               <div className="cert-info">
                 <h4>SQL – Basics (Standard)</h4>
@@ -680,7 +694,7 @@ function App() {
               </div>
               <span className="cert-year">2024</span>
             </div>
-            <div className="cert-card glass-card reveal">
+            <div className="cert-card glass-card reveal-scale">
               <div className="cert-icon">🧩</div>
               <div className="cert-info">
                 <h4>Problem Solving (Basics) | SQL (Basics)</h4>
@@ -688,7 +702,7 @@ function App() {
               </div>
               <span className="cert-year">2024</span>
             </div>
-            <div className="cert-card glass-card reveal">
+            <div className="cert-card glass-card reveal-scale">
               <div className="cert-icon">☕</div>
               <div className="cert-info">
                 <h4>Java Programming</h4>
@@ -696,7 +710,7 @@ function App() {
               </div>
               <span className="cert-year">2024</span>
             </div>
-            <div className="cert-card glass-card reveal">
+            <div className="cert-card glass-card reveal-scale">
               <div className="cert-icon">📊</div>
               <div className="cert-info">
                 <h4>Mastering Data Structures and Algorithms using C and C++</h4>
@@ -716,49 +730,49 @@ function App() {
             <h2 className="section-title">Milestones</h2>
           </div>
           <div className="achievements-grid">
-            <div className="achievement-card glass-card reveal">
+            <div className="achievement-card glass-card reveal-scale">
               <div className="ach-icon">🏆</div>
               <div className="ach-body">
                 <h4>Freshathon</h4>
                 <p>Secured <strong>3rd place</strong> at the First-Year Student Project Expo</p>
               </div>
             </div>
-            <div className="achievement-card glass-card reveal">
+            <div className="achievement-card glass-card reveal-scale">
               <div className="ach-icon">⚡</div>
               <div className="ach-body">
                 <h4>Innohacks</h4>
                 <p>Cleared <strong>1st round</strong> in hackathon at PSG College of Technology</p>
               </div>
             </div>
-            <div className="achievement-card glass-card reveal">
+            <div className="achievement-card glass-card reveal-scale">
               <div className="ach-icon">🔥</div>
               <div className="ach-body">
                 <h4>Hacksagon</h4>
                 <p>Cleared <strong>1st round</strong> in hackathon at ABV-IITM-IEEE (Gwalior)</p>
               </div>
             </div>
-            <div className="achievement-card glass-card reveal">
+            <div className="achievement-card glass-card reveal-scale">
               <div className="ach-icon">💡</div>
               <div className="ach-body">
                 <h4>LeetCode</h4>
                 <p>Solved <strong>400+ problems</strong> · Max Rating: 1,603 · Contests: 34</p>
               </div>
             </div>
-            <div className="achievement-card glass-card reveal">
+            <div className="achievement-card glass-card reveal-scale">
               <div className="ach-icon">🍳</div>
               <div className="ach-body">
                 <h4>CodeChef</h4>
                 <p>Secured <strong>Highest Rating of 1037</strong></p>
               </div>
             </div>
-            <div className="achievement-card glass-card reveal">
+            <div className="achievement-card glass-card reveal-scale">
               <div className="ach-icon">⭐</div>
               <div className="ach-body">
                 <h4>HackerRank</h4>
                 <p>Achieved <strong>1 star in Java</strong> · 1 Badge</p>
               </div>
             </div>
-            <div className="achievement-card glass-card reveal">
+            <div className="achievement-card glass-card reveal-scale">
               <div className="ach-icon">🎯</div>
               <div className="ach-body">
                 <h4>SkillRack</h4>
