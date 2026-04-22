@@ -62,6 +62,50 @@ function App() {
   const typedTextRef = useRef(null);
   const canvasRef = useRef(null);
 
+  // Terminal State
+  const [termHistory, setTermHistory] = useState([
+    { type: 'output', content: 'SoujanyaOS v1.0.0 initializing...' },
+    { type: 'output', content: 'Type "help" to see available commands.' }
+  ]);
+  const [termInput, setTermInput] = useState('');
+  const termEndRef = useRef(null);
+
+  useEffect(() => {
+    if (termEndRef.current) termEndRef.current.scrollIntoView({ behavior: 'smooth' });
+  }, [termHistory]);
+
+  const handleTermCommand = (e) => {
+    if (e.key === 'Enter') {
+      const cmd = termInput.trim().toLowerCase();
+      const newHistory = [...termHistory, { type: 'input', content: termInput }];
+      
+      let response = '';
+      if (cmd === 'help') {
+        response = 'Available commands: about, projects, skills, contact, clear';
+      } else if (['about', 'projects', 'skills', 'contact'].includes(cmd)) {
+        response = `Navigating to ${cmd}...`;
+        setTimeout(() => {
+          setNavOpen(false);
+          const target = document.getElementById(cmd);
+          if (target) target.scrollIntoView({ behavior: 'smooth' });
+        }, 600);
+      } else if (cmd === 'clear') {
+        setTermHistory([]);
+        setTermInput('');
+        return;
+      } else if (cmd !== '') {
+        response = `Command not found: ${cmd}. Type "help" for a list of commands.`;
+      }
+      
+      if (response) {
+        newHistory.push({ type: 'output', content: response, isError: !['help', 'about', 'projects', 'skills', 'contact'].includes(cmd) && cmd !== '' });
+      }
+      
+      setTermHistory(newHistory);
+      setTermInput('');
+    }
+  };
+
   // Loader Effect
   useEffect(() => {
     let pct = 0;
@@ -394,103 +438,94 @@ function App() {
         </div>
       </nav>
 
-      <section className="hero" id="home">
+      <section className="ide-hero section" id="home" style={{ paddingTop: '100px', minHeight: '100vh', display: 'flex', alignItems: 'center' }}>
         <div className="hero-bg">
-          <div className="hero-orb orb-1"></div>
-          <div className="hero-orb orb-2"></div>
-          <div className="hero-orb orb-3"></div>
-          <div className="hero-grid"></div>
           <canvas className="hero-particles" ref={canvasRef}></canvas>
         </div>
-        <div className="hero-content">
-          <div className="hero-badge">
-            <span className="badge-dot"></span>
-            Available for Opportunities
-          </div>
-          <h1 className="hero-title">
-            <span className="title-line">Hi, I'm</span>
-            <span className="title-name shimmer-text">Soujanya S</span>
-            <span className="title-role">
-              <span className="role-prefix">I build</span>
-              <span className="typed-wrapper">
-                <span className="typed-text" ref={typedTextRef}></span>
-                <span className="typed-cursor">|</span>
-              </span>
-            </span>
-          </h1>
-          <p className="hero-desc">
-            Electronics & Communication Engineering student at <strong>Sri Eshwar College of Engineering</strong>,
-            passionate about building scalable web applications, smart IoT systems, and solving complex problems.
-          </p>
-          <div className="hero-stats">
-            <div className="stat-card">
-              <span className="stat-num counter" data-target="400">0</span>
-              <span className="stat-plus">+</span>
-              <span className="stat-label">LeetCode</span>
+        <div className="container" style={{ width: '100%', zIndex: 1 }}>
+          <Tilt tiltMaxAngleX={2} tiltMaxAngleY={2} scale={1.01} transitionSpeed={2500} className="ide-container reveal">
+            <div className="ide-header">
+              <div className="ide-dots">
+                <div className="ide-dot red"></div>
+                <div className="ide-dot yellow"></div>
+                <div className="ide-dot green"></div>
+              </div>
+              <div className="ide-title">Soujanya S — Portfolio - Visual Studio Code</div>
             </div>
-            <div className="stat-divider"></div>
-            <div className="stat-card">
-              <span className="stat-num counter" data-target="630">0</span>
-              <span className="stat-plus">+</span>
-              <span className="stat-label">SkillRack</span>
-            </div>
-            <div className="stat-divider"></div>
-            <div className="stat-card">
-              <span className="stat-num counter" data-target="3">0</span>
-              <span className="stat-label">Projects</span>
-            </div>
-          </div>
-          <div className="hero-cta">
-            <Magnetic>
-              <button className="btn-primary" onClick={() => handleNavClick('projects')}>
-                <span>View My Work</span>
-                <ChevronRight size={18} />
-              </button>
-            </Magnetic>
-            <Magnetic>
-              <button className="btn-secondary" onClick={() => handleNavClick('contact')}>Let's Talk</button>
-            </Magnetic>
-          </div>
-          <div className="hero-socials">
-            <Magnetic>
-              <a href="https://github.com/soujanya-7" target="_blank" rel="noreferrer" className="social-link" aria-label="GitHub">
-                <Github size={18} />
-              </a>
-            </Magnetic>
-            <Magnetic>
-              <a href="https://linkedin.com" target="_blank" rel="noreferrer" className="social-link" aria-label="LinkedIn">
-                <Linkedin size={18} />
-              </a>
-            </Magnetic>
-            <Magnetic>
-              <a href="mailto:soujanya.s2023@sece.ac.in" className="social-link" aria-label="Email">
-                <Mail size={18} />
-              </a>
-            </Magnetic>
-          </div>
-        </div>
-        <div className="hero-visual">
-          <div className="profile-container">
-            <div className="profile-ring ring-1"></div>
-            <div className="profile-ring ring-2"></div>
-            <div className="profile-ring ring-3"></div>
-            <div className="profile-avatar">
-              <div className="avatar-placeholder">
-                <span className="avatar-initials">SS</span>
+            
+            <div className="ide-body">
+              <div className="ide-sidebar">
+                <div className="sidebar-title">Explorer</div>
+                <div className="sidebar-item active">
+                  <span style={{ color: '#519aba' }}>⚛</span> App.jsx
+                </div>
+                <div className="sidebar-item" onClick={() => handleNavClick('projects')}>
+                  <span style={{ color: '#cbcb41' }}>{'{ }'}</span> projects.json
+                </div>
+                <div className="sidebar-item" onClick={() => handleNavClick('skills')}>
+                  <span style={{ color: '#cbcb41' }}>{'{ }'}</span> skills.json
+                </div>
+                <div className="sidebar-item" onClick={() => handleNavClick('contact')}>
+                  <span style={{ color: '#519aba' }}>⚛</span> Contact.jsx
+                </div>
+              </div>
+              
+              <div className="ide-editor">
+                <div className="code-line"><span className="line-num">1</span><span className="code-content"><span className="syn-comment">// Profile Initialization</span></span></div>
+                <div className="code-line"><span className="line-num">2</span><span className="code-content"><span className="syn-keyword">const</span> <span className="syn-variable">developer</span> = <span className="syn-keyword">new</span> <span className="syn-function">Developer</span>({'{'}</span></div>
+                <div className="code-line"><span className="line-num">3</span><span className="code-content">  name: <span className="syn-string">'Soujanya S'</span>,</span></div>
+                <div className="code-line"><span className="line-num">4</span><span className="code-content">  role: <span className="syn-string">'ECE Engineer & MERN Developer'</span>,</span></div>
+                <div className="code-line"><span className="line-num">5</span><span className="code-content">  location: <span className="syn-string">'Coimbatore, Tamil Nadu'</span>,</span></div>
+                <div className="code-line"><span className="line-num">6</span><span className="code-content">  skills: [<span className="syn-string">'React'</span>, <span className="syn-string">'Node.js'</span>, <span className="syn-string">'IoT'</span>, <span className="syn-string">'Arduino'</span>, <span className="syn-string">'MongoDB'</span>],</span></div>
+                <div className="code-line"><span className="line-num">7</span><span className="code-content">  education: <span className="syn-string">'B.E. ECE @ Sri Eshwar College of Engineering'</span></span></div>
+                <div className="code-line"><span className="line-num">8</span><span className="code-content">{'}'});</span></div>
+                <div className="code-line"><span className="line-num">9</span><span className="code-content"> </span></div>
+                <div className="code-line"><span className="line-num">10</span><span className="code-content"><span className="syn-variable">developer</span>.<span className="syn-function">buildAwesomeThings</span>();<span className="syn-cursor"></span></span></div>
               </div>
             </div>
-            <div className="floating-badge badge-ece">
-              <Cpu size={16} /> ECE Engineer
+            
+            <div className="ide-terminal">
+              <div className="terminal-tabs">
+                <div className="terminal-tab">Problems</div>
+                <div className="terminal-tab">Output</div>
+                <div className="terminal-tab">Debug Console</div>
+                <div className="terminal-tab active">Terminal</div>
+              </div>
+              <div className="terminal-content">
+                {termHistory.map((item, i) => (
+                  <div key={i} className="term-line">
+                    {item.type === 'input' ? (
+                      <>
+                        <span className="term-prompt">soujanya@macbook</span>
+                        <span className="term-dir">~/portfolio</span>
+                        <span style={{ color: '#d4d4d4' }}>$ {item.content}</span>
+                      </>
+                    ) : (
+                      <span className={`term-output ${item.isError ? 'term-error' : 'term-success'}`}>{item.content}</span>
+                    )}
+                  </div>
+                ))}
+                <div className="term-input-wrapper">
+                  <span className="term-prompt">soujanya@macbook</span>
+                  <span className="term-dir">~/portfolio</span>
+                  <span style={{ color: '#d4d4d4' }}>$</span>
+                  <input 
+                    type="text" 
+                    className="term-input" 
+                    value={termInput} 
+                    onChange={(e) => setTermInput(e.target.value)}
+                    onKeyDown={handleTermCommand}
+                    autoFocus
+                    spellCheck="false"
+                  />
+                </div>
+                <div ref={termEndRef}></div>
+              </div>
             </div>
-            <div className="floating-badge badge-dev">
-              <Code size={16} /> MERN Dev
-            </div>
-            <div className="floating-badge badge-iot">
-              <Globe size={16} /> IoT Enthusiast
-            </div>
-          </div>
+            
+          </Tilt>
         </div>
-        <a href="#about" className="scroll-indicator" onClick={(e) => { e.preventDefault(); handleNavClick('about'); }}>
+        <a href="#about" className="scroll-indicator" onClick={(e) => { e.preventDefault(); handleNavClick('about'); }} style={{ zIndex: 1 }}>
           <div className="scroll-mouse"><div className="scroll-wheel"></div></div>
           <span>Scroll Down</span>
         </a>
