@@ -748,99 +748,125 @@ a.contact-value:hover { color: var(--accent-2); }
 .term-success { color: #27c93f; }
 
 /* ============================================================
-   PHYSICS HERO (UNIQUE LANDING)
+   CODE HERO (IDE LANDING)
    ============================================================ */
-.physics-hero {
+.code-hero {
   position: relative;
   min-height: 100vh;
   display: flex;
   align-items: center;
   overflow: hidden;
   background: var(--bg-primary);
-  padding: 0 2.5rem;
+  padding: 6rem 2.5rem 2rem;
 }
-.physics-hero-content {
-  position: relative;
-  z-index: 10;
-  max-width: 800px;
-  pointer-events: none; /* Let clicks pass through to canvas */
+.ch-bg {
+  position: absolute; inset: 0; z-index: 0; pointer-events: none;
 }
-.ph-subtitle {
-  font-family: var(--font-mono);
-  color: var(--accent-2);
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  margin-bottom: 1.5rem;
-  font-weight: 600;
+.ch-orb {
+  position: absolute; border-radius: 50%; filter: blur(90px); opacity: 0.15;
+  animation: orbFloat 10s ease-in-out infinite;
 }
-.ph-title {
-  font-size: clamp(3.5rem, 8vw, 7rem);
-  font-weight: 900;
-  line-height: 1.05;
-  margin-bottom: 2rem;
-  color: var(--text-primary);
-  text-shadow: 0 10px 30px rgba(0,0,0,0.5);
+.ch-orb-1 {
+  width: 500px; height: 500px; top: -100px; left: -100px;
+  background: var(--accent-1); animation-delay: 0s;
 }
-.ph-desc {
-  font-size: 1.15rem;
-  color: var(--text-secondary);
-  line-height: 1.8;
-  max-width: 550px;
-  margin-bottom: 2.5rem;
-  text-shadow: 0 4px 10px rgba(0,0,0,0.5);
+.ch-orb-2 {
+  width: 400px; height: 400px; bottom: -50px; right: -50px;
+  background: var(--accent-2); animation-delay: -5s;
 }
-.ph-cta {
-  pointer-events: auto; /* Re-enable clicks for buttons */
-}
-.physics-hero-canvas {
-  position: absolute;
-  inset: 0;
-  z-index: 5;
-}
-.physics-hero-canvas canvas {
-  position: absolute !important;
-  inset: 0;
-  cursor: grab;
-}
-.physics-hero-canvas canvas:active {
-  cursor: grabbing;
-}
-.physics-skill-tag {
-  position: absolute;
-  top: 0; left: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(10, 15, 30, 0.7);
-  backdrop-filter: blur(12px);
-  border: 1.5px solid rgba(255, 255, 255, 0.1);
-  border-radius: 25px;
-  font-family: var(--font-mono);
-  font-weight: 700;
-  font-size: 0.95rem;
-  pointer-events: none; /* VERY IMPORTANT: Let mouse events pass to Matter.js canvas */
-  user-select: none;
-  transform-origin: center center;
-}
-.physics-hint {
-  position: absolute;
-  bottom: 2.5rem;
-  right: 2.5rem;
-  color: var(--text-muted);
-  font-family: var(--font-mono);
-  font-size: 0.85rem;
-  pointer-events: none;
-  animation: pulseOpacity 2s infinite;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-}
-@keyframes pulseOpacity {
-  0%, 100% { opacity: 0.3; }
-  50% { opacity: 1; }
+.ch-grid {
+  position: absolute; inset: 0;
+  background-image: linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+  background-size: 40px 40px;
+  mask-image: radial-gradient(ellipse 100% 100% at 50% 50%, black 20%, transparent 100%);
 }
 
-@media (max-width: 768px) {
-  .physics-hero { padding: 0 1.5rem; justify-content: center; text-align: center; }
-  .ph-title { font-size: 3rem; }
-  .ph-desc { font-size: 1rem; margin-left: auto; margin-right: auto; }
+.ch-container {
+  position: relative; z-index: 10; max-width: 1400px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between; gap: 4rem; width: 100%;
+}
+
+.ch-text-content { flex: 1; max-width: 600px; }
+.ch-badge {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  padding: 0.4rem 1rem; border-radius: 99px;
+  background: rgba(39, 201, 63, 0.1); border: 1px solid rgba(39, 201, 63, 0.2);
+  color: #27c93f; font-size: 0.8rem; font-weight: 600; font-family: var(--font-mono);
+  margin-bottom: 1.5rem; letter-spacing: 1px; text-transform: uppercase;
+}
+.ch-pulse-dot {
+  width: 8px; height: 8px; border-radius: 50%; background: #27c93f;
+  animation: pulseOpacity 2s infinite;
+}
+.ch-title {
+  font-size: clamp(3rem, 5vw, 4.5rem); font-weight: 900; line-height: 1.1; margin-bottom: 1.5rem; color: var(--text-primary);
+}
+.ch-desc {
+  font-size: 1.1rem; line-height: 1.8; color: var(--text-secondary); margin-bottom: 2rem;
+}
+.ch-actions { display: flex; gap: 1rem; margin-bottom: 3rem; flex-wrap: wrap; }
+.ch-widgets { display: flex; gap: 1.5rem; }
+.ch-widget {
+  display: flex; align-items: center; gap: 1rem; padding: 1rem 1.25rem; flex: 1;
+}
+.ch-widget-icon { color: var(--accent-1); }
+.ch-widget h4 { font-size: 0.9rem; color: var(--text-primary); margin-bottom: 0.2rem; }
+.ch-widget p { font-size: 0.8rem; color: var(--text-muted); font-family: var(--font-mono); }
+
+.ch-ide-wrapper { flex: 1; max-width: 650px; perspective: 1000px; }
+.ch-tilt { transform-style: preserve-3d; }
+.ch-ide-window {
+  width: 100%; background: rgba(15, 15, 25, 0.8) !important;
+  border-radius: 12px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1);
+  box-shadow: 0 30px 60px rgba(0,0,0,0.6), 0 0 40px rgba(124,58,237,0.15) !important;
+  backdrop-filter: blur(20px);
+}
+.ch-ide-header {
+  height: 40px; background: rgba(0,0,0,0.4); display: flex; align-items: center; padding: 0 1rem;
+  border-bottom: 1px solid rgba(255,255,255,0.05); position: relative;
+}
+.ch-ide-controls { display: flex; gap: 8px; }
+.ch-control { width: 12px; height: 12px; border-radius: 50%; }
+.ch-control.red { background: #ff5f56; }
+.ch-control.yellow { background: #ffbd2e; }
+.ch-control.green { background: #27c93f; }
+.ch-ide-title {
+  position: absolute; left: 50%; transform: translateX(-50%);
+  display: flex; align-items: center; gap: 0.5rem; font-family: var(--font-mono);
+  font-size: 0.85rem; color: #858585;
+}
+.ch-ide-body {
+  display: flex; padding: 1.5rem 0; min-height: 380px; font-family: 'Fira Code', 'Courier New', monospace; font-size: 0.95rem; line-height: 1.7;
+}
+.ch-line-numbers {
+  padding: 0 1rem; display: flex; flex-direction: column; color: #4b5563; user-select: none; text-align: right; border-right: 1px solid rgba(255,255,255,0.05);
+}
+.ch-code-content {
+  flex: 1; padding: 0 1.5rem; color: #e5e7eb; position: relative;
+}
+.ch-code-line { white-space: pre-wrap; display: flex; flex-wrap: wrap; }
+.c-comment { color: #6b7280; font-style: italic; }
+.c-keyword { color: #c678dd; }
+.c-variable { color: #e5c07b; }
+.c-property { color: #61afef; }
+.c-string { color: #98c379; }
+.c-array { color: #d19a66; }
+.c-boolean { color: #d19a66; }
+.c-punctuation { color: #abb2bf; }
+.c-method { color: #61afef; }
+.ch-cursor {
+  color: #56b6c2; animation: blink 1s step-end infinite; font-weight: bold; margin-left: 2px;
+}
+
+@media (max-width: 1024px) {
+  .ch-container { flex-direction: column; text-align: center; gap: 3rem; }
+  .ch-text-content { max-width: 100%; display: flex; flex-direction: column; align-items: center; }
+  .ch-actions { justify-content: center; }
+  .ch-widgets { flex-wrap: wrap; justify-content: center; }
+}
+@media (max-width: 640px) {
+  .ch-ide-body { font-size: 0.8rem; padding: 1rem 0; min-height: 300px; }
+  .ch-title { font-size: 2.5rem; }
+  .ch-widgets { flex-direction: column; width: 100%; }
 }

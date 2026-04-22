@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import Tilt from 'react-parallax-tilt';
-import PhysicsHero from './PhysicsHero';
+import CodeHero from './CodeHero';
 import { 
   Mail, ChevronRight, 
   Code, Globe, Cpu, Database, Blocks, Terminal, Edit3, Monitor, CheckCircle, Shield
@@ -395,7 +395,7 @@ function App() {
         </div>
       </nav>
 
-      <PhysicsHero onNavigate={handleNavClick} />
+      <CodeHero onNavigate={handleNavClick} />
 
       {/* About Section */}
       <section className="about section" id="about">
