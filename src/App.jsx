@@ -375,11 +375,6 @@ function App() {
               <span className="stat-num counter" data-target="3">0</span>
               <span className="stat-label">Projects</span>
             </div>
-            <div className="stat-divider"></div>
-            <div className="stat-card">
-              <span className="stat-num">7.88</span>
-              <span className="stat-label">CGPA</span>
-            </div>
           </div>
           <div className="hero-cta">
             <button className="btn-primary" onClick={() => handleNavClick('projects')}>
@@ -473,7 +468,7 @@ function App() {
                   <div className="edu-content">
                     <span className="edu-degree">B.E. (ECE)</span>
                     <span className="edu-school">Sri Eshwar College of Engineering</span>
-                    <span className="edu-meta">CGPA: 7.88 (up to 5th sem) &nbsp;|&nbsp; 2023–2027</span>
+                    <span className="edu-meta">2023–2027</span>
                   </div>
                 </div>
                 <div className="edu-item">
@@ -481,7 +476,7 @@ function App() {
                   <div className="edu-content">
                     <span className="edu-degree">HSC (12th)</span>
                     <span className="edu-school">Srinivasa Vidhyala Matric Higher Secondary School</span>
-                    <span className="edu-meta">87% &nbsp;|&nbsp; 2021–2023</span>
+                    <span className="edu-meta">2021–2023</span>
                   </div>
                 </div>
                 <div className="edu-item">
@@ -489,7 +484,7 @@ function App() {
                   <div className="edu-content">
                     <span className="edu-degree">SSLC (10th)</span>
                     <span className="edu-school">Srinivasa Vidhyala Matric Higher Secondary School</span>
-                    <span className="edu-meta">Pass &nbsp;|&nbsp; 2020–2021</span>
+                    <span className="edu-meta">2020–2021</span>
                   </div>
                 </div>
               </div>
