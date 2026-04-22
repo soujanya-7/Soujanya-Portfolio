@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
+import { motion } from 'framer-motion';
+import Tilt from 'react-parallax-tilt';
 import { 
   Mail, ChevronRight, 
   Code, Globe, Cpu, Database, Blocks, Terminal, Edit3, Monitor, CheckCircle, Shield
@@ -18,6 +20,35 @@ const Linkedin = ({ size = 24, ...props }) => (
     <circle cx="4" cy="4" r="2" />
   </svg>
 );
+
+const Magnetic = ({ children, className }) => {
+  const ref = useRef(null);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+
+  const handleMouse = (e) => {
+    const { clientX, clientY } = e;
+    const { height, width, left, top } = ref.current.getBoundingClientRect();
+    const middleX = clientX - (left + width / 2);
+    const middleY = clientY - (top + height / 2);
+    setPosition({ x: middleX * 0.2, y: middleY * 0.2 });
+  };
+
+  const reset = () => setPosition({ x: 0, y: 0 });
+
+  return (
+    <motion.div
+      className={className}
+      ref={ref}
+      onMouseMove={handleMouse}
+      onMouseLeave={reset}
+      animate={{ x: position.x, y: position.y }}
+      transition={{ type: "spring", stiffness: 150, damping: 15, mass: 0.1 }}
+      style={{ display: 'inline-block' }}
+    >
+      {children}
+    </motion.div>
+  );
+};
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -185,11 +216,25 @@ function App() {
     const ctx = canvas.getContext('2d');
     let W, H, particles = [];
     let animationId;
+    let mouse = { x: null, y: null };
 
     const resize = () => {
       W = canvas.width = window.innerWidth;
       H = canvas.height = window.innerHeight;
     };
+
+    const handleMouseMove = (e) => {
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+    };
+    
+    const handleMouseLeave = () => {
+      mouse.x = null;
+      mouse.y = null;
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mouseout', handleMouseLeave);
 
     class Particle {
       constructor() {
@@ -223,6 +268,23 @@ function App() {
         ctx.fillStyle = `rgba(124,58,237,${p.a})`;
         ctx.fill();
         p.update();
+        
+        if (mouse.x != null && mouse.y != null) {
+          const dx = mouse.x - p.x;
+          const dy = mouse.y - p.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 150) {
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(mouse.x, mouse.y);
+            ctx.strokeStyle = `rgba(6,182,212,${0.2 * (1 - dist / 150)})`;
+            ctx.lineWidth = 1;
+            ctx.stroke();
+            // Subtle pull
+            p.x += dx * 0.005;
+            p.y += dy * 0.005;
+          }
+        }
       });
       for (let i = 0; i < particles.length; i++) {
         for (let j = i + 1; j < particles.length; j++) {
@@ -248,6 +310,8 @@ function App() {
 
     return () => {
       window.removeEventListener('resize', resize);
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseout', handleMouseLeave);
       cancelAnimationFrame(animationId);
     };
   }, [loading]);
@@ -321,7 +385,7 @@ function App() {
           ))}
         </div>
         <div className="nav-actions">
-          <a href="mailto:soujanya.s2023@sece.ac.in" className="btn-hire">Hire Me</a>
+          <Magnetic><a href="mailto:soujanya.s2023@sece.ac.in" className="btn-hire">Hire Me</a></Magnetic>
           <button className="nav-toggle" id="navToggle" onClick={() => setNavOpen(!navOpen)}>
             <span style={{ transform: navOpen ? 'rotate(45deg) translate(5px,5px)' : '' }}></span>
             <span style={{ opacity: navOpen ? '0' : '1' }}></span>
@@ -345,7 +409,7 @@ function App() {
           </div>
           <h1 className="hero-title">
             <span className="title-line">Hi, I'm</span>
-            <span className="title-name gradient-text">Soujanya S</span>
+            <span className="title-name shimmer-text">Soujanya S</span>
             <span className="title-role">
               <span className="role-prefix">I build</span>
               <span className="typed-wrapper">
@@ -377,22 +441,32 @@ function App() {
             </div>
           </div>
           <div className="hero-cta">
-            <button className="btn-primary" onClick={() => handleNavClick('projects')}>
-              <span>View My Work</span>
-              <ChevronRight size={18} />
-            </button>
-            <button className="btn-secondary" onClick={() => handleNavClick('contact')}>Let's Talk</button>
+            <Magnetic>
+              <button className="btn-primary" onClick={() => handleNavClick('projects')}>
+                <span>View My Work</span>
+                <ChevronRight size={18} />
+              </button>
+            </Magnetic>
+            <Magnetic>
+              <button className="btn-secondary" onClick={() => handleNavClick('contact')}>Let's Talk</button>
+            </Magnetic>
           </div>
           <div className="hero-socials">
-            <a href="https://github.com/soujanya-7" target="_blank" rel="noreferrer" className="social-link" aria-label="GitHub">
-              <Github size={18} />
-            </a>
-            <a href="https://linkedin.com" target="_blank" rel="noreferrer" className="social-link" aria-label="LinkedIn">
-              <Linkedin size={18} />
-            </a>
-            <a href="mailto:soujanya.s2023@sece.ac.in" className="social-link" aria-label="Email">
-              <Mail size={18} />
-            </a>
+            <Magnetic>
+              <a href="https://github.com/soujanya-7" target="_blank" rel="noreferrer" className="social-link" aria-label="GitHub">
+                <Github size={18} />
+              </a>
+            </Magnetic>
+            <Magnetic>
+              <a href="https://linkedin.com" target="_blank" rel="noreferrer" className="social-link" aria-label="LinkedIn">
+                <Linkedin size={18} />
+              </a>
+            </Magnetic>
+            <Magnetic>
+              <a href="mailto:soujanya.s2023@sece.ac.in" className="social-link" aria-label="Email">
+                <Mail size={18} />
+              </a>
+            </Magnetic>
           </div>
         </div>
         <div className="hero-visual">
@@ -431,7 +505,7 @@ function App() {
           </div>
           <div className="about-grid">
             <div className="about-image-col">
-              <div className="about-card glass-card">
+              <Tilt tiltMaxAngleX={10} tiltMaxAngleY={10} scale={1.05} transitionSpeed={2000} className="about-card glass-card">
                 <div className="about-avatar-wrap">
                   <div className="about-avatar">
                     <span className="avatar-initials-lg">SS</span>
@@ -449,7 +523,7 @@ function App() {
                     <Globe size={16} /> Coimbatore, Tamil Nadu
                   </div>
                 </div>
-              </div>
+              </Tilt>
             </div>
             <div className="about-text-col">
               <p className="about-lead">
@@ -569,7 +643,7 @@ function App() {
             <h2 className="section-title">What I've Built</h2>
           </div>
           <div className="projects-grid">
-            <div className="project-card featured glass-card reveal">
+            <Tilt tiltMaxAngleX={5} tiltMaxAngleY={5} scale={1.02} transitionSpeed={2500} className="project-card featured glass-card reveal">
               <div className="project-badge">Featured</div>
               <div className="project-header">
                 <div className="project-icon project-icon-1"><Shield size={28} /></div>
@@ -584,9 +658,9 @@ function App() {
                 <span className="tech-tag">Arduino</span><span className="tech-tag">React.js</span><span className="tech-tag">Firebase</span><span className="tech-tag">GPS Module</span><span className="tech-tag">Pulse Sensor</span><span className="tech-tag">Embedded C</span>
               </div>
               <div className="project-year">2025</div>
-            </div>
+            </Tilt>
 
-            <div className="project-card glass-card reveal">
+            <Tilt tiltMaxAngleX={8} tiltMaxAngleY={8} scale={1.03} transitionSpeed={2500} className="project-card glass-card reveal">
               <div className="project-header">
                 <div className="project-icon project-icon-2"><Monitor size={28} /></div>
                 <div className="project-links">
@@ -600,9 +674,9 @@ function App() {
                 <span className="tech-tag">HTML</span><span className="tech-tag">CSS</span><span className="tech-tag">JavaScript</span><span className="tech-tag">React.js</span>
               </div>
               <div className="project-year">2025</div>
-            </div>
+            </Tilt>
 
-            <div className="project-card glass-card reveal">
+            <Tilt tiltMaxAngleX={8} tiltMaxAngleY={8} scale={1.03} transitionSpeed={2500} className="project-card glass-card reveal">
               <div className="project-header">
                 <div className="project-icon project-icon-3"><Database size={28} /></div>
                 <div className="project-links">
@@ -616,7 +690,7 @@ function App() {
                 <span className="tech-tag">Java</span><span className="tech-tag">OOP</span><span className="tech-tag">MySQL</span><span className="tech-tag">JDBC</span>
               </div>
               <div className="project-year">2024</div>
-            </div>
+            </Tilt>
           </div>
         </div>
       </section>
