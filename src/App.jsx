@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import Tilt from 'react-parallax-tilt';
+import Matter from 'matter-js';
 import { 
   Mail, ChevronRight, 
   Code, Globe, Cpu, Database, Blocks, Terminal, Edit3, Monitor, CheckCircle, Shield
@@ -62,49 +63,126 @@ function App() {
   const typedTextRef = useRef(null);
   const canvasRef = useRef(null);
 
-  // Terminal State
-  const [termHistory, setTermHistory] = useState([
-    { type: 'output', content: 'SoujanyaOS v1.0.0 initializing...' },
-    { type: 'output', content: 'Type "help" to see available commands.' }
-  ]);
-  const [termInput, setTermInput] = useState('');
-  const termEndRef = useRef(null);
+  // Physics Sandbox State (Concept C)
+  const sceneRef = useRef(null);
+  const engineRef = useRef(null);
+  const renderRef = useRef(null);
 
   useEffect(() => {
-    if (termEndRef.current) termEndRef.current.scrollIntoView({ behavior: 'smooth' });
-  }, [termHistory]);
+    if (loading || !sceneRef.current) return;
 
-  const handleTermCommand = (e) => {
-    if (e.key === 'Enter') {
-      const cmd = termInput.trim().toLowerCase();
-      const newHistory = [...termHistory, { type: 'input', content: termInput }];
-      
-      let response = '';
-      if (cmd === 'help') {
-        response = 'Available commands: about, projects, skills, contact, clear';
-      } else if (['about', 'projects', 'skills', 'contact'].includes(cmd)) {
-        response = `Navigating to ${cmd}...`;
-        setTimeout(() => {
-          setNavOpen(false);
-          const target = document.getElementById(cmd);
-          if (target) target.scrollIntoView({ behavior: 'smooth' });
-        }, 600);
-      } else if (cmd === 'clear') {
-        setTermHistory([]);
-        setTermInput('');
-        return;
-      } else if (cmd !== '') {
-        response = `Command not found: ${cmd}. Type "help" for a list of commands.`;
+    const Engine = Matter.Engine,
+          Render = Matter.Render,
+          Runner = Matter.Runner,
+          MouseConstraint = Matter.MouseConstraint,
+          Mouse = Matter.Mouse,
+          Composite = Matter.Composite,
+          Bodies = Matter.Bodies;
+
+    // Create engine
+    const engine = Engine.create();
+    engineRef.current = engine;
+
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+
+    // Create renderer
+    const render = Render.create({
+      element: sceneRef.current,
+      engine: engine,
+      options: {
+        width,
+        height,
+        wireframes: false,
+        background: 'transparent',
+        pixelRatio: window.devicePixelRatio
       }
-      
-      if (response) {
-        newHistory.push({ type: 'output', content: response, isError: !['help', 'about', 'projects', 'skills', 'contact'].includes(cmd) && cmd !== '' });
+    });
+    renderRef.current = render;
+
+    // Create boundaries
+    const ground = Bodies.rectangle(width / 2, height + 30, width * 2, 60, { isStatic: true, render: { fillStyle: 'transparent' } });
+    const wallLeft = Bodies.rectangle(-30, height / 2, 60, height * 2, { isStatic: true, render: { fillStyle: 'transparent' } });
+    const wallRight = Bodies.rectangle(width + 30, height / 2, 60, height * 2, { isStatic: true, render: { fillStyle: 'transparent' } });
+    const ceiling = Bodies.rectangle(width / 2, -300, width * 2, 60, { isStatic: true, render: { fillStyle: 'transparent' } });
+
+    Composite.add(engine.world, [ground, wallLeft, wallRight, ceiling]);
+
+    // Create skill blocks
+    const skills = ['React', 'Node.js', 'MongoDB', 'IoT', 'Arduino', 'C++', 'Java', 'Python', 'Firebase', 'MERN'];
+    const blocks = skills.map((skill, i) => {
+      const textWidth = skill.length * 16 + 40;
+      return Bodies.rectangle(
+        Math.random() * (width - 200) + 100,
+        -150 - (i * 200),
+        textWidth, 56,
+        {
+          restitution: 0.6,
+          friction: 0.1,
+          render: {
+            fillStyle: ['#7c3aed', '#06b6d4', '#f59e0b', '#ec4899'][i % 4],
+            strokeStyle: 'rgba(255,255,255,0.2)',
+            lineWidth: 2
+          },
+          label: skill
+        }
+      );
+    });
+
+    Composite.add(engine.world, blocks);
+
+    // Add mouse control
+    const mouse = Mouse.create(render.canvas);
+    const mouseConstraint = MouseConstraint.create(engine, {
+      mouse: mouse,
+      constraint: {
+        stiffness: 0.2,
+        render: { visible: false }
       }
-      
-      setTermHistory(newHistory);
-      setTermInput('');
-    }
-  };
+    });
+
+    Composite.add(engine.world, mouseConstraint);
+    render.mouse = mouse;
+
+    // Run engine and renderer
+    Render.run(render);
+    const runner = Runner.create();
+    Runner.run(runner, engine);
+
+    // Custom render event for drawing text on the blocks
+    Matter.Events.on(render, 'afterRender', () => {
+      const ctx = render.context;
+      ctx.font = 'bold 20px "JetBrains Mono", monospace';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillStyle = '#ffffff';
+
+      blocks.forEach(block => {
+        const { x, y } = block.position;
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate(block.angle);
+        ctx.fillText(block.label, 0, 0);
+        ctx.restore();
+      });
+    });
+
+    const handleResize = () => {
+      render.canvas.width = window.innerWidth;
+      render.canvas.height = window.innerHeight;
+      Matter.Body.setPosition(ground, { x: window.innerWidth / 2, y: window.innerHeight + 30 });
+      Matter.Body.setPosition(wallRight, { x: window.innerWidth + 30, y: window.innerHeight / 2 });
+    };
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      Render.stop(render);
+      Runner.stop(runner);
+      if (engineRef.current) Engine.clear(engineRef.current);
+      if (renderRef.current && renderRef.current.canvas) renderRef.current.canvas.remove();
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [loading]);
 
   // Loader Effect
   useEffect(() => {
@@ -253,112 +331,7 @@ function App() {
     return () => obs.disconnect();
   }, [loading]);
 
-  // Canvas Particles
-  useEffect(() => {
-    if (loading || !canvasRef.current) return;
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
-    let W, H, particles = [];
-    let animationId;
-    let mouse = { x: null, y: null };
 
-    const resize = () => {
-      W = canvas.width = window.innerWidth;
-      H = canvas.height = window.innerHeight;
-    };
-
-    const handleMouseMove = (e) => {
-      mouse.x = e.clientX;
-      mouse.y = e.clientY;
-    };
-    
-    const handleMouseLeave = () => {
-      mouse.x = null;
-      mouse.y = null;
-    };
-
-    window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('mouseout', handleMouseLeave);
-
-    class Particle {
-      constructor() {
-        this.x = Math.random() * W;
-        this.y = Math.random() * H;
-        this.vx = (Math.random() - 0.5) * 0.3;
-        this.vy = (Math.random() - 0.5) * 0.3;
-        this.r = Math.random() * 1.5 + 0.5;
-        this.a = Math.random() * 0.5 + 0.1;
-      }
-      update() {
-        this.x += this.vx;
-        this.y += this.vy;
-        if (this.x < 0) this.x = W;
-        if (this.x > W) this.x = 0;
-        if (this.y < 0) this.y = H;
-        if (this.y > H) this.y = 0;
-      }
-    }
-
-    const init = () => {
-      resize();
-      particles = Array.from({ length: 120 }, () => new Particle());
-    };
-
-    const draw = () => {
-      ctx.clearRect(0, 0, W, H);
-      particles.forEach((p) => {
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(124,58,237,${p.a})`;
-        ctx.fill();
-        p.update();
-        
-        if (mouse.x != null && mouse.y != null) {
-          const dx = mouse.x - p.x;
-          const dy = mouse.y - p.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 150) {
-            ctx.beginPath();
-            ctx.moveTo(p.x, p.y);
-            ctx.lineTo(mouse.x, mouse.y);
-            ctx.strokeStyle = `rgba(6,182,212,${0.2 * (1 - dist / 150)})`;
-            ctx.lineWidth = 1;
-            ctx.stroke();
-            // Subtle pull
-            p.x += dx * 0.005;
-            p.y += dy * 0.005;
-          }
-        }
-      });
-      for (let i = 0; i < particles.length; i++) {
-        for (let j = i + 1; j < particles.length; j++) {
-          const dx = particles[i].x - particles[j].x;
-          const dy = particles[i].y - particles[j].y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 100) {
-            ctx.beginPath();
-            ctx.moveTo(particles[i].x, particles[i].y);
-            ctx.lineTo(particles[j].x, particles[j].y);
-            ctx.strokeStyle = `rgba(124,58,237,${0.12 * (1 - dist / 100)})`;
-            ctx.lineWidth = 0.5;
-            ctx.stroke();
-          }
-        }
-      }
-      animationId = requestAnimationFrame(draw);
-    };
-
-    window.addEventListener('resize', resize);
-    init();
-    draw();
-
-    return () => {
-      window.removeEventListener('resize', resize);
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('mouseout', handleMouseLeave);
-      cancelAnimationFrame(animationId);
-    };
-  }, [loading]);
 
   const handleNavClick = (sectionId) => {
     setNavOpen(false);
@@ -438,94 +411,14 @@ function App() {
         </div>
       </nav>
 
-      <section className="ide-hero section" id="home" style={{ paddingTop: '100px', minHeight: '100vh', display: 'flex', alignItems: 'center' }}>
-        <div className="hero-bg">
-          <canvas className="hero-particles" ref={canvasRef}></canvas>
+      <section className="physics-hero" id="home">
+        <div className="physics-canvas-container" ref={sceneRef}></div>
+        <div className="physics-overlay">
+          <h1 className="physics-title">Soujanya S</h1>
+          <p className="physics-subtitle">MERN Developer & ECE Engineer</p>
         </div>
-        <div className="container" style={{ width: '100%', zIndex: 1 }}>
-          <Tilt tiltMaxAngleX={2} tiltMaxAngleY={2} scale={1.01} transitionSpeed={2500} className="ide-container reveal">
-            <div className="ide-header">
-              <div className="ide-dots">
-                <div className="ide-dot red"></div>
-                <div className="ide-dot yellow"></div>
-                <div className="ide-dot green"></div>
-              </div>
-              <div className="ide-title">Soujanya S — Portfolio - Visual Studio Code</div>
-            </div>
-            
-            <div className="ide-body">
-              <div className="ide-sidebar">
-                <div className="sidebar-title">Explorer</div>
-                <div className="sidebar-item active">
-                  <span style={{ color: '#519aba' }}>⚛</span> App.jsx
-                </div>
-                <div className="sidebar-item" onClick={() => handleNavClick('projects')}>
-                  <span style={{ color: '#cbcb41' }}>{'{ }'}</span> projects.json
-                </div>
-                <div className="sidebar-item" onClick={() => handleNavClick('skills')}>
-                  <span style={{ color: '#cbcb41' }}>{'{ }'}</span> skills.json
-                </div>
-                <div className="sidebar-item" onClick={() => handleNavClick('contact')}>
-                  <span style={{ color: '#519aba' }}>⚛</span> Contact.jsx
-                </div>
-              </div>
-              
-              <div className="ide-editor">
-                <div className="code-line"><span className="line-num">1</span><span className="code-content"><span className="syn-comment">// Profile Initialization</span></span></div>
-                <div className="code-line"><span className="line-num">2</span><span className="code-content"><span className="syn-keyword">const</span> <span className="syn-variable">developer</span> = <span className="syn-keyword">new</span> <span className="syn-function">Developer</span>({'{'}</span></div>
-                <div className="code-line"><span className="line-num">3</span><span className="code-content">  name: <span className="syn-string">'Soujanya S'</span>,</span></div>
-                <div className="code-line"><span className="line-num">4</span><span className="code-content">  role: <span className="syn-string">'ECE Engineer & MERN Developer'</span>,</span></div>
-                <div className="code-line"><span className="line-num">5</span><span className="code-content">  location: <span className="syn-string">'Coimbatore, Tamil Nadu'</span>,</span></div>
-                <div className="code-line"><span className="line-num">6</span><span className="code-content">  skills: [<span className="syn-string">'React'</span>, <span className="syn-string">'Node.js'</span>, <span className="syn-string">'IoT'</span>, <span className="syn-string">'Arduino'</span>, <span className="syn-string">'MongoDB'</span>],</span></div>
-                <div className="code-line"><span className="line-num">7</span><span className="code-content">  education: <span className="syn-string">'B.E. ECE @ Sri Eshwar College of Engineering'</span></span></div>
-                <div className="code-line"><span className="line-num">8</span><span className="code-content">{'}'});</span></div>
-                <div className="code-line"><span className="line-num">9</span><span className="code-content"> </span></div>
-                <div className="code-line"><span className="line-num">10</span><span className="code-content"><span className="syn-variable">developer</span>.<span className="syn-function">buildAwesomeThings</span>();<span className="syn-cursor"></span></span></div>
-              </div>
-            </div>
-            
-            <div className="ide-terminal">
-              <div className="terminal-tabs">
-                <div className="terminal-tab">Problems</div>
-                <div className="terminal-tab">Output</div>
-                <div className="terminal-tab">Debug Console</div>
-                <div className="terminal-tab active">Terminal</div>
-              </div>
-              <div className="terminal-content">
-                {termHistory.map((item, i) => (
-                  <div key={i} className="term-line">
-                    {item.type === 'input' ? (
-                      <>
-                        <span className="term-prompt">soujanya@macbook</span>
-                        <span className="term-dir">~/portfolio</span>
-                        <span style={{ color: '#d4d4d4' }}>$ {item.content}</span>
-                      </>
-                    ) : (
-                      <span className={`term-output ${item.isError ? 'term-error' : 'term-success'}`}>{item.content}</span>
-                    )}
-                  </div>
-                ))}
-                <div className="term-input-wrapper">
-                  <span className="term-prompt">soujanya@macbook</span>
-                  <span className="term-dir">~/portfolio</span>
-                  <span style={{ color: '#d4d4d4' }}>$</span>
-                  <input 
-                    type="text" 
-                    className="term-input" 
-                    value={termInput} 
-                    onChange={(e) => setTermInput(e.target.value)}
-                    onKeyDown={handleTermCommand}
-                    autoFocus
-                    spellCheck="false"
-                  />
-                </div>
-                <div ref={termEndRef}></div>
-              </div>
-            </div>
-            
-          </Tilt>
-        </div>
-        <a href="#about" className="scroll-indicator" onClick={(e) => { e.preventDefault(); handleNavClick('about'); }} style={{ zIndex: 1 }}>
+        <div className="physics-instruction">Drag and throw the blocks!</div>
+        <a href="#about" className="scroll-indicator" onClick={(e) => { e.preventDefault(); handleNavClick('about'); }} style={{ zIndex: 10 }}>
           <div className="scroll-mouse"><div className="scroll-wheel"></div></div>
           <span>Scroll Down</span>
         </a>
