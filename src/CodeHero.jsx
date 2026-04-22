@@ -5,7 +5,7 @@ import { ChevronRight, Terminal, Code, Cpu, Globe } from 'lucide-react';
 
 const FULL_CODE = [
   { type: 'comment', text: '// Initialize the developer profile' },
-  { type: 'keyword', text: 'const', variable: 'soujanya', value: '{' },
+  { type: 'keyword', text: 'const', variable: 'soujanyaS', value: '{' },
   { type: 'property', text: '  role:', string: '"ECE Engineer & Full-Stack Developer",' },
   { type: 'property', text: '  education:', string: '"Sri Eshwar College of Engineering",' },
   { type: 'property', text: '  skills:', array: '["React", "Node.js", "IoT", "Arduino", "Java"],' },
@@ -14,7 +14,7 @@ const FULL_CODE = [
   { type: 'plain', text: '};' },
   { type: 'empty', text: '' },
   { type: 'comment', text: '// Start a new project' },
-  { type: 'method', text: 'await soujanya.buildAmazingThings();' },
+  { type: 'method', text: 'await soujanyaS.buildAmazingThings();' },
 ];
 
 export default function CodeHero({ onNavigate }) {
@@ -133,7 +133,7 @@ export default function CodeHero({ onNavigate }) {
                   <div className="ch-control green"></div>
                 </div>
                 <div className="ch-ide-title">
-                  <Code size={14} /> soujanya.js
+                  <Code size={14} /> soujanyaS.js
                 </div>
               </div>
 
@@ -172,7 +172,7 @@ export default function CodeHero({ onNavigate }) {
                         {line.type === 'plain' && <span className="c-punctuation">{line.text}</span>}
                         {line.type === 'method' && (
                           <>
-                            <span className="c-keyword">await</span> <span className="c-variable">soujanya</span>.<span className="c-method">buildAmazingThings</span>();
+                            <span className="c-keyword">await</span> <span className="c-variable">soujanyaS</span>.<span className="c-method">buildAmazingThings</span>();
                           </>
                         )}
                       </motion.div>

@@ -370,7 +370,7 @@ function App() {
       <nav className={`navbar ${scrolled ? 'scrolled' : ''}`} id="navbar">
         <div className="nav-logo">
           <span className="logo-bracket">&lt;</span>
-          <span className="logo-name">Soujanya</span>
+          <span className="logo-name">Soujanya S</span>
           <span className="logo-bracket">/&gt;</span>
         </div>
         <div className={`nav-links ${navOpen ? 'open' : ''}`} id="navLinks">
