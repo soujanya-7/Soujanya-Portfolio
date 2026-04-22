@@ -674,34 +674,173 @@ a.contact-value:hover { color: var(--accent-2); }
 }
 
 /* ============================================================
-   PHYSICS HERO (CONCEPT C)
+   IDE / TERMINAL HERO
+   ============================================================ */
+.ide-container {
+  width: 100%; max-width: 900px; background: #1e1e1e; border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+  overflow: hidden; display: flex; flex-direction: column; margin: 0 auto;
+  font-family: var(--font-mono); text-align: left;
+}
+.ide-header {
+  height: 36px; background: #2d2d2d; display: flex; align-items: center;
+  padding: 0 1rem; border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.ide-dots { display: flex; gap: 8px; }
+.ide-dot { width: 12px; height: 12px; border-radius: 50%; }
+.ide-dot.red { background: #ff5f56; }
+.ide-dot.yellow { background: #ffbd2e; }
+.ide-dot.green { background: #27c93f; }
+.ide-title {
+  flex: 1; text-align: center; font-size: 0.8rem; color: #858585; margin-right: 44px;
+}
+.ide-body { display: flex; min-height: 320px; }
+.ide-sidebar {
+  width: 200px; background: #252526; border-right: 1px solid rgba(255,255,255,0.05);
+  padding: 1rem 0; display: flex; flex-direction: column;
+}
+@media (max-width: 768px) {
+  .ide-sidebar { display: none; }
+}
+.sidebar-title { font-size: 0.7rem; color: #858585; text-transform: uppercase; padding: 0 1rem 0.5rem; letter-spacing: 1px; }
+.sidebar-item {
+  padding: 0.4rem 1rem; font-size: 0.85rem; color: #cccccc; display: flex; align-items: center; gap: 8px; cursor: pointer;
+}
+.sidebar-item:hover, .sidebar-item.active { background: #37373d; color: #ffffff; }
+.ide-editor {
+  flex: 1; padding: 1.5rem; background: #1e1e1e; color: #d4d4d4; font-size: 0.95rem; line-height: 1.6; position: relative;
+}
+.code-line { display: flex; }
+.line-num { width: 30px; color: #858585; user-select: none; text-align: right; margin-right: 1rem; }
+.code-content { flex: 1; white-space: pre-wrap; font-family: var(--font-mono); }
+
+/* Syntax */
+.syn-keyword { color: #569cd6; } 
+.syn-function { color: #dcdcaa; } 
+.syn-string { color: #ce9178; } 
+.syn-comment { color: #6a9955; font-style: italic; }
+.syn-variable { color: #9cdcfe; }
+.syn-operator { color: #d4d4d4; }
+.syn-number { color: #b5cea8; }
+.syn-cursor { border-left: 2px solid #d4d4d4; animation: blink 1s step-end infinite; }
+
+/* Terminal */
+.ide-terminal {
+  background: #1e1e1e; border-top: 1px solid rgba(255,255,255,0.1); height: 220px; display: flex; flex-direction: column;
+}
+.terminal-tabs {
+  display: flex; border-bottom: 1px solid rgba(255,255,255,0.05); padding: 0 1rem; background: #252526;
+}
+.terminal-tab {
+  padding: 0.5rem 1rem; font-size: 0.8rem; color: #858585; text-transform: uppercase; border-bottom: 1px solid transparent; cursor: pointer;
+}
+.terminal-tab.active { color: #e7e7e7; border-bottom-color: #569cd6; }
+.terminal-content {
+  flex: 1; padding: 1rem; overflow-y: auto; font-size: 0.85rem; color: #cccccc; display: flex; flex-direction: column; gap: 6px;
+}
+.term-line { display: flex; gap: 8px; flex-wrap: wrap; line-height: 1.4; }
+.term-prompt { color: #27c93f; font-weight: bold; white-space: nowrap; }
+.term-dir { color: #569cd6; font-weight: bold; white-space: nowrap; }
+.term-input-wrapper { display: flex; gap: 8px; margin-top: 2px; align-items: center; }
+.term-input { background: transparent; border: none; color: #cccccc; font-family: var(--font-mono); font-size: 0.85rem; flex: 1; outline: none; }
+.term-output { color: #d4d4d4; white-space: pre-wrap; width: 100%; }
+.term-error { color: #ff5f56; }
+.term-success { color: #27c93f; }
+
+/* ============================================================
+   PHYSICS HERO (UNIQUE LANDING)
    ============================================================ */
 .physics-hero {
-  position: relative; width: 100vw; height: 100vh; overflow: hidden;
-  background: var(--bg-primary); display: flex; align-items: center; justify-content: center;
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  background: var(--bg-primary);
+  padding: 0 2.5rem;
 }
-.physics-canvas-container {
-  position: absolute; inset: 0; z-index: 1; pointer-events: auto; cursor: grab;
+.physics-hero-content {
+  position: relative;
+  z-index: 10;
+  max-width: 800px;
+  pointer-events: none; /* Let clicks pass through to canvas */
 }
-.physics-canvas-container:active { cursor: grabbing; }
-.physics-overlay {
-  position: absolute; z-index: 0; text-align: center; pointer-events: none;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
+.ph-subtitle {
+  font-family: var(--font-mono);
+  color: var(--accent-2);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+  font-weight: 600;
 }
-.physics-title {
-  font-size: clamp(4rem, 12vw, 10rem); font-weight: 900; line-height: 1;
-  background: var(--grad-main); -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent; background-clip: text;
-  opacity: 0.15; text-transform: uppercase; letter-spacing: -4px; margin: 0;
+.ph-title {
+  font-size: clamp(3.5rem, 8vw, 7rem);
+  font-weight: 900;
+  line-height: 1.05;
+  margin-bottom: 2rem;
+  color: var(--text-primary);
+  text-shadow: 0 10px 30px rgba(0,0,0,0.5);
 }
-.physics-subtitle {
-  font-size: clamp(1.5rem, 4vw, 3rem); font-weight: 800; color: var(--text-secondary);
-  opacity: 0.15; margin-top: 0.5rem; text-transform: uppercase; letter-spacing: 4px;
+.ph-desc {
+  font-size: 1.15rem;
+  color: var(--text-secondary);
+  line-height: 1.8;
+  max-width: 550px;
+  margin-bottom: 2.5rem;
+  text-shadow: 0 4px 10px rgba(0,0,0,0.5);
 }
-.physics-instruction {
-  position: absolute; bottom: 80px; left: 50%; transform: translateX(-50%);
-  font-size: 0.85rem; color: var(--accent-1); z-index: 2; pointer-events: none;
-  font-family: var(--font-mono); letter-spacing: 2px; text-transform: uppercase;
-  animation: pulse 2s infinite; background: rgba(5,8,22,0.6); padding: 8px 16px; border-radius: 99px;
-  border: 1px solid rgba(124,58,237,0.3);
+.ph-cta {
+  pointer-events: auto; /* Re-enable clicks for buttons */
+}
+.physics-hero-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+}
+.physics-hero-canvas canvas {
+  position: absolute !important;
+  inset: 0;
+  cursor: grab;
+}
+.physics-hero-canvas canvas:active {
+  cursor: grabbing;
+}
+.physics-skill-tag {
+  position: absolute;
+  top: 0; left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(10, 15, 30, 0.7);
+  backdrop-filter: blur(12px);
+  border: 1.5px solid rgba(255, 255, 255, 0.1);
+  border-radius: 25px;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 0.95rem;
+  pointer-events: none; /* VERY IMPORTANT: Let mouse events pass to Matter.js canvas */
+  user-select: none;
+  transform-origin: center center;
+}
+.physics-hint {
+  position: absolute;
+  bottom: 2.5rem;
+  right: 2.5rem;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  pointer-events: none;
+  animation: pulseOpacity 2s infinite;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+@keyframes pulseOpacity {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+
+@media (max-width: 768px) {
+  .physics-hero { padding: 0 1.5rem; justify-content: center; text-align: center; }
+  .ph-title { font-size: 3rem; }
+  .ph-desc { font-size: 1rem; margin-left: auto; margin-right: auto; }
 }
