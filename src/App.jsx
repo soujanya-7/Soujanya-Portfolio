@@ -140,7 +140,7 @@ function App() {
       },
       { threshold: 0.1, rootMargin: '0px 0px -40px 0px' }
     );
-    document.querySelectorAll('.reveal').forEach((el, i) => {
+    document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale').forEach((el, i) => {
       el.style.transitionDelay = (i % 4) * 0.08 + 's';
       obs.observe(el);
     });
