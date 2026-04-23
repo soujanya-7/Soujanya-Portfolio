@@ -4,17 +4,16 @@ import Tilt from 'react-parallax-tilt';
 import { ChevronRight, Terminal, Code, Cpu, Globe } from 'lucide-react';
 
 const FULL_CODE = [
-  { type: 'comment', text: '// Initialize the developer profile' },
+  { type: 'comment', text: '// Let\'s build something cool' },
   { type: 'keyword', text: 'const', variable: 'soujanyaS', value: '{' },
-  { type: 'property', text: '  role:', string: '"ECE Engineer & Full-Stack Developer",' },
-  { type: 'property', text: '  education:', string: '"Sri Eshwar College of Engineering",' },
-  { type: 'property', text: '  skills:', array: '["React", "Node.js", "IoT", "Arduino", "Java"],' },
-  { type: 'property', text: '  passion:', string: '"Building scalable web apps & smart systems.",' },
-  { type: 'property', text: '  availability:', boolean: 'true' },
+  { type: 'property', text: '  focus:', string: '"IoT & Full-Stack Mastery",' },
+  { type: 'property', text: '  tech:', array: '["React", "Node.js", "Arduino", "Java"],' },
+  { type: 'property', text: '  mindset:', string: '"Turn problems into working systems.",' },
+  { type: 'property', text: '  status:', string: '"Ready to Innovate"' },
   { type: 'plain', text: '};' },
   { type: 'empty', text: '' },
-  { type: 'comment', text: '// Start a new project' },
-  { type: 'method', text: 'await soujanyaS.buildAmazingThings();' },
+  { type: 'comment', text: '// Coffee + Code = Progress' },
+  { type: 'method', text: 'await soujanyaS.createAmazingTech();' },
 ];
 
 export default function CodeHero({ onNavigate }) {
@@ -62,11 +61,11 @@ export default function CodeHero({ onNavigate }) {
             <span className="ch-pulse-dot"></span> System Online
           </div>
           <h1 className="ch-title">
-            I write <span className="shimmer-text">Code</span> that<br />
-            powers the future.
+            I turn <span className="shimmer-text">Ideas</span> into<br />
+            working reality.
           </h1>
           <p className="ch-desc">
-            Electronics & Communication Engineer crafting seamless experiences across web interfaces and embedded IoT devices.
+            Bridging the gap between hardware and software. I build smart systems, responsive apps, and everything in between.
           </p>
 
           {isTypingComplete && (
@@ -172,7 +171,7 @@ export default function CodeHero({ onNavigate }) {
                         {line.type === 'plain' && <span className="c-punctuation">{line.text}</span>}
                         {line.type === 'method' && (
                           <>
-                            <span className="c-keyword">await</span> <span className="c-variable">soujanyaS</span>.<span className="c-method">buildAmazingThings</span>();
+                            <span className="c-keyword">await</span> <span className="c-variable">soujanyaS</span>.<span className="c-method">createAmazingTech</span>();
                           </>
                         )}
                       </motion.div>

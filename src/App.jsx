@@ -442,13 +442,13 @@ function App() {
             </div>
             <div className="about-text-col reveal-right">
               <p className="about-lead">
-                I'm a <strong>B.E. Electronics & Communication Engineering</strong> student at Sri Eshwar College of Engineering (Batch 2023–2027), with a passion for building things that live on the web and in embedded systems.
+                I spend my days at the intersection of circuits and code. Currently, I'm an <strong>Electronics & Communication Engineering</strong> student (Batch 2023–2027), obsessed with how things work under the hood.
               </p>
               <p className="about-body">
-                From designing responsive web interfaces to building smart wearable systems with Arduino and React, I enjoy working at the intersection of <em>hardware and software</em>. I've interned at PropelFoundry and Better Tomorrow, where I worked on production-grade web applications using the MERN stack.
+                Whether I'm debugging a complex React component or soldering components for an IoT prototype, I love the process of turning an abstract idea into a functional product. My experience spans from interning as a MERN stack developer to building life-saving wearable tech like AuraVue.
               </p>
               <p className="about-body">
-                Outside of engineering, I Love hackathons and have cleared rounds at Innohacks, Hacksagon, and won 3rd place at Freshathon.
+                When I'm not staring at a screen or a breadboard, you'll probably find me at a hackathon—I've cleared rounds at Innohacks and Hacksagon, and recently took home 3rd place at Freshathon.
               </p>
               <div className="education-timeline">
                 <h3 className="sub-heading">Education</h3>
