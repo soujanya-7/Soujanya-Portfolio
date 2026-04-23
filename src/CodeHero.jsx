@@ -57,9 +57,7 @@ export default function CodeHero({ onNavigate }) {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <div className="ch-badge">
-            <span className="ch-pulse-dot"></span> System Online
-          </div>
+
           <h1 className="ch-title">
             I turn <span className="shimmer-text">Ideas</span> into<br />
             working reality.
