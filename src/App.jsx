@@ -1,13 +1,297 @@
 import { useEffect, useRef, useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import Tilt from 'react-parallax-tilt';
 import CodeHero from './CodeHero';
+import SpotlightHero from './SpotlightHero';
+import soujanyaPhoto from './assets/soujanya.png';
+import logo from './assets/logo.png';
 import { 
-  Mail, ChevronRight, 
-  Code, Globe, Cpu, Database, Blocks, Terminal, Edit3, Monitor, CheckCircle, Shield
+  Mail, ChevronRight, Award,
+  Code, Globe, Layout, Database, Blocks, Terminal, Edit3, Monitor, CheckCircle, Shield,
+  ExternalLink, Activity, Check, Cpu, Layers, Lock, RefreshCw, Play, Sparkles, Heart, Clock, Server
 } from 'lucide-react';
 
+/* ── Interactive Projects Dataset ── */
+const PROJECTS_DATA = [
+  {
+    title: "AuraVue",
+    subtitle: "Health Monitoring Dashboard",
+    desc: "A responsive MERN web dashboard that aggregates user physiological telemetry, monitors key health thresholds, and automatically coordinates SOS protocols when anomalies are triggered.",
+    tech: ["Next.js", "React.js", "Firebase", "WebSockets"],
+    status: "Active",
+    statusColor: "#3b82f6",
+    url: "https://auravue.health.dev",
+    github: "https://github.com/soujanya-s",
+    demo: "#",
+    highlights: [
+      "Aggregates vital health metrics via responsive, multi-tier panels",
+      "Executes real-time anomaly detection triggers for rapid alert routing",
+      "Features seamless WebSockets streams coupled with cloud telemetry logs"
+    ]
+  },
+  {
+    title: "PropelFoundry",
+    subtitle: "Business Consulting Hub",
+    desc: "A highly-optimized digital corporate consulting landing page and portfolio interface engineered to showcase professional agency offerings and accelerate user onboarding.",
+    tech: ["HTML5", "CSS3", "JavaScript", "React.js"],
+    status: "Completed",
+    statusColor: "#10b981",
+    url: "https://propelfoundry.com",
+    github: "https://github.com/soujanya-s",
+    demo: "#",
+    highlights: [
+      "Custom responsive design utilizing curated, clean layout standards",
+      "Smooth modern interaction triggers and transitions built in pure CSS/React",
+      "High performance SEO scores and structured client contact endpoints"
+    ]
+  },
+  {
+    title: "PolicyPro",
+    subtitle: "Insurance CRUD Database",
+    desc: "A robust Java-based database administration console engineered to perform reliable create, read, update, and delete actions on insurance profiles, schemas, and policy listings.",
+    tech: ["Java", "MySQL", "JDBC", "Console CLI"],
+    status: "Completed",
+    statusColor: "#8b5cf6",
+    url: "https://policypro.db.local",
+    github: "https://github.com/soujanya-s",
+    demo: "#",
+    highlights: [
+      "Features a strict transactional CLI interface with complete validation checks",
+      "Engineered clean database schemas with optimized query execution indexing",
+      "Adheres strictly to traditional Object-Oriented Controller architectures"
+    ]
+  },
+  {
+    title: "EcoSense",
+    subtitle: "Smart Environmental Monitor",
+    desc: "An end-to-end data platform that processes environmental sensor telemetry and maps trends on a gorgeous, highly visual react dashboard utilizing custom gauges and trendcharts.",
+    tech: ["React.js", "Node.js", "Chart.js", "WebSockets"],
+    status: "Live",
+    statusColor: "#06b6d4",
+    url: "https://ecosense.live",
+    github: "https://github.com/soujanya-s",
+    demo: "#",
+    highlights: [
+      "Visualizes humidity, temperature, and AQI readings in interactive layouts",
+      "Maintains low-latency streams via WebSockets server aggregation",
+      "Combines modular React custom gauges with history timeline comparisons"
+    ]
+  },
+  {
+    title: "Genzolver",
+    subtitle: "Hackathon Workspace Platform",
+    desc: "A centralized hub engineered to host large scale hackathons, facilitating team matching, prompt submissions, interactive grading boards, and live results calculations.",
+    tech: ["Next.js", "TailwindCSS", "Firebase", "Framer Motion"],
+    status: "Beta",
+    statusColor: "#f59e0b",
+    url: "https://genzolver.org",
+    github: "https://github.com/soujanya-s",
+    demo: "#",
+    highlights: [
+      "Integrates instant team-matching rooms with real-time feedback flows",
+      "Features custom judge submission scorecards with responsive rankings syncing",
+      "Rich front-end detail elements incorporating animated layouts and components"
+    ]
+  }
+];
+
+/* ── Services Dataset ── */
+const SERVICES_DATA = [
+  {
+    title: "Full-Stack Web Dev",
+    subtitle: "End-to-End MERN Architectures",
+    desc: "Building highly-scalable, production-ready MERN web applications with secure backend models and clean component logic.",
+    icon: Globe,
+    color: "var(--accent-1)",
+    watermark: "MERN",
+    capabilities: [
+      "Real-time synchronization using WebSockets",
+      "Secure JWT authentication & session management",
+      "State management patterns via Redux & Context API",
+      "Cloud uploads with Firebase & AWS storage"
+    ],
+    tech: ["MongoDB", "Express", "React", "Node.js", "WebSockets"]
+  },
+  {
+    title: "Frontend Development",
+    subtitle: "Pixel-Perfect UI/UX Engineering",
+    desc: "Crafting responsive, high-performance interfaces with clean layouts, fluid animations, and strict accessibility standards.",
+    icon: Layout,
+    color: "var(--accent-2)",
+    watermark: "FRONTEND",
+    capabilities: [
+      "Modern fluid layouts utilizing CSS grid & flexbox",
+      "60fps interactions utilizing Framer Motion",
+      "Semantic structure matching WCAG guidelines",
+      "Cross-browser speed & performance optimization"
+    ],
+    tech: ["HTML5", "CSS3", "JavaScript", "React.js", "Framer Motion"]
+  },
+  {
+    title: "Database & API Design",
+    subtitle: "Secure & Efficient Data Pipelines",
+    desc: "Designing optimized relational schemas and building secure RESTful API endpoints for low-latency CRUD operations.",
+    icon: Database,
+    color: "var(--accent-3)",
+    watermark: "DATABASE",
+    capabilities: [
+      "Structured schema design and indexing optimization",
+      "API security middleware and input validations",
+      "Advanced transactional SQL & MongoDB queries",
+      "External service connections & data sync pipelines"
+    ],
+    tech: ["MySQL", "MongoDB", "REST APIs", "JDBC", "GraphQL"]
+  }
+];
+
+/* ── Technical Skills Dataset ── */
+const SKILLS_DATA = [
+  {
+    category: "Languages & Core Fundamentals",
+    subtitle: "DSA, OOPS & PROGRAMMING",
+    icon: Cpu,
+    color: "var(--accent-1)",
+    items: [
+      { name: "Java SE", level: "Expert", value: 90 },
+      { name: "JavaScript (ES6+)", level: "Advanced", value: 85 },
+      { name: "Data Structures & Algos", level: "Advanced", value: 85 },
+      { name: "Object-Oriented Coding", level: "Advanced", value: 88 },
+      { name: "C Programming", level: "Intermediate", value: 70 }
+    ]
+  },
+  {
+    category: "Frontend UI Engineering",
+    subtitle: "PIXEL-PERFECT INTERACTION",
+    icon: Layers,
+    color: "var(--accent-2)",
+    items: [
+      { name: "React.js / Next.js", level: "Expert", value: 92 },
+      { name: "Redux & Context API", level: "Advanced", value: 80 },
+      { name: "TailwindCSS & CSS Grid", level: "Expert", value: 90 },
+      { name: "Framer Motion / UX Anims", level: "Advanced", value: 85 },
+      { name: "HTML5 / Semantic markup", level: "Expert", value: 95 }
+    ]
+  },
+  {
+    category: "Backend & Systems",
+    subtitle: "APIS & DATABASE PIPELINES",
+    icon: Server,
+    color: "var(--accent-3)",
+    items: [
+      { name: "Node.js & Express", level: "Advanced", value: 85 },
+      { name: "REST APIs & WebSockets", level: "Advanced", value: 88 },
+      { name: "MySQL database design", level: "Advanced", value: 80 },
+      { name: "MongoDB database CRUD", level: "Advanced", value: 85 },
+      { name: "Firebase integrations", level: "Intermediate", value: 78 }
+    ]
+  },
+  {
+    category: "Tools, Platforms & Analytics",
+    subtitle: "VERSION CONTROL & ANALYTICS",
+    icon: Terminal,
+    color: "#f59e0b",
+    items: [
+      { name: "Git & GitHub workflow", level: "Expert", value: 90 },
+      { name: "Postman API testing", level: "Advanced", value: 82 },
+      { name: "NumPy & Pandas analysis", level: "Intermediate", value: 75 },
+      { name: "Matplotlib graphics", level: "Intermediate", value: 70 },
+      { name: "VS Code environment", level: "Expert", value: 90 }
+    ]
+  }
+];
+
+/* ── Experience Dataset ── */
+const EXPERIENCE_DATA = [
+  {
+    role: "Web Development Intern",
+    company: "PropelFoundry",
+    duration: "Jan 2025 - Apr 2025",
+    desc: "Developed and maintained the company's official website, improving overall online presence and user engagement. Worked on designing responsive and clean user interfaces.",
+    tech: ["HTML", "CSS", "React.js"],
+    color: "var(--accent-1)"
+  },
+  {
+    role: "MERN Stack Developer Intern",
+    company: "Better Tomorrow",
+    duration: "May 2025 - Present",
+    desc: "Developed projects using the MERN stack (MongoDB, Express, React, Node.js). Designed and implemented APIs to connect frontend and backend seamlessly.",
+    tech: ["MongoDB", "Node.js", "React.js"],
+    color: "var(--accent-2)"
+  }
+];
+
+/* ── Animated Counter Card ── */
+
+function CounterCard({ val, suffix, label, color, delay }) {
+  const [count, setCount] = useState(0);
+  const ref = useRef(null);
+  const started = useRef(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting && !started.current) {
+        started.current = true;
+        const duration = 1400;
+        const steps = 50;
+        const increment = val / steps;
+        let current = 0;
+        const timer = setInterval(() => {
+          current += increment;
+          if (current >= val) { setCount(val); clearInterval(timer); }
+          else setCount(Math.floor(current));
+        }, duration / steps);
+      }
+    }, { threshold: 0.5 });
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, [val]);
+
+  return (
+    <motion.div
+      ref={ref}
+      className="av3-counter-card glass-card"
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5, delay }}
+      whileHover={{ y: -6, transition: { duration: 0.2 } }}
+    >
+      <span className="av3-counter-num" style={{ color }}>{count}{suffix}</span>
+      <span className="av3-counter-label">{label.split('\n').map((l, i) => <span key={i}>{l}<br/></span>)}</span>
+      <div className="av3-counter-glow" style={{ background: color }} />
+    </motion.div>
+  );
+}
+
+function CounterVal({ val }) {
+  const [count, setCount] = useState(0);
+  const ref = useRef(null);
+  const started = useRef(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting && !started.current) {
+        started.current = true;
+        const duration = 1200;
+        const steps = 40;
+        const increment = val / steps;
+        let current = 0;
+        const timer = setInterval(() => {
+          current += increment;
+          if (current >= val) { setCount(val); clearInterval(timer); }
+          else setCount(Math.floor(current));
+        }, duration / steps);
+      }
+    }, { threshold: 0.1 });
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, [val]);
+
+  return <span ref={ref}>{count}</span>;
+}
+
 const Github = ({ size = 24, ...props }) => (
+
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
     <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.03c3.15-.38 6.5-1.4 6.5-7.17a5.5 5.5 0 0 0-1.5-3.8 5.5 5.5 0 0 0 .15-3.8s-1.18-.38-3.9 1.4a13.38 13.38 0 0 0-7 0c-2.72-1.78-3.9-1.4-3.9-1.4a5.5 5.5 0 0 0 .15 3.8 5.5 5.5 0 0 0-1.5 3.8c0 5.76 3.35 6.78 6.5 7.16a4.8 4.8 0 0 0-1 3.04V22" />
     <path d="M9 20c-5 1.5-5-2.5-7-3" />
@@ -51,12 +335,131 @@ const Magnetic = ({ children, className }) => {
   );
 };
 
+function CertificateCard({ cert, index, onPreview }) {
+  const [imgValid, setImgValid] = useState(true);
+  const IconComponent = cert.icon;
+  return (
+    <motion.div
+      className="cert-gallery-card glass-card"
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5, delay: index * 0.08 }}
+      whileHover={{ y: -6, transition: { duration: 0.2 } }}
+      style={{ '--card-brand-glow': cert.color }}
+    >
+      {/* Certificate Image Preview or Fallback */}
+      <div className="cert-img-wrapper" onClick={() => onPreview(cert)}>
+        {imgValid ? (
+          <img 
+            src={`/certificates/${cert.filename}`} 
+            alt={`${cert.title} Certificate`} 
+            className="cert-preview-img"
+            onError={() => setImgValid(false)}
+          />
+        ) : (
+          <div className="cert-fallback-placeholder" style={{ '--accent-glow': cert.color }}>
+            <div className="fallback-ring ring-1" />
+            <div className="fallback-ring ring-2" />
+            <Award size={36} className="fallback-icon" style={{ color: cert.color }} />
+            <span className="fallback-watermark font-mono">PREVIEW</span>
+          </div>
+        )}
+        <div className="cert-img-overlay">
+          <span className="overlay-text font-mono">VIEW PREVIEW</span>
+        </div>
+      </div>
+
+      {/* Info block */}
+      <div className="cert-card-info">
+        <div className="cert-card-header-row">
+          <div className="cert-card-icon-circle" style={{ background: `${cert.color}15`, border: `1px solid ${cert.color}30` }}>
+            <IconComponent size={14} style={{ color: cert.color }} />
+          </div>
+          <span className="cert-year-badge font-mono">{cert.year}</span>
+        </div>
+        
+        <h3 className="cert-card-title">{cert.title}</h3>
+        <p className="cert-card-issuer font-mono" style={{ color: cert.color }}>{cert.issuer}</p>
+      </div>
+
+      <div className="cert-card-actions">
+        <button className="cert-action-btn view font-mono" onClick={() => onPreview(cert)}>
+          View Image
+        </button>
+        <span className="verified-pill font-mono">✔ Verified</span>
+      </div>
+    </motion.div>
+  );
+}
+
+function CertStackImage({ cert }) {
+  const [imgOk, setImgOk] = useState(true);
+  return (
+    <div className="cert-stack-inner">
+      {imgOk ? (
+        <img
+          src={`/certificates/${cert.filename}`}
+          alt={`${cert.title} Certificate`}
+          className="cert-stack-img"
+          onError={() => setImgOk(false)}
+        />
+      ) : (
+        <div className="cert-stack-fallback" style={{ '--accent-glow': cert.color }}>
+          <Award size={40} style={{ color: cert.color, filter: `drop-shadow(0 0 12px ${cert.color})` }} />
+          <span className="cert-stack-fallback-label font-mono">{cert.title}</span>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function App() {
   const [loading, setLoading] = useState(true);
   const [loaderProgress, setLoaderProgress] = useState(0);
   const [navOpen, setNavOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
+  const [activeProject, setActiveProject] = useState(0);
+  const [activeService, setActiveService] = useState(0);
+
+  const prevProject = () => {
+    setActiveProject((prev) => (prev === 0 ? PROJECTS_DATA.length - 1 : prev - 1));
+  };
+  const nextProject = () => {
+    setActiveProject((prev) => (prev === PROJECTS_DATA.length - 1 ? 0 : prev + 1));
+  };
+  const [lightboxImage, setLightboxImage] = useState(null);
+  const [activeCert, setActiveCert] = useState(0);
+  const [formState, setFormState] = useState('idle');
+  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+  const [emailCopied, setEmailCopied] = useState(false);
+  const [currentTime, setCurrentTime] = useState('');
+
+  // Live Coimbatore Time Clock (IST is UTC + 5:50 or 5:30)
+  useEffect(() => {
+    const updateTime = () => {
+      const options = {
+        timeZone: 'Asia/Kolkata',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: true
+      };
+      const formatter = new Intl.DateTimeFormat([], options);
+      setCurrentTime(formatter.format(new Date()));
+    };
+    updateTime();
+    const interval = setInterval(updateTime, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const handleCopyEmail = () => {
+    navigator.clipboard.writeText('soujanya.s2023@sece.ac.in').then(() => {
+      setEmailCopied(true);
+      setTimeout(() => setEmailCopied(false), 2000);
+    });
+  };
 
   const cursorRef = useRef(null);
   const followerRef = useRef(null);
@@ -152,9 +555,9 @@ function App() {
     if (loading || !typedTextRef.current) return;
     const phrases = [
       'Smart Web Apps',
-      'IoT Solutions',
+      'UI/UX Design',
       'MERN Projects',
-      'Embedded Systems',
+      'API Development',
       'Full-Stack Magic',
     ];
     let pi = 0, ci = 0, deleting = false;
@@ -329,23 +732,18 @@ function App() {
 
   const handleContactSubmit = (e) => {
     e.preventDefault();
-    const btn = e.currentTarget.querySelector('button');
-    const span = btn.querySelector('span');
-    const originalText = span.textContent;
+    const data = new FormData(e.currentTarget);
+    setFormData({
+      name: data.get('name') || '',
+      email: data.get('email') || '',
+      message: data.get('message') || ''
+    });
+    setFormState('sending');
     
-    span.textContent = 'Sending...';
-    btn.disabled = true;
-    
+    // Simulate terminal transmission delay
     setTimeout(() => {
-      span.textContent = '✓ Message Sent!';
-      btn.style.background = 'linear-gradient(135deg,#10b981,#059669)';
-      setTimeout(() => {
-        span.textContent = originalText;
-        btn.disabled = false;
-        btn.style.background = '';
-        e.target.reset();
-      }, 3000);
-    }, 1500);
+      setFormState('success');
+    }, 3500);
   };
 
   return (
@@ -369,10 +767,10 @@ function App() {
 
       {/* Section Progress Indicator */}
       <div className="section-progress">
-        {['home', 'about', 'skills', 'projects', 'experience', 'achievements', 'contact'].map((item) => (
+        {['home', 'services', 'skills', 'projects', 'experience', 'achievements', 'contact'].map((item) => (
           <div 
             key={item}
-            className={`progress-dot ${activeSection === item ? 'active' : ''}`}
+            className={`progress-dot ${activeSection === item || (item === 'experience' && activeSection === 'certifications') ? 'active' : ''}`}
             onClick={() => handleNavClick(item)}
           >
             <span className="progress-label">{item}</span>
@@ -381,17 +779,18 @@ function App() {
       </div>
 
       <nav className={`navbar ${scrolled ? 'scrolled' : ''}`} id="navbar">
-        <div className="nav-logo">
-          <span className="logo-bracket">&lt;</span>
-          <span className="logo-name">Soujanya S</span>
-          <span className="logo-bracket">/&gt;</span>
-        </div>
+        <div className="nav-logo" onClick={() => handleNavClick('home')}>
+          <div className="logo-container">
+            <img src={logo} alt="S Logo" className="logo-img" />
+            <span className="logo-tm">TM</span>
+          </div>
+         </div>
         <div className={`nav-links ${navOpen ? 'open' : ''}`} id="navLinks">
-          {['home', 'about', 'skills', 'projects', 'experience', 'achievements', 'contact'].map((item) => (
+          {['home', 'services', 'skills', 'projects', 'experience', 'contact'].map((item) => (
             <a
               key={item}
               href={`#${item}`}
-              className={`nav-link ${activeSection === item ? 'active' : ''}`}
+              className={`nav-link ${activeSection === item || (item === 'experience' && (activeSection === 'certifications' || activeSection === 'achievements')) ? 'active' : ''}`}
               onClick={(e) => { e.preventDefault(); handleNavClick(item); }}
             >
               {item.charAt(0).toUpperCase() + item.slice(1)}
@@ -408,144 +807,151 @@ function App() {
         </div>
       </nav>
 
-      <CodeHero onNavigate={handleNavClick} />
+      <SpotlightHero onNavigate={handleNavClick} />
 
-      {/* About Section */}
-      <section className="about section" id="about">
-        <div className="hero-bg animated-grid" style={{ position: 'absolute', opacity: 0.4 }}></div>
+      {/* Services Section */}
+      <section className="services section" id="services">
         <div className="container">
           <div className="section-header">
-            <span className="section-tag">01. About Me</span>
-            <h2 className="section-title">Who I Am</h2>
+            <span className="section-tag">01. Specialties</span>
+            <h2 className="section-title">Areas of Expertise</h2>
           </div>
-          <div className="about-grid">
-            <div className="about-image-col reveal-left">
-              <Tilt tiltMaxAngleX={10} tiltMaxAngleY={10} scale={1.05} transitionSpeed={2000} className="about-card glass-card">
-                <div className="about-avatar-wrap floating">
-                  <div className="about-avatar">
-                    <span className="avatar-initials-lg">SS</span>
+          
+          <div className="services-deck">
+            {SERVICES_DATA.map((service, idx) => {
+              const IconComponent = service.icon;
+              const isActive = activeService === idx;
+              return (
+                <motion.div
+                  key={service.title}
+                  layout
+                  onClick={() => setActiveService(idx)}
+                  className={`deck-card ${isActive ? 'active' : ''}`}
+                  transition={{ type: "spring", stiffness: 220, damping: 22 }}
+                  style={{
+                    '--card-accent': service.color
+                  }}
+                >
+                  {/* Card Background Glow */}
+                  {isActive && (
+                    <div className="deck-card-glow" />
+                  )}
+
+                  {/* Watermark Backtext */}
+                  <div className="deck-watermark font-mono">{service.watermark}</div>
+
+                  {/* Top Header Node */}
+                  <div className="deck-card-top">
+                    <span className="deck-num font-mono">0{idx + 1}</span>
+                    <div className="deck-icon-wrapper">
+                      <IconComponent size={24} className="deck-icon" />
+                    </div>
                   </div>
-                  <div className="about-glow"></div>
-                </div>
-                <div className="about-info-pills">
-                  <div className="info-pill">
-                    <Mail size={16} /> soujanya.s2023@sece.ac.in
+
+                  <div className="deck-card-body">
+                    <h3 className="deck-title">{service.title}</h3>
+                    <p className="deck-subtitle font-mono">{service.subtitle}</p>
+                    
+                    {/* Expanded details */}
+                    <AnimatePresence mode="wait">
+                      {isActive && (
+                        <motion.div
+                          initial={{ opacity: 0, y: 8 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: 4 }}
+                          transition={{ duration: 0.2 }}
+                          className="deck-expanded-content"
+                        >
+                          <p className="deck-desc">{service.desc}</p>
+                          
+                          <div className="deck-capabilities">
+                            <span className="cap-label font-mono">
+                              <Sparkles size={11} className="text-accent-1" style={{ marginRight: '6px' }} /> 
+                              Core Specialties
+                            </span>
+                            <ul className="cap-list">
+                              {service.capabilities.map((c, i) => (
+                                <li key={i}>
+                                  <Check size={11} className="cap-check-icon text-green" style={{ flexShrink: 0, marginTop: '3px' }} />
+                                  <span>{c}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+
+                          <div className="deck-tech-tags">
+                            {service.tech.map(t => (
+                              <span key={t} className="tech-badge">{t}</span>
+                            ))}
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </div>
-                  <div className="info-pill">
-                    <Monitor size={16} /> +91 8610531594
-                  </div>
-                  <div className="info-pill">
-                    <Globe size={16} /> Coimbatore, Tamil Nadu
-                  </div>
-                </div>
-              </Tilt>
-            </div>
-            <div className="about-text-col reveal-right">
-              <p className="about-lead">
-                I spend my days at the intersection of circuits and code. Currently, I'm an <strong>Electronics & Communication Engineering</strong> student (Batch 2023–2027), obsessed with how things work under the hood.
-              </p>
-              <p className="about-body">
-                Whether I'm debugging a complex React component or soldering components for an IoT prototype, I love the process of turning an abstract idea into a functional product. My experience spans from interning as a MERN stack developer to building life-saving wearable tech like AuraVue.
-              </p>
-              <p className="about-body">
-                When I'm not staring at a screen or a breadboard, you'll probably find me at a hackathon—I've cleared rounds at Innohacks and Hacksagon, and recently took home 3rd place at Freshathon.
-              </p>
-              <div className="education-timeline">
-                <h3 className="sub-heading">Education</h3>
-                <div className="edu-item">
-                  <div className="edu-dot"></div>
-                  <div className="edu-content">
-                    <span className="edu-degree">B.E. (ECE)</span>
-                    <span className="edu-school">Sri Eshwar College of Engineering</span>
-                    <span className="edu-meta">2023–2027</span>
-                  </div>
-                </div>
-                <div className="edu-item">
-                  <div className="edu-dot"></div>
-                  <div className="edu-content">
-                    <span className="edu-degree">HSC (12th)</span>
-                    <span className="edu-school">Srinivasa Vidhyala Matric Higher Secondary School</span>
-                    <span className="edu-meta">2021–2023</span>
-                  </div>
-                </div>
-                <div className="edu-item">
-                  <div className="edu-dot"></div>
-                  <div className="edu-content">
-                    <span className="edu-degree">SSLC (10th)</span>
-                    <span className="edu-school">Srinivasa Vidhyala Matric Higher Secondary School</span>
-                    <span className="edu-meta">2020–2021</span>
-                  </div>
-                </div>
-              </div>
-            </div>
+                </motion.div>
+              );
+            })}
           </div>
         </div>
       </section>
+
+
 
       {/* Skills Section */}
       <section className="skills section" id="skills">
         <div className="container">
           <div className="section-header">
             <span className="section-tag">02. Skills</span>
-            <h2 className="section-title">My Tech Stack</h2>
+            <h2 className="section-title">Technical Mastery</h2>
           </div>
+
           <div className="skills-grid">
-            <div className="skill-category glass-card reveal-scale">
-              <div className="skill-cat-icon"><Code size={24} /></div>
-              <h3>Programming</h3>
-              <div className="skill-chips">
-                <span className="chip">Java</span><span className="chip">C (Basics)</span><span className="chip">React.js</span><span className="chip">Node.js</span>
-              </div>
-            </div>
-            <div className="skill-category glass-card reveal-scale">
-              <div className="skill-cat-icon"><Monitor size={24} /></div>
-              <h3>Web Development</h3>
-              <div className="skill-chips">
-                <span className="chip">MERN Stack</span><span className="chip">HTML</span><span className="chip">CSS</span><span className="chip">JavaScript</span>
-              </div>
-            </div>
-            <div className="skill-category glass-card reveal-scale">
-              <div className="skill-cat-icon"><Globe size={24} /></div>
-              <h3>Core</h3>
-              <div className="skill-chips">
-                <span className="chip">DSA</span><span className="chip">OOPs</span><span className="chip">Embedded Systems</span><span className="chip">IoT</span>
-              </div>
-            </div>
-            <div className="skill-category glass-card reveal-scale">
-              <div className="skill-cat-icon"><Database size={24} /></div>
-              <h3>Databases</h3>
-              <div className="skill-chips">
-                <span className="chip">MySQL</span><span className="chip">MongoDB</span><span className="chip">Firebase</span>
-              </div>
-            </div>
-            <div className="skill-category glass-card reveal-scale">
-              <div className="skill-cat-icon"><Blocks size={24} /></div>
-              <h3>Libraries</h3>
-              <div className="skill-chips">
-                <span className="chip">Pandas</span><span className="chip">NumPy</span><span className="chip">Matplotlib</span>
-              </div>
-            </div>
-            <div className="skill-category glass-card reveal-scale">
-              <div className="skill-cat-icon"><Cpu size={24} /></div>
-              <h3>Microcontrollers</h3>
-              <div className="skill-chips">
-                <span className="chip">ESP32</span><span className="chip">Arduino Uno</span><span className="chip">8051</span>
-              </div>
-            </div>
-            <div className="skill-category glass-card reveal-scale">
-              <div className="skill-cat-icon"><Terminal size={24} /></div>
-              <h3>Tools & IDE</h3>
-              <div className="skill-chips">
-                <span className="chip">VSCode</span><span className="chip">Eclipse</span><span className="chip">Arduino IDE</span><span className="chip">MATLAB</span><span className="chip">GitHub</span><span className="chip">Canva</span><span className="chip">Colab</span>
-              </div>
-            </div>
-            <div className="skill-category glass-card reveal-scale">
-              <div className="skill-cat-icon"><Edit3 size={24} /></div>
-              <h3>Simulation</h3>
-              <div className="skill-chips">
-                <span className="chip">Multisim</span><span className="chip">Octave</span><span className="chip">ModelSim</span><span className="chip">IntelliJ IDEA</span>
-              </div>
-            </div>
+            {SKILLS_DATA.map((cat, i) => {
+              const IconComponent = cat.icon;
+              return (
+                <motion.div
+                  key={cat.category}
+                  className="skills-category-card glass-card"
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: i * 0.12 }}
+                  whileHover={{ y: -5, transition: { duration: 0.2 } }}
+                  style={{ '--card-accent': cat.color }}
+                >
+                  <div className="skills-category-header">
+                    <div className="skills-category-icon-wrap" style={{ color: cat.color }}>
+                      <IconComponent size={20} />
+                    </div>
+                    <div>
+                      <h3 className="skills-category-title">{cat.category}</h3>
+                      <span className="skills-category-subtitle font-mono">{cat.subtitle}</span>
+                    </div>
+                  </div>
+
+                  <div className="skills-list">
+                    {cat.items.map((skill, idx) => (
+                      <div key={skill.name} className="skill-progress-item">
+                        <div className="skill-info">
+                          <span className="skill-name">{skill.name}</span>
+                          <span className="skill-level font-mono" style={{ color: cat.color }}>{skill.level}</span>
+                        </div>
+                        <div className="skill-track">
+                          <motion.div 
+                            className="skill-bar" 
+                            style={{ background: `linear-gradient(90deg, var(--border), ${cat.color})` }}
+                            initial={{ width: 0 }}
+                            whileInView={{ width: `${skill.value}%` }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 1.2, delay: 0.2 + idx * 0.08, ease: "easeOut" }}
+                          />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </motion.div>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -553,102 +959,252 @@ function App() {
       {/* Projects Section */}
       <section className="projects section" id="projects">
         <div className="container">
-          <div className="section-header">
-            <span className="section-tag">03. Projects</span>
-            <h2 className="section-title">What I've Built</h2>
+          <div className="projects-header-wrap">
+            <button className="carousel-nav-btn prev" onClick={prevProject} aria-label="Previous Project">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+            </button>
+            
+            <div className="section-header centered">
+              <span className="section-tag">03. Projects</span>
+              <h2 className="section-title">Featured Projects</h2>
+              <p className="section-sub-centered">
+                A showcase of production-ready applications, secure database systems, and low-latency environmental monitors engineered with high-performance architectures.
+              </p>
+            </div>
+            
+            <button className="carousel-nav-btn next" onClick={nextProject} aria-label="Next Project">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            </button>
           </div>
-          <div className="projects-grid">
-            <Tilt tiltMaxAngleX={5} tiltMaxAngleY={5} scale={1.02} transitionSpeed={2500} className="project-card featured glass-card reveal-scale">
-              <div className="project-badge">Featured</div>
-              <div className="project-header">
-                <div className="project-icon project-icon-1"><Shield size={28} /></div>
-                <div className="project-links">
-                  <a href="#" className="proj-link" aria-label="GitHub"><Github size={18} /></a>
-                </div>
-              </div>
-              <h3 className="project-title">AuraVue</h3>
-              <p className="project-subtitle">Wearable Smart Glasses System</p>
-              <p className="project-desc">A wearable smart glasses system that monitors pulse rate from the neck, detects fainting or falls, and triggers emergency protocols. Captures real-time photos and GPS data with Firebase backend and a React dashboard for live monitoring.</p>
-              <div className="project-tech">
-                <span className="tech-tag">Arduino</span><span className="tech-tag">React.js</span><span className="tech-tag">Firebase</span><span className="tech-tag">GPS Module</span><span className="tech-tag">Pulse Sensor</span><span className="tech-tag">Embedded C</span>
-              </div>
-              <div className="project-year">2025</div>
-            </Tilt>
 
-            <Tilt tiltMaxAngleX={8} tiltMaxAngleY={8} scale={1.03} transitionSpeed={2500} className="project-card glass-card reveal-right">
-              <div className="project-header">
-                <div className="project-icon project-icon-2"><Monitor size={28} /></div>
-                <div className="project-links">
-                  <a href="#" className="proj-link" aria-label="GitHub"><Github size={18} /></a>
-                </div>
-              </div>
-              <h3 className="project-title">PropelFoundry Website</h3>
-              <p className="project-subtitle">Business Consulting Platform</p>
-              <p className="project-desc">A professional business website for a startup consulting firm, enhancing online visibility and user engagement. Features responsive UI, structured content, and mentorship & startup support services showcase.</p>
-              <div className="project-tech">
-                <span className="tech-tag">HTML</span><span className="tech-tag">CSS</span><span className="tech-tag">JavaScript</span><span className="tech-tag">React.js</span>
-              </div>
-              <div className="project-year">2025</div>
-            </Tilt>
+          <div className="projects-carousel-wrapper">
+            <div className="projects-carousel-track">
+              {PROJECTS_DATA.map((project, idx) => {
+                const isActive = activeProject === idx;
+                
+                return (
+                  <motion.div
+                    key={project.title}
+                    onClick={() => setActiveProject(idx)}
+                    className={`project-carousel-card ${isActive ? 'active' : ''}`}
+                    layout
+                    transition={{ type: "spring", stiffness: 180, damping: 24 }}
+                  >
+                    {/* Background Art Graphics per project */}
+                    <div className="project-card-bg-art">
+                      {idx === 0 && (
+                        <div className="bg-art-graphic auravue-art">
+                          <div className="mesh-grid" />
+                          <svg viewBox="0 0 100 40" className="art-sparkline text-red" style={{ color: '#ef4444' }}>
+                            <path 
+                              d="M0,20 L20,20 L25,5 L30,35 L33,20 L60,20 L65,5 L70,35 L73,20 L100,20" 
+                              fill="none" 
+                              stroke="currentColor" 
+                              strokeWidth="1" 
+                            />
+                          </svg>
+                          <div className="pulse-circle red" />
+                        </div>
+                      )}
+                      {idx === 1 && (
+                        <div className="bg-art-graphic propelfoundry-art">
+                          <div className="mesh-grid" />
+                          <div className="isometric-box-grid">
+                            <div className="iso-line line-1" />
+                            <div className="iso-line line-2" />
+                            <div className="iso-line line-3" />
+                          </div>
+                        </div>
+                      )}
+                      {idx === 2 && (
+                        <div className="bg-art-graphic policypro-art font-mono">
+                          <div className="mesh-grid" />
+                          <div className="terminal-lines-art">
+                            <span>admin@db:~$ select *</span>
+                            <span>[INFO] Connection ok</span>
+                            <span>+----+------------+</span>
+                            <span>| 01 | SOUJANYA S |</span>
+                            <span>+----+------------+</span>
+                          </div>
+                        </div>
+                      )}
+                      {idx === 3 && (
+                        <div className="bg-art-graphic ecosense-art">
+                          <div className="mesh-grid" />
+                          <div className="circular-dials">
+                            <div className="dial-circle green" style={{ borderColor: '#10b981' }} />
+                            <div className="dial-circle blue" style={{ borderColor: '#3b82f6' }} />
+                          </div>
+                          <svg viewBox="0 0 100 40" className="art-sparkline text-green" style={{ color: '#10b981' }}>
+                            <path 
+                              d="M0,30 Q20,10 40,22 T80,5 T100,15" 
+                              fill="none" 
+                              stroke="currentColor" 
+                              strokeWidth="1" 
+                            />
+                          </svg>
+                        </div>
+                      )}
+                      {idx === 4 && (
+                        <div className="bg-art-graphic genzolver-art">
+                          <div className="mesh-grid" />
+                          <div className="network-nodes">
+                            <span className="node node-1" />
+                            <span className="node node-2" />
+                            <span className="node node-3" />
+                            <span className="node-line l1" />
+                            <span className="node-line l2" />
+                          </div>
+                        </div>
+                      )}
+                    </div>
 
-            <Tilt tiltMaxAngleX={8} tiltMaxAngleY={8} scale={1.03} transitionSpeed={2500} className="project-card glass-card reveal-left">
-              <div className="project-header">
-                <div className="project-icon project-icon-3"><Database size={28} /></div>
-                <div className="project-links">
-                  <a href="#" className="proj-link" aria-label="GitHub"><Github size={18} /></a>
-                </div>
-              </div>
-              <h3 className="project-title">Insurance Management System</h3>
-              <p className="project-subtitle">Java CRUD Application</p>
-              <p className="project-desc">An insurance management system focusing on CRUD operations to manage policyholder data efficiently. Designed and optimized functionalities for seamless policy creation and retrieval.</p>
-              <div className="project-tech">
-                <span className="tech-tag">Java</span><span className="tech-tag">OOP</span><span className="tech-tag">MySQL</span><span className="tech-tag">JDBC</span>
-              </div>
-              <div className="project-year">2024</div>
-            </Tilt>
+                    {/* Dark gradient overlay for readability */}
+                    <div className="project-card-overlay" />
+
+                    {/* Content Top */}
+                    <div className="project-card-top-info">
+                      <span className="project-card-num font-mono">0{idx + 1}</span>
+                      <span className="project-card-status font-mono" style={{ color: project.statusColor, borderColor: `${project.statusColor}30`, backgroundColor: `${project.statusColor}08` }}>
+                        {project.status}
+                      </span>
+                    </div>
+
+                    {/* Content Bottom / Center */}
+                    <div className="project-card-content">
+                      <h3 className="project-card-title">{project.title}</h3>
+                      <p className="project-card-subtitle font-mono">{project.subtitle}</p>
+                      
+                      {isActive && (
+                        <motion.div
+                          initial={{ opacity: 0, y: 15 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.3, delay: 0.15 }}
+                          className="project-card-expanded-body"
+                        >
+                          <p className="project-card-desc">{project.desc}</p>
+                          
+                          <div className="project-card-tech font-mono">
+                            {project.tech.map(t => (
+                              <span key={t} className="tech-badge">{t}</span>
+                            ))}
+                          </div>
+
+                          <div className="project-card-actions">
+                            <a href={project.github} className="project-action-link secondary" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
+                              <Github size={14} />
+                              <span>Code</span>
+                            </a>
+                            <a href={project.demo} className="project-action-link primary" onClick={(e) => e.stopPropagation()}>
+                              <ExternalLink size={14} />
+                              <span>Live Demo</span>
+                            </a>
+                          </div>
+                        </motion.div>
+                      )}
+                    </div>
+
+                    {/* Diagonal indicator arrow bottom-right (just like screenshot) */}
+                    {!isActive && (
+                      <div className="project-card-enter-arrow">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                          <line x1="7" y1="17" x2="17" y2="7"></line>
+                          <polyline points="7 7 17 7 17 17"></polyline>
+                        </svg>
+                      </div>
+                    )}
+                  </motion.div>
+                );
+              })}
+            </div>
           </div>
         </div>
       </section>
+
 
       {/* Experience Section */}
       <section className="experience section" id="experience">
         <div className="container">
           <div className="section-header">
             <span className="section-tag">04. Experience</span>
-            <h2 className="section-title">Internships</h2>
+            <h2 className="section-title">Professional Experience</h2>
           </div>
-          <div className="timeline">
-            <div className="timeline-item reveal-left">
-              <div className="timeline-dot"></div>
-              <div className="timeline-content glass-card">
-                <div className="timeline-header">
-                  <div>
-                    <h3 className="timeline-role">Web Development Intern</h3>
-                    <span className="timeline-company">PropelFoundry</span>
-                  </div>
-                  <span className="timeline-year">2025</span>
+
+          <div className="experience-horizontal-timeline">
+            {/* The Timeline Track Line */}
+            <div className="timeline-track-wrapper">
+              <div className="timeline-horizontal-line">
+                <div className="timeline-horizontal-progress" />
+              </div>
+              
+              <div className="timeline-nodes-container">
+                {/* Node 1: PropelFoundry */}
+                <div className="timeline-node-item active" style={{ '--node-color': 'var(--accent-1)' }}>
+                  <span className="node-date font-mono">Jan 2025</span>
+                  <span className="node-dot" />
+                  <span className="node-company font-mono">PropelFoundry</span>
                 </div>
-                <p className="timeline-desc">Developed and maintained the company's official website, improving overall online presence and user engagement. Worked on designing responsive and clean user interfaces to effectively showcase services like mentorship and startup support. Collaborated closely with the team to build a scalable and user-friendly platform.</p>
-                <div className="timeline-tags">
-                  <span className="chip sm">HTML</span><span className="chip sm">CSS</span><span className="chip sm">JavaScript</span><span className="chip sm">React.js</span>
+                
+                {/* Node 2: Better Tomorrow */}
+                <div className="timeline-node-item active pulse-node" style={{ '--node-color': 'var(--accent-2)' }}>
+                  <span className="node-date font-mono">May 2025</span>
+                  <span className="node-dot" />
+                  <span className="node-company font-mono">Better Tomorrow</span>
                 </div>
               </div>
             </div>
-            <div className="timeline-item reveal-right">
-              <div className="timeline-dot"></div>
-              <div className="timeline-content glass-card">
-                <div className="timeline-header">
-                  <div>
-                    <h3 className="timeline-role">MERN Stack Developer Intern</h3>
-                    <span className="timeline-company">Better Tomorrow</span>
+
+            {/* Symmetrical Cards Grid */}
+            <div className="timeline-cards-grid">
+              {/* Card 1: PropelFoundry Details */}
+              <motion.div 
+                className="timeline-horizontal-card pf-glow"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5 }}
+              >
+                <div className="bento-card-header">
+                  <div className="role-company">
+                    <h3 className="bento-role">{EXPERIENCE_DATA[0].role}</h3>
+                    <span className="bento-company font-mono">@ {EXPERIENCE_DATA[0].company}</span>
                   </div>
-                  <span className="timeline-year">2025</span>
+                  <span className="bento-duration font-mono">{EXPERIENCE_DATA[0].duration}</span>
                 </div>
-                <p className="timeline-desc">Developed projects using the MERN stack (MongoDB, Express, React, Node.js). Designed and implemented APIs to connect frontend and backend seamlessly. Enhanced application performance, scalability, and maintainability.</p>
-                <div className="timeline-tags">
-                  <span className="chip sm">MongoDB</span><span className="chip sm">Express.js</span><span className="chip sm">React.js</span><span className="chip sm">Node.js</span>
+
+                <p className="bento-desc">{EXPERIENCE_DATA[0].desc}</p>
+
+                <div className="bento-tech-strip">
+                  {EXPERIENCE_DATA[0].tech.map(t => (
+                    <span key={t} className="tech-badge">{t}</span>
+                  ))}
                 </div>
-              </div>
+              </motion.div>
+
+              {/* Card 2: Better Tomorrow Details */}
+              <motion.div 
+                className="timeline-horizontal-card bt-glow"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+              >
+                <div className="bento-card-header">
+                  <div className="role-company">
+                    <h3 className="bento-role">{EXPERIENCE_DATA[1].role}</h3>
+                    <span className="bento-company font-mono">@ {EXPERIENCE_DATA[1].company}</span>
+                  </div>
+                  <span className="bento-duration font-mono">{EXPERIENCE_DATA[1].duration}</span>
+                </div>
+
+                <p className="bento-desc">{EXPERIENCE_DATA[1].desc}</p>
+
+                <div className="bento-tech-strip">
+                  {EXPERIENCE_DATA[1].tech.map(t => (
+                    <span key={t} className="tech-badge">{t}</span>
+                  ))}
+                </div>
+              </motion.div>
             </div>
           </div>
         </div>
@@ -659,66 +1215,158 @@ function App() {
         <div className="container">
           <div className="section-header">
             <span className="section-tag">05. Credentials</span>
-            <h2 className="section-title">Certifications</h2>
+            <h2 className="section-title">Credentials & Certifications</h2>
           </div>
-          <div className="cert-grid">
-            <div className="cert-card glass-card reveal-scale">
-              <div className="cert-icon">🔌</div>
-              <div className="cert-info">
-                <h4>Debugging Techniques for Serial Communications (I2C/SPI/UART)</h4>
-                <span className="cert-issuer">Microchip</span>
-              </div>
-              <span className="cert-year">2025</span>
-            </div>
-            <div className="cert-card glass-card reveal-scale">
-              <div className="cert-icon">⚛️</div>
-              <div className="cert-info">
-                <h4>Learning React</h4>
-                <span className="cert-issuer">Infosys Springboard</span>
-              </div>
-              <span className="cert-year">2025</span>
-            </div>
-            <div className="cert-card glass-card reveal-scale">
-              <div className="cert-icon">☕</div>
-              <div className="cert-info">
-                <h4>Programming with Java</h4>
-                <span className="cert-issuer">NPTEL</span>
-              </div>
-              <span className="cert-year">2025</span>
-            </div>
-            <div className="cert-card glass-card reveal-scale">
-              <div className="cert-icon">🗄️</div>
-              <div className="cert-info">
-                <h4>SQL – Basics (Standard)</h4>
-                <span className="cert-issuer">SkillRack</span>
-              </div>
-              <span className="cert-year">2024</span>
-            </div>
-            <div className="cert-card glass-card reveal-scale">
-              <div className="cert-icon">🧩</div>
-              <div className="cert-info">
-                <h4>Problem Solving (Basics) | SQL (Basics)</h4>
-                <span className="cert-issuer">HackerRank</span>
-              </div>
-              <span className="cert-year">2024</span>
-            </div>
-            <div className="cert-card glass-card reveal-scale">
-              <div className="cert-icon">☕</div>
-              <div className="cert-info">
-                <h4>Java Programming</h4>
-                <span className="cert-issuer">GreatLearning</span>
-              </div>
-              <span className="cert-year">2024</span>
-            </div>
-            <div className="cert-card glass-card reveal-scale">
-              <div className="cert-icon">📊</div>
-              <div className="cert-info">
-                <h4>Mastering Data Structures and Algorithms using C and C++</h4>
-                <span className="cert-issuer">Udemy</span>
-              </div>
-              <span className="cert-year">2024</span>
-            </div>
-          </div>
+
+          {(() => {
+            const CERTS = [
+              { icon: Cpu,         title: 'Learning React',                                        issuer: 'Infosys Springboard', year: '2025', color: '#61dafb', filename: 'cert_react.png' },
+              { icon: Code,        title: 'Programming with Java',                                  issuer: 'NPTEL',               year: '2025', color: '#f89820', filename: 'cert_java_nptel.png' },
+              { icon: Award,       title: 'Problem Solving (Basics) | SQL (Basics)',               issuer: 'HackerRank',          year: '2024', color: '#2ec866', filename: 'cert_hackerrank.png' },
+              { icon: Terminal,    title: 'Java Programming',                                       issuer: 'GreatLearning',       year: '2024', color: '#f89820', filename: 'cert_greatlearning.png' },
+              { icon: Database,    title: 'SQL – Basics (Standard)',                              issuer: 'SkillRack',           year: '2024', color: '#6366f1', filename: 'cert_skillrack.png' },
+              { icon: Layers,      title: 'Mastering Data Structures & Algorithms using C and C++', issuer: 'Udemy',              year: '2024', color: '#a435f0', filename: 'cert_udemy_dsa.png' },
+              { icon: Activity,    title: 'Debugging Techniques for Serial Communications',         issuer: 'Microchip',           year: '2025', color: '#ef4444', filename: 'cert_microchip.png' },
+            ];
+            const total = CERTS.length;
+            const prevCert = () => setActiveCert((p) => (p === 0 ? total - 1 : p - 1));
+            const nextCert = () => setActiveCert((p) => (p === total - 1 ? 0 : p + 1));
+            const activeCertData = CERTS[activeCert];
+            const IconComp = activeCertData.icon;
+
+            return (
+              <>
+                <div className="cert-deck-layout">
+                  {/* Left: Stacked Card Deck */}
+                  <div className="cert-deck-container">
+                    <div className="cert-deck-stack">
+                      {CERTS.map((cert, i) => {
+                        const offset = (i - activeCert + total) % total;
+                        const isActive = offset === 0;
+                        const behind = Math.min(offset, total - offset);
+                        const dir = offset <= total / 2 ? 1 : -1;
+                        const zIdx = 100 - behind;
+                        const scl = Math.max(1 - behind * 0.06, 0.7);
+                        const transY = behind * 12;
+                        const transX = behind === 0 ? 0 : dir * behind * 8;
+                        const opa = behind <= 3 ? 1 - behind * 0.2 : 0;
+
+                        return (
+                          <motion.div
+                            key={i}
+                            className={`cert-stack-card ${isActive ? 'active' : ''}`}
+                            style={{
+                              '--card-brand-glow': cert.color,
+                              zIndex: zIdx,
+                              pointerEvents: isActive ? 'auto' : 'none',
+                            }}
+                            animate={{
+                              scale: scl,
+                              y: transY,
+                              x: transX,
+                              opacity: opa,
+                              rotateZ: behind === 0 ? 0 : dir * behind * 1.5,
+                            }}
+                            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                            onClick={() => isActive && setLightboxImage(cert)}
+                          >
+                            <CertStackImage cert={cert} />
+                          </motion.div>
+                        );
+                      })}
+                    </div>
+
+                    {/* Navigation arrows */}
+                    <div className="cert-deck-nav">
+                      <button className="cert-nav-btn font-mono" onClick={prevCert} aria-label="Previous certificate">
+                        <ChevronRight size={20} style={{ transform: 'rotate(180deg)' }} />
+                      </button>
+                      <span className="cert-counter font-mono">
+                        {String(activeCert + 1).padStart(2, '0')} / {String(total).padStart(2, '0')}
+                      </span>
+                      <button className="cert-nav-btn font-mono" onClick={nextCert} aria-label="Next certificate">
+                        <ChevronRight size={20} />
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Right: Active Certificate Info Panel */}
+                  <motion.div
+                    className="cert-info-panel glass-card"
+                    key={activeCert}
+                    initial={{ opacity: 0, x: 30 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.4 }}
+                    style={{ '--card-brand-glow': activeCertData.color }}
+                  >
+                    <div className="cert-info-top">
+                      <div className="cert-info-icon-circle" style={{ background: `${activeCertData.color}18`, border: `1px solid ${activeCertData.color}40` }}>
+                        <IconComp size={22} style={{ color: activeCertData.color }} />
+                      </div>
+                      <span className="cert-info-year font-mono" style={{ color: activeCertData.color }}>{activeCertData.year}</span>
+                    </div>
+                    <h3 className="cert-info-title">{activeCertData.title}</h3>
+                    <p className="cert-info-issuer font-mono" style={{ color: activeCertData.color }}>{activeCertData.issuer}</p>
+                    <div className="cert-info-divider" style={{ background: `linear-gradient(90deg, ${activeCertData.color}, transparent)` }} />
+                    <div className="cert-info-actions">
+                      <button className="cert-view-btn font-mono" onClick={() => setLightboxImage(activeCertData)} style={{ borderColor: `${activeCertData.color}40`, color: activeCertData.color }}>
+                        VIEW CERTIFICATE
+                      </button>
+                      <span className="verified-pill-lg font-mono">✔ Verified</span>
+                    </div>
+                    <div className="cert-info-dots">
+                      {CERTS.map((_, i) => (
+                        <button
+                          key={i}
+                          className={`cert-dot ${i === activeCert ? 'active' : ''}`}
+                          onClick={() => setActiveCert(i)}
+                          style={i === activeCert ? { background: activeCertData.color, boxShadow: `0 0 8px ${activeCertData.color}` } : {}}
+                        />
+                      ))}
+                    </div>
+                  </motion.div>
+                </div>
+
+                {/* Lightbox Modal overlay */}
+                <AnimatePresence>
+                  {lightboxImage && (
+                    <motion.div
+                      className="lightbox-overlay"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      onClick={() => setLightboxImage(null)}
+                    >
+                      <motion.div
+                        className="lightbox-content"
+                        initial={{ scale: 0.9, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        exit={{ scale: 0.9, opacity: 0 }}
+                        transition={{ type: "spring", damping: 25, stiffness: 200 }}
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <button className="lightbox-close font-mono" onClick={() => setLightboxImage(null)}>
+                          ✕
+                        </button>
+                        <img
+                          src={`/certificates/${lightboxImage.filename}`}
+                          alt={`${lightboxImage.title} Certificate Full Preview`}
+                          className="lightbox-img"
+                          onError={(e) => {
+                            e.target.src = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='800' height='600' viewBox='0 0 800 600'><rect width='100%' height='100%' fill='%230b0f19'/><text x='50%' y='50%' font-family='monospace' font-size='24' fill='%23ef4444' text-anchor='middle'>Certificate Image Not Found</text><text x='50%' y='56%' font-family='monospace' font-size='14' fill='%236b7280' text-anchor='middle'>Place the file in /public/certificates/" + lightboxImage.filename + "</text></svg>";
+                          }}
+                        />
+                        <div className="lightbox-caption">
+                          <h3 className="lightbox-title">{lightboxImage.title}</h3>
+                          <p className="lightbox-subtitle font-mono" style={{ color: lightboxImage.color }}>{lightboxImage.issuer} ({lightboxImage.year})</p>
+                        </div>
+                      </motion.div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </>
+            );
+          })()}
         </div>
       </section>
 
@@ -727,144 +1375,192 @@ function App() {
         <div className="container">
           <div className="section-header">
             <span className="section-tag">06. Achievements</span>
-            <h2 className="section-title">Milestones</h2>
+            <h2 className="section-title">Honors & Achievements</h2>
           </div>
-          <div className="achievements-grid">
-            <div className="achievement-card glass-card reveal-scale">
-              <div className="ach-icon">🏆</div>
-              <div className="ach-body">
-                <h4>Freshathon</h4>
-                <p>Secured <strong>3rd place</strong> at the First-Year Student Project Expo</p>
-              </div>
-            </div>
-            <div className="achievement-card glass-card reveal-scale">
-              <div className="ach-icon">⚡</div>
-              <div className="ach-body">
-                <h4>Innohacks</h4>
-                <p>Cleared <strong>1st round</strong> in hackathon at PSG College of Technology</p>
-              </div>
-            </div>
-            <div className="achievement-card glass-card reveal-scale">
-              <div className="ach-icon">🔥</div>
-              <div className="ach-body">
-                <h4>Hacksagon</h4>
-                <p>Cleared <strong>1st round</strong> in hackathon at ABV-IITM-IEEE (Gwalior)</p>
-              </div>
-            </div>
-            <div className="achievement-card glass-card reveal-scale">
-              <div className="ach-icon">💡</div>
-              <div className="ach-body">
-                <h4>LeetCode</h4>
-                <p>Solved <strong>400+ problems</strong> · Max Rating: 1,603 · Contests: 34</p>
-              </div>
-            </div>
-            <div className="achievement-card glass-card reveal-scale">
-              <div className="ach-icon">🍳</div>
-              <div className="ach-body">
-                <h4>CodeChef</h4>
-                <p>Secured <strong>Highest Rating of 1037</strong></p>
-              </div>
-            </div>
-            <div className="achievement-card glass-card reveal-scale">
-              <div className="ach-icon">⭐</div>
-              <div className="ach-body">
-                <h4>HackerRank</h4>
-                <p>Achieved <strong>1 star in Java</strong> · 1 Badge</p>
-              </div>
-            </div>
-            <div className="achievement-card glass-card reveal-scale">
-              <div className="ach-icon">🎯</div>
-              <div className="ach-body">
-                <h4>SkillRack</h4>
-                <p>Solved <strong>630+ problems</strong> · Received 1 Certificate</p>
-              </div>
-            </div>
+
+          {/* TOP — Competition trophies */}
+          <div className="ach-trophies">
+            {[
+              { icon: Award, title: 'Freshathon', sub: '3rd Place', desc: 'First-Year Student Project Expo', accent: 'var(--accent-1)' },
+              { icon: Cpu, title: 'Innohacks',  sub: 'Round 1 Cleared', desc: 'Hackathon at PSG College of Technology', accent: 'var(--accent-2)' },
+              { icon: Sparkles, title: 'Hacksagon',  sub: 'Round 1 Cleared', desc: 'ABV-IITM-IEEE Hackathon (Gwalior)', accent: '#f97316' },
+            ].map(({ icon: IconComponent, title, sub, desc, accent }, i) => (
+              <motion.div
+                key={i}
+                className="ach-trophy-card glass-card"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: i * 0.12 }}
+                whileHover={{ y: -6, transition: { duration: 0.2 } }}
+                style={{ '--card-accent': accent }}
+              >
+                <div className="ach-trophy-icon">
+                  <IconComponent size={32} style={{ color: accent }} />
+                </div>
+                <p className="ach-trophy-sub" style={{ color: accent }}>{sub}</p>
+                <h4 className="ach-trophy-title">{title}</h4>
+                <p className="ach-trophy-desc">{desc}</p>
+                <div className="ach-trophy-line" style={{ background: accent }} />
+              </motion.div>
+            ))}
+          </div>
+
+          {/* BOTTOM — Coding platform stats */}
+          <div className="ach-platforms">
+            {[
+              { icon: Code, platform: 'LeetCode',   stat: '400+', statLabel: 'Problems Solved', extra: 'Max Rating: 1,603 · Contests: 34',   color: '#f89820' },
+              { icon: CheckCircle, platform: 'SkillRack',  stat: '630+', statLabel: 'Problems Solved', extra: '1 Certificate Earned',                color: '#6366f1' },
+              { icon: Award, platform: 'HackerRank', stat: '1',    statLabel: 'Star in Java',     extra: '1 Badge Earned',                      color: '#2ec866' },
+              { icon: Terminal, platform: 'CodeChef',   stat: '1037', statLabel: 'Highest Rating',   extra: 'Competitive Programming',             color: '#5b4638' },
+            ].map(({ icon: IconComponent, platform, stat, statLabel, extra, color }, i) => (
+              <motion.div
+                key={i}
+                className="ach-platform-card glass-card"
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: i * 0.1 }}
+                whileHover={{ y: -5, transition: { duration: 0.2 } }}
+              >
+                <div className="ach-plat-header">
+                  <span className="ach-plat-icon">
+                    <IconComponent size={16} style={{ color }} />
+                  </span>
+                  <span className="ach-plat-name">{platform}</span>
+                </div>
+                <p className="ach-plat-stat" style={{ color }}>{stat}</p>
+                <p className="ach-plat-stat-label">{statLabel}</p>
+                <p className="ach-plat-extra">{extra}</p>
+                <div className="ach-plat-glow" style={{ background: color }} />
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
 
       {/* Contact Section */}
       <section className="contact section" id="contact">
-        <div className="container">
+        <div className="container" style={{ position: 'relative' }}>
+          <div className="contact-orb orb-1" />
+          <div className="contact-orb orb-2" />
+
           <div className="section-header">
             <span className="section-tag">07. Contact</span>
-            <h2 className="section-title">Get in Touch</h2>
-            <p className="section-sub">I'm currently open to internships, collaborations, and exciting opportunities. Let's build something amazing together!</p>
+            <h2 className="section-title">Let's Work Together</h2>
+            <p className="section-sub">Have a project in mind or want to collaborate? I'd love to hear from you.</p>
           </div>
-          <div className="contact-grid">
-            <div className="contact-info">
-              <div className="contact-card glass-card">
-                <div className="contact-item">
-                  <div className="contact-item-icon"><Mail size={20} /></div>
-                  <div>
-                    <span className="contact-label">Email</span>
-                    <a href="mailto:soujanya.s2023@sece.ac.in" className="contact-value">soujanya.s2023@sece.ac.in</a>
-                  </div>
-                </div>
-                <div className="contact-item">
-                  <div className="contact-item-icon"><Monitor size={20} /></div>
-                  <div>
-                    <span className="contact-label">Phone</span>
-                    <a href="tel:+918610531594" className="contact-value">+91 8610531594</a>
-                  </div>
-                </div>
-                <div className="contact-item">
-                  <div className="contact-item-icon"><Globe size={20} /></div>
-                  <div>
-                    <span className="contact-label">Location</span>
-                    <span className="contact-value">Coimbatore, Tamil Nadu</span>
-                  </div>
-                </div>
-                <div className="contact-socials">
-                  <a href="https://github.com/soujanya-7" target="_blank" rel="noreferrer" className="social-btn">
-                    <Github size={20} /> GitHub
-                  </a>
-                  <a href="https://linkedin.com" target="_blank" rel="noreferrer" className="social-btn">
-                    <Linkedin size={20} /> LinkedIn
-                  </a>
-                </div>
+
+          {/* Contact Info Chips */}
+          <motion.div className="contact-chips-row" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }}>
+            <div className="contact-chip-card">
+              <div className="cchip-icon" style={{ background: 'rgba(124,58,237,0.15)' }}>
+                <Mail size={18} style={{ color: '#8b5cf6' }} />
+              </div>
+              <div className="cchip-text">
+                <span className="cchip-label font-mono">EMAIL</span>
+                <span className="cchip-val">soujanya.s2023@sece.ac.in</span>
+              </div>
+              <button className={`cchip-copy font-mono ${emailCopied ? 'copied' : ''}`} onClick={handleCopyEmail}>
+                {emailCopied ? <><Check size={14} /> Copied</> : 'Copy'}
+              </button>
+            </div>
+            <div className="contact-chip-card">
+              <div className="cchip-icon" style={{ background: 'rgba(6,182,212,0.15)' }}>
+                <Globe size={18} style={{ color: '#06b6d4' }} />
+              </div>
+              <div className="cchip-text">
+                <span className="cchip-label font-mono">LOCATION</span>
+                <span className="cchip-val">Coimbatore, India</span>
               </div>
             </div>
-            <div className="contact-form-wrap">
-              <form className="contact-form glass-card" onSubmit={handleContactSubmit}>
-                <div className="form-group">
-                  <label htmlFor="senderName">Your Name</label>
-                  <input type="text" id="senderName" name="name" placeholder="John Doe" required />
+            <div className="contact-chip-card">
+              <div className="cchip-icon" style={{ background: 'rgba(16,185,129,0.15)' }}>
+                <Clock size={18} style={{ color: '#10b981' }} />
+              </div>
+              <div className="cchip-text">
+                <span className="cchip-label font-mono">LOCAL TIME</span>
+                <span className="cchip-val">{currentTime || '...'} IST</span>
+              </div>
+              <span className="cchip-status font-mono"><span className="cchip-live-dot" />Available</span>
+            </div>
+          </motion.div>
+
+          {/* Centered Form Card */}
+          <motion.div className="contact-form-hero" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.1 }}>
+            {formState === 'idle' && (
+              <form className="hero-form" onSubmit={handleContactSubmit}>
+                <div className="hero-form-row">
+                  <div className="hero-input-group">
+                    <label htmlFor="heroName" className="hero-label font-mono">Your Name</label>
+                    <input type="text" id="heroName" name="name" required placeholder="What should I call you?" autoComplete="off" className="hero-input" />
+                  </div>
+                  <div className="hero-input-group">
+                    <label htmlFor="heroEmail" className="hero-label font-mono">Your Email</label>
+                    <input type="email" id="heroEmail" name="email" required placeholder="Where can I reply?" autoComplete="off" className="hero-input" />
+                  </div>
                 </div>
-                <div className="form-group">
-                  <label htmlFor="senderEmail">Your Email</label>
-                  <input type="email" id="senderEmail" name="email" placeholder="john@example.com" required />
+                <div className="hero-input-group">
+                  <label htmlFor="heroMessage" className="hero-label font-mono">Message</label>
+                  <textarea id="heroMessage" name="message" rows="5" required placeholder="Tell me about your project, idea, or just say hi..." className="hero-input hero-textarea"></textarea>
                 </div>
-                <div className="form-group">
-                  <label htmlFor="messageSubject">Subject</label>
-                  <input type="text" id="messageSubject" name="subject" placeholder="Internship Opportunity..." />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="messageBody">Message</label>
-                  <textarea id="messageBody" name="message" rows="5" placeholder="Hello Soujanya, I'd love to..." required></textarea>
-                </div>
-                <button type="submit" className="btn-primary full-width">
+                <button type="submit" className="hero-submit-btn">
                   <span>Send Message</span>
                   <ChevronRight size={18} />
                 </button>
               </form>
-            </div>
-          </div>
+            )}
+            {formState === 'sending' && (
+              <div className="hero-sending">
+                <div className="hero-spinner" />
+                <h3 className="hero-sending-title">Sending your message...</h3>
+                <p className="hero-sending-sub font-mono">Establishing secure connection</p>
+                <div className="hero-progress"><div className="hero-progress-fill" /></div>
+              </div>
+            )}
+            {formState === 'success' && (
+              <div className="hero-success">
+                <div className="hero-success-icon"><CheckCircle size={56} style={{ color: '#10b981' }} /></div>
+                <h3 className="hero-success-title">Message Sent Successfully!</h3>
+                <p className="hero-success-sub">Thank you for reaching out. I'll get back to you soon.</p>
+                <div className="hero-success-details">
+                  <div className="hsd-item"><span className="hsd-label font-mono">From:</span><span>{formData.name}</span></div>
+                  <div className="hsd-item"><span className="hsd-label font-mono">At:</span><span>{currentTime} IST</span></div>
+                </div>
+                <button className="hero-reset-btn font-mono" onClick={() => setFormState('idle')}>Send Another Message</button>
+              </div>
+            )}
+          </motion.div>
+
+          {/* Social Row */}
+          <motion.div className="contact-social-row" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.2 }}>
+            <a href="https://github.com/soujanya-7" target="_blank" rel="noreferrer" className="csocial-link">
+              <Github size={20} />
+              <span>GitHub</span>
+            </a>
+            <a href="https://linkedin.com" target="_blank" rel="noreferrer" className="csocial-link">
+              <Linkedin size={20} />
+              <span>LinkedIn</span>
+            </a>
+            <a href="mailto:soujanya.s2023@sece.ac.in" className="csocial-link">
+              <Mail size={20} />
+              <span>Email</span>
+            </a>
+          </motion.div>
         </div>
       </section>
-
       <footer className="footer">
         <div className="container">
           <div className="footer-inner">
             <div className="footer-logo">
-              <span className="logo-bracket">&lt;</span>
-              <span className="logo-name">Soujanya S</span>
-              <span className="logo-bracket">/&gt;</span>
+              <div className="logo-container sm">
+                <img src={logo} alt="S Logo" className="logo-img-sm" />
+                <span className="logo-tm">TM</span>
+              </div>
             </div>
             <p className="footer-copy">Designed & Built with ❤️ by Soujanya S · 2026</p>
             <div className="footer-nav">
               <a href="#home" onClick={(e) => { e.preventDefault(); handleNavClick('home'); }}>Home</a>
-              <a href="#about" onClick={(e) => { e.preventDefault(); handleNavClick('about'); }}>About</a>
               <a href="#projects" onClick={(e) => { e.preventDefault(); handleNavClick('projects'); }}>Projects</a>
               <a href="#contact" onClick={(e) => { e.preventDefault(); handleNavClick('contact'); }}>Contact</a>
             </div>

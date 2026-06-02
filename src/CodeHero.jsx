@@ -58,12 +58,16 @@ export default function CodeHero({ onNavigate }) {
           transition={{ duration: 0.8 }}
         >
 
+          <div className="ch-badge reveal-scale">
+            <span className="ch-pulse-dot"></span>
+            Hi! 👋 My name is Soujanya S
+          </div>
           <h1 className="ch-title">
-            I turn <span className="shimmer-text">Ideas</span> into<br />
-            working reality.
+            <span className="shimmer-text">Fullstack</span> Developer & <br />
+            <span style={{ color: 'var(--accent-1)' }}>IoT</span> Engineer
           </h1>
           <p className="ch-desc">
-            Bridging the gap between hardware and software. I build smart systems, responsive apps, and everything in between.
+            I build bridges between the digital and physical worlds. From responsive web apps to smart IoT systems, I'm all about creating technology that feels seamless and intuitive.
           </p>
 
           {isTypingComplete && (
@@ -73,13 +77,8 @@ export default function CodeHero({ onNavigate }) {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
             >
-              <button className="btn-primary" onClick={() => onNavigate('projects')}>
-                <Terminal size={18} style={{ marginRight: '8px' }} />
-                Execute Project
-                <ChevronRight size={18} style={{ marginLeft: '4px' }} />
-              </button>
-              <button className="btn-secondary" onClick={() => onNavigate('contact')}>
-                Initialize Contact
+              <button className="btn-primary" onClick={() => onNavigate('contact')}>
+                Hire Me &gt;
               </button>
             </motion.div>
           )}
