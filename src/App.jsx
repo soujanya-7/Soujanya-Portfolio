@@ -398,18 +398,28 @@ function CertificateCard({ cert, index, onPreview }) {
   );
 }
 
-function CertStackImage({ cert }) {
+function CertGridCard({ cert, onView }) {
   const [imgOk, setImgOk] = useState(true);
   const IconComp = cert.icon;
   return (
-    <div className="cert-stack-inner">
+    <motion.div 
+      className="cert-grid-card"
+      style={{ '--card-brand-glow': cert.color }}
+      whileHover={{ y: -6 }}
+      transition={{ duration: 0.3 }}
+    >
       {imgOk ? (
-        <img
-          src={`/certificates/${cert.filename}`}
-          alt={`${cert.title} Certificate`}
-          className="cert-stack-img"
-          onError={() => setImgOk(false)}
-        />
+        <div className="cert-grid-card-image-wrap" onClick={() => onView(cert)}>
+          <img
+            src={`/certificates/${cert.filename}`}
+            alt={`${cert.title} Certificate`}
+            className="cert-grid-card-img"
+            onError={() => setImgOk(false)}
+          />
+          <div className="cert-grid-card-img-hover">
+            <span className="font-mono">VIEW CREDENTIAL</span>
+          </div>
+        </div>
       ) : (
         <div className="cert-stack-fallback" style={{ '--cert-color': cert.color }}>
           {/* Tech Style Corner Lines */}
@@ -429,11 +439,20 @@ function CertStackImage({ cert }) {
           </div>
           
           <div className="cert-card-body">
-            <div className="cert-card-subtitle font-mono">VERIFIED CREDENTIAL</div>
+            <div className="cert-card-subtitle font-mono" style={{ color: cert.color }}>VERIFIED CREDENTIAL</div>
             <h4 className="cert-card-title">{cert.title}</h4>
             <div className="cert-card-recipient">
               <span>Awarded to:</span> <strong>Soujanya S</strong>
             </div>
+            {cert.skills && (
+              <div className="cert-skills-list">
+                {cert.skills.map((skill, k) => (
+                  <span key={k} className="cert-skill-tag font-mono" style={{ '--tag-glow': cert.color }}>
+                    {skill}
+                  </span>
+                ))}
+              </div>
+            )}
           </div>
           
           <div className="cert-card-footer">
@@ -442,15 +461,20 @@ function CertStackImage({ cert }) {
               <div className="meta-val font-mono">{cert.year}</div>
             </div>
             
-            <div className="cert-card-stamp" style={{ borderColor: `${cert.color}35` }}>
-              <div className="stamp-inner" style={{ background: `${cert.color}12` }}>
-                <Award size={16} style={{ color: cert.color }} />
-              </div>
+            <div className="cert-card-actions">
+              <button 
+                className="cert-view-btn font-mono" 
+                onClick={(e) => { e.stopPropagation(); onView(cert); }}
+                style={{ borderColor: `${cert.color}40`, color: cert.color }}
+              >
+                VIEW
+              </button>
+              <span className="verified-pill-lg font-mono">✔ Verified</span>
             </div>
           </div>
         </div>
       )}
-    </div>
+    </motion.div>
   );
 }
 
@@ -470,7 +494,6 @@ function App() {
     setActiveProject((prev) => (prev === PROJECTS_DATA.length - 1 ? 0 : prev + 1));
   };
   const [lightboxImage, setLightboxImage] = useState(null);
-  const [activeCert, setActiveCert] = useState(0);
   const [formState, setFormState] = useState('idle');
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
   const [emailCopied, setEmailCopied] = useState(false);
@@ -1243,114 +1266,12 @@ function App() {
               { icon: Layers,      title: 'Mastering Data Structures & Algorithms using C and C++', issuer: 'Udemy',              year: '2024', color: '#a435f0', filename: 'cert_udemy_dsa.png', skills: ['Data Structures', 'C/C++', 'Time Complexity', 'Recursion'] },
               { icon: Activity,    title: 'Debugging Techniques for Serial Communications',         issuer: 'Microchip',           year: '2025', color: '#ef4444', filename: 'cert_microchip.png', skills: ['Serial Protocols', 'Debugging', 'Hardware/Firmware', 'UART/SPI'] },
             ];
-            const total = CERTS.length;
-            const prevCert = () => setActiveCert((p) => (p === 0 ? total - 1 : p - 1));
-            const nextCert = () => setActiveCert((p) => (p === total - 1 ? 0 : p + 1));
-            const activeCertData = CERTS[activeCert];
-            const IconComp = activeCertData.icon;
-
             return (
               <>
-                <div className="cert-deck-layout">
-                  {/* Left: Stacked Card Deck */}
-                  <div className="cert-deck-container">
-                    <div className="cert-deck-stack">
-                      {CERTS.map((cert, i) => {
-                        const offset = (i - activeCert + total) % total;
-                        const isActive = offset === 0;
-                        const behind = Math.min(offset, total - offset);
-                        const dir = offset <= total / 2 ? 1 : -1;
-                        const zIdx = 100 - behind;
-                        const scl = Math.max(1 - behind * 0.06, 0.7);
-                        const transY = behind * 12;
-                        const transX = behind === 0 ? 0 : dir * behind * 8;
-                        const opa = behind <= 3 ? 1 - behind * 0.2 : 0;
-
-                        return (
-                          <motion.div
-                            key={i}
-                            className={`cert-stack-card ${isActive ? 'active' : ''}`}
-                            style={{
-                              '--card-brand-glow': cert.color,
-                              zIndex: zIdx,
-                              pointerEvents: isActive ? 'auto' : 'none',
-                            }}
-                            animate={{
-                              scale: scl,
-                              y: transY,
-                              x: transX,
-                              opacity: opa,
-                              rotateZ: behind === 0 ? 0 : dir * behind * 1.5,
-                            }}
-                            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-                            onClick={() => isActive && setLightboxImage(cert)}
-                          >
-                            <CertStackImage cert={cert} />
-                          </motion.div>
-                        );
-                      })}
-                    </div>
-
-                    {/* Navigation arrows */}
-                    <div className="cert-deck-nav">
-                      <button className="cert-nav-btn font-mono" onClick={prevCert} aria-label="Previous certificate">
-                        <ChevronRight size={20} style={{ transform: 'rotate(180deg)' }} />
-                      </button>
-                      <span className="cert-counter font-mono">
-                        {String(activeCert + 1).padStart(2, '0')} / {String(total).padStart(2, '0')}
-                      </span>
-                      <button className="cert-nav-btn font-mono" onClick={nextCert} aria-label="Next certificate">
-                        <ChevronRight size={20} />
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Right: Active Certificate Info Panel */}
-                  <motion.div
-                    className="cert-info-panel glass-card"
-                    key={activeCert}
-                    initial={{ opacity: 0, x: 30 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.4 }}
-                    style={{ '--card-brand-glow': activeCertData.color }}
-                  >
-                    <div className="cert-info-top">
-                      <div className="cert-info-icon-circle" style={{ background: `${activeCertData.color}18`, border: `1px solid ${activeCertData.color}40` }}>
-                        <IconComp size={22} style={{ color: activeCertData.color }} />
-                      </div>
-                      <span className="cert-info-year font-mono" style={{ color: activeCertData.color }}>{activeCertData.year}</span>
-                    </div>
-                    <h3 className="cert-info-title">{activeCertData.title}</h3>
-                    <p className="cert-info-issuer font-mono" style={{ color: activeCertData.color }}>{activeCertData.issuer}</p>
-                    <div className="cert-info-divider" style={{ background: `linear-gradient(90deg, ${activeCertData.color}, transparent)` }} />
-                    
-                    {/* Skills list tags */}
-                    {activeCertData.skills && (
-                      <div className="cert-skills-list">
-                        {activeCertData.skills.map((skill, k) => (
-                          <span key={k} className="cert-skill-tag font-mono" style={{ '--tag-glow': activeCertData.color }}>
-                            {skill}
-                          </span>
-                        ))}
-                      </div>
-                    )}
-                    <div className="cert-info-actions">
-                      <button className="cert-view-btn font-mono" onClick={() => setLightboxImage(activeCertData)} style={{ borderColor: `${activeCertData.color}40`, color: activeCertData.color }}>
-                        VIEW CERTIFICATE
-                      </button>
-                      <span className="verified-pill-lg font-mono">✔ Verified</span>
-                    </div>
-                    <div className="cert-info-dots">
-                      {CERTS.map((_, i) => (
-                        <button
-                          key={i}
-                          className={`cert-dot ${i === activeCert ? 'active' : ''}`}
-                          onClick={() => setActiveCert(i)}
-                          style={i === activeCert ? { background: activeCertData.color, boxShadow: `0 0 8px ${activeCertData.color}` } : {}}
-                        />
-                      ))}
-                    </div>
-                  </motion.div>
+                <div className="cert-grid-layout">
+                  {CERTS.map((cert, i) => (
+                    <CertGridCard key={i} cert={cert} onView={setLightboxImage} />
+                  ))}
                 </div>
 
                 {/* Lightbox Modal overlay */}
