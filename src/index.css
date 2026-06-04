@@ -1589,12 +1589,17 @@ img { max-width: 100%; display: block; }
 }
 
 /* Specific bento configurations */
-.bento-card.tall {
+.bento-card-wrapper {
+  width: 100%;
+  height: 100%;
+}
+
+.bento-card.tall, .bento-card-wrapper.tall {
   grid-column: 1;
   grid-row: 1 / 3;
 }
 
-.bento-card.wide {
+.bento-card.wide, .bento-card-wrapper.wide {
   grid-column: 2 / 4;
   grid-row: 2;
 }
@@ -1768,14 +1773,18 @@ img { max-width: 100%; display: block; }
     grid-template-columns: repeat(2, 1fr);
     grid-auto-rows: minmax(170px, auto);
   }
-  .bento-card.tall {
+  .bento-card.tall, .bento-card-wrapper.tall {
     grid-column: span 1;
     grid-row: span 1;
+  }
+  .bento-card.wide, .bento-card-wrapper.wide {
+    grid-column: span 2;
+    grid-row: span 1;
+  }
+  .bento-card.tall {
     aspect-ratio: 16 / 11;
   }
   .bento-card.wide {
-    grid-column: span 2;
-    grid-row: span 1;
     aspect-ratio: auto;
   }
   .bento-trophy-content {
@@ -1793,7 +1802,7 @@ img { max-width: 100%; display: block; }
     grid-auto-rows: auto;
     gap: 1rem;
   }
-  .bento-card.wide {
+  .bento-card.wide, .bento-card-wrapper.wide {
     grid-column: span 1;
   }
   .bento-card {

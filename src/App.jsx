@@ -1404,12 +1404,11 @@ function App() {
           <div className="achievements-bento-grid">
             {/* 1. Freshathon (Tall: Col 1, Spans 2 Rows) */}
             <motion.div
-              className="tall"
+              className="bento-card-wrapper tall"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5 }}
-              style={{ width: '100%', height: '100%' }}
             >
               <Tilt
                 className="bento-card tall gold-theme"
@@ -1445,11 +1444,11 @@ function App() {
 
             {/* 2. Innohacks (Col 2, Row 1) */}
             <motion.div
+              className="bento-card-wrapper"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.1 }}
-              style={{ width: '100%', height: '100%' }}
             >
               <Tilt
                 className="bento-card cyan-theme"
@@ -1483,11 +1482,11 @@ function App() {
 
             {/* 3. Hacksagon (Col 3, Row 1) */}
             <motion.div
+              className="bento-card-wrapper"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.2 }}
-              style={{ width: '100%', height: '100%' }}
             >
               <Tilt
                 className="bento-card orange-theme"
@@ -1521,12 +1520,11 @@ function App() {
 
             {/* 4. LeetCode (Wide: Col 2 & 3, Row 2) */}
             <motion.div
-              className="wide"
+              className="bento-card-wrapper wide"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.15 }}
-              style={{ width: '100%', height: '100%' }}
             >
               <Tilt
                 className="bento-card wide leetcode-theme"
@@ -1582,11 +1580,11 @@ function App() {
 
             {/* 5. SkillRack (Col 1, Row 3) */}
             <motion.div
+              className="bento-card-wrapper"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.2 }}
-              style={{ width: '100%', height: '100%' }}
             >
               <Tilt
                 className="bento-card indigo-theme"
@@ -1620,11 +1618,11 @@ function App() {
 
             {/* 6. HackerRank (Col 2, Row 3) */}
             <motion.div
+              className="bento-card-wrapper"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.25 }}
-              style={{ width: '100%', height: '100%' }}
             >
               <Tilt
                 className="bento-card green-theme"
@@ -1658,11 +1656,11 @@ function App() {
 
             {/* 7. CodeChef (Col 3, Row 3) */}
             <motion.div
+              className="bento-card-wrapper"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.3 }}
-              style={{ width: '100%', height: '100%' }}
             >
               <Tilt
                 className="bento-card brown-theme"
