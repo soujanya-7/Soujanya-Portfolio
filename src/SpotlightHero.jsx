@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import soujanyaPhoto from './assets/soujanya.png';
+import ShinyText from './components/animations/ShinyText';
 
 /* ── Animated Split Text ── */
 function SplitText({ text, className, delay = 0 }) {
@@ -118,11 +119,11 @@ export default function SpotlightHero({ onNavigate }) {
             transition={{ duration: 0.7, delay: 1.4 }}
           >
             <button className="btn-glow" onClick={() => onNavigate('projects')}>
-              View My Work
+              <ShinyText speed="3s">View My Work</ShinyText>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
             </button>
             <button className="btn-outline-hero" onClick={() => onNavigate('contact')}>
-              Contact Me
+              <ShinyText color="#7c3aed" speed="3s">Contact Me</ShinyText>
             </button>
           </motion.div>
         </div>

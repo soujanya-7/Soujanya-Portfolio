@@ -4,7 +4,10 @@ import Tilt from 'react-parallax-tilt';
 import CodeHero from './CodeHero';
 import SpotlightHero from './SpotlightHero';
 import soujanyaPhoto from './assets/soujanya.png';
-import logo from './assets/logo.png';
+import ShinyText from './components/animations/ShinyText';
+import Magnet from './components/animations/Magnet';
+import ParticlesBackground from './components/animations/ParticlesBackground';
+
 import { 
   Mail, ChevronRight, Award,
   Code, Globe, Layout, Database, Blocks, Terminal, Edit3, Monitor, CheckCircle, Shield,
@@ -203,20 +206,22 @@ const SKILLS_DATA = [
 /* ── Experience Dataset ── */
 const EXPERIENCE_DATA = [
   {
+    role: "MERN Stack Developer Intern",
+    company: "Better Tomorrow",
+    duration: "May 2025 - Completed",
+    desc: "Engineered robust full-stack applications using the MERN stack (MongoDB, Express, React, Node.js). Designed secure RESTful APIs to bridge the frontend and backend architectures for seamless data flow.",
+    tech: ["MongoDB", "Express", "React.js", "Node.js"],
+    color: "var(--accent-2)",
+    icon: "BT"
+  },
+  {
     role: "Web Development Intern",
     company: "PropelFoundry",
     duration: "Jan 2025 - Apr 2025",
-    desc: "Developed and maintained the company's official website, improving overall online presence and user engagement. Worked on designing responsive and clean user interfaces.",
-    tech: ["HTML", "CSS", "React.js"],
-    color: "var(--accent-1)"
-  },
-  {
-    role: "MERN Stack Developer Intern",
-    company: "Better Tomorrow",
-    duration: "May 2025 - Present",
-    desc: "Developed projects using the MERN stack (MongoDB, Express, React, Node.js). Designed and implemented APIs to connect frontend and backend seamlessly.",
-    tech: ["MongoDB", "Node.js", "React.js"],
-    color: "var(--accent-2)"
+    desc: "Spearheaded the development and maintenance of the official company website. Overhauled the UI/UX design to build highly responsive, clean, and engaging user interfaces that boosted online presence.",
+    tech: ["HTML5", "CSS3", "React.js"],
+    color: "var(--accent-1)",
+    icon: "PF"
   }
 ];
 
@@ -780,9 +785,10 @@ function App() {
 
       <nav className={`navbar ${scrolled ? 'scrolled' : ''}`} id="navbar">
         <div className="nav-logo" onClick={() => handleNavClick('home')}>
-          <div className="logo-container">
-            <img src={logo} alt="S Logo" className="logo-img" />
-            <span className="logo-tm">TM</span>
+          <div className="text-logo">
+            <span className="logo-brace">&lt;</span>
+            <span className="logo-name">Soujanya</span>
+            <span className="logo-brace">/&gt;</span>
           </div>
          </div>
         <div className={`nav-links ${navOpen ? 'open' : ''}`} id="navLinks">
@@ -798,7 +804,7 @@ function App() {
           ))}
         </div>
         <div className="nav-actions">
-          <Magnetic><a href="mailto:soujanya.s2023@sece.ac.in" className="btn-hire">Hire Me</a></Magnetic>
+          <Magnetic><a href="mailto:soujanya.s2023@sece.ac.in" className="btn-hire"><ShinyText speed="3s">Hire Me</ShinyText></a></Magnetic>
           <button className="nav-toggle" id="navToggle" onClick={() => setNavOpen(!navOpen)}>
             <span style={{ transform: navOpen ? 'rotate(45deg) translate(5px,5px)' : '' }}></span>
             <span style={{ opacity: navOpen ? '0' : '1' }}></span>
@@ -1121,91 +1127,50 @@ function App() {
         </div>
       </section>
 
-
       {/* Experience Section */}
       <section className="experience section" id="experience">
         <div className="container">
           <div className="section-header">
-            <span className="section-tag">04. Experience</span>
+            <span className="section-tag">04. Internships</span>
             <h2 className="section-title">Professional Experience</h2>
           </div>
 
-          <div className="experience-horizontal-timeline">
-            {/* The Timeline Track Line */}
-            <div className="timeline-track-wrapper">
-              <div className="timeline-horizontal-line">
-                <div className="timeline-horizontal-progress" />
-              </div>
-              
-              <div className="timeline-nodes-container">
-                {/* Node 1: PropelFoundry */}
-                <div className="timeline-node-item active" style={{ '--node-color': 'var(--accent-1)' }}>
-                  <span className="node-date font-mono">Jan 2025</span>
-                  <span className="node-dot" />
-                  <span className="node-company font-mono">PropelFoundry</span>
-                </div>
-                
-                {/* Node 2: Better Tomorrow */}
-                <div className="timeline-node-item active pulse-node" style={{ '--node-color': 'var(--accent-2)' }}>
-                  <span className="node-date font-mono">May 2025</span>
-                  <span className="node-dot" />
-                  <span className="node-company font-mono">Better Tomorrow</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Symmetrical Cards Grid */}
-            <div className="timeline-cards-grid">
-              {/* Card 1: PropelFoundry Details */}
+          <div className="exp-dual-grid">
+            {EXPERIENCE_DATA.map((exp, i) => (
               <motion.div 
-                className="timeline-horizontal-card pf-glow"
+                key={i}
+                className="exp-dual-card"
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.5 }}
+                transition={{ duration: 0.5, delay: i * 0.2 }}
+                style={{ '--exp-color': exp.color }}
               >
-                <div className="bento-card-header">
-                  <div className="role-company">
-                    <h3 className="bento-role">{EXPERIENCE_DATA[0].role}</h3>
-                    <span className="bento-company font-mono">@ {EXPERIENCE_DATA[0].company}</span>
+                <div className="exp-dual-bg-glow" />
+                <div className="exp-dual-content">
+                  <div className="exp-dual-top">
+                    <div className="exp-dual-logo font-mono">{exp.icon}</div>
+                    <div className="exp-dual-status">
+                      <CheckCircle size={16} /> Completed
+                    </div>
                   </div>
-                  <span className="bento-duration font-mono">{EXPERIENCE_DATA[0].duration}</span>
-                </div>
+                  
+                  <div className="exp-dual-main">
+                    <h3 className="exp-dual-role">{exp.role}</h3>
+                    <div className="exp-dual-company font-mono">@ {exp.company}</div>
+                    <div className="exp-dual-duration">{exp.duration}</div>
+                  </div>
 
-                <p className="bento-desc">{EXPERIENCE_DATA[0].desc}</p>
+                  <p className="exp-dual-desc">{exp.desc}</p>
 
-                <div className="bento-tech-strip">
-                  {EXPERIENCE_DATA[0].tech.map(t => (
-                    <span key={t} className="tech-badge">{t}</span>
-                  ))}
+                  <div className="exp-dual-tech">
+                    {exp.tech.map((t, j) => (
+                      <span key={j} className="dual-tech-badge font-mono">{t}</span>
+                    ))}
+                  </div>
                 </div>
               </motion.div>
-
-              {/* Card 2: Better Tomorrow Details */}
-              <motion.div 
-                className="timeline-horizontal-card bt-glow"
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.2 }}
-              >
-                <div className="bento-card-header">
-                  <div className="role-company">
-                    <h3 className="bento-role">{EXPERIENCE_DATA[1].role}</h3>
-                    <span className="bento-company font-mono">@ {EXPERIENCE_DATA[1].company}</span>
-                  </div>
-                  <span className="bento-duration font-mono">{EXPERIENCE_DATA[1].duration}</span>
-                </div>
-
-                <p className="bento-desc">{EXPERIENCE_DATA[1].desc}</p>
-
-                <div className="bento-tech-strip">
-                  {EXPERIENCE_DATA[1].tech.map(t => (
-                    <span key={t} className="tech-badge">{t}</span>
-                  ))}
-                </div>
-              </motion.div>
-            </div>
+            ))}
           </div>
         </div>
       </section>
@@ -1378,8 +1343,8 @@ function App() {
             <h2 className="section-title">Honors & Achievements</h2>
           </div>
 
-          {/* TOP — Competition trophies */}
-          <div className="ach-trophies">
+          {/* Trophies Row - 3 Columns */}
+          <div className="ach-holo-grid trophies-row">
             {[
               { icon: Award, title: 'Freshathon', sub: '3rd Place', desc: 'First-Year Student Project Expo', accent: 'var(--accent-1)' },
               { icon: Cpu, title: 'Innohacks',  sub: 'Round 1 Cleared', desc: 'Hackathon at PSG College of Technology', accent: 'var(--accent-2)' },
@@ -1387,52 +1352,61 @@ function App() {
             ].map(({ icon: IconComponent, title, sub, desc, accent }, i) => (
               <motion.div
                 key={i}
-                className="ach-trophy-card glass-card"
+                className="holo-card"
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.12 }}
-                whileHover={{ y: -6, transition: { duration: 0.2 } }}
+                transition={{ duration: 0.5, delay: i * 0.15 }}
                 style={{ '--card-accent': accent }}
               >
-                <div className="ach-trophy-icon">
-                  <IconComponent size={32} style={{ color: accent }} />
+                <div className="holo-card-inner">
+                  <div className="holo-bg" />
+                  <div className="holo-content">
+                    <div className="holo-icon-wrapper" style={{ background: `linear-gradient(135deg, ${accent}22, transparent)` }}>
+                      <IconComponent size={28} style={{ color: accent }} />
+                    </div>
+                    <span className="holo-sub font-mono" style={{ color: accent }}>{sub}</span>
+                    <h4 className="holo-title">{title}</h4>
+                    <p className="holo-desc">{desc}</p>
+                  </div>
                 </div>
-                <p className="ach-trophy-sub" style={{ color: accent }}>{sub}</p>
-                <h4 className="ach-trophy-title">{title}</h4>
-                <p className="ach-trophy-desc">{desc}</p>
-                <div className="ach-trophy-line" style={{ background: accent }} />
               </motion.div>
             ))}
           </div>
 
-          {/* BOTTOM — Coding platform stats */}
-          <div className="ach-platforms">
+          {/* Platforms Row - 4 Columns */}
+          <div className="ach-holo-grid platforms-row">
             {[
               { icon: Code, platform: 'LeetCode',   stat: '400+', statLabel: 'Problems Solved', extra: 'Max Rating: 1,603 · Contests: 34',   color: '#f89820' },
               { icon: CheckCircle, platform: 'SkillRack',  stat: '630+', statLabel: 'Problems Solved', extra: '1 Certificate Earned',                color: '#6366f1' },
-              { icon: Award, platform: 'HackerRank', stat: '1',    statLabel: 'Star in Java',     extra: '1 Badge Earned',                      color: '#2ec866' },
+              { icon: Award, platform: 'HackerRank', stat: '1 Star',    statLabel: 'in Java',     extra: '1 Badge Earned',                      color: '#2ec866' },
               { icon: Terminal, platform: 'CodeChef',   stat: '1037', statLabel: 'Highest Rating',   extra: 'Competitive Programming',             color: '#5b4638' },
             ].map(({ icon: IconComponent, platform, stat, statLabel, extra, color }, i) => (
               <motion.div
                 key={i}
-                className="ach-platform-card glass-card"
+                className="holo-card stat-card"
                 initial={{ opacity: 0, scale: 0.9 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.4, delay: i * 0.1 }}
-                whileHover={{ y: -5, transition: { duration: 0.2 } }}
+                style={{ '--card-accent': color }}
               >
-                <div className="ach-plat-header">
-                  <span className="ach-plat-icon">
-                    <IconComponent size={16} style={{ color }} />
-                  </span>
-                  <span className="ach-plat-name">{platform}</span>
+                <div className="holo-card-inner">
+                  <div className="holo-bg" />
+                  <div className="holo-content center-align">
+                    <div className="holo-icon-wrapper small" style={{ background: `linear-gradient(135deg, ${color}22, transparent)` }}>
+                      <IconComponent size={20} style={{ color }} />
+                    </div>
+                    <span className="holo-platform font-mono">{platform}</span>
+                    <div className="holo-stat-block">
+                      <h3 className="holo-stat" style={{ color }}>{stat}</h3>
+                      <p className="holo-stat-label">{statLabel}</p>
+                    </div>
+                    <div className="holo-extra-pill" style={{ borderColor: `${color}33`, color: 'var(--text-muted)' }}>
+                      {extra}
+                    </div>
+                  </div>
                 </div>
-                <p className="ach-plat-stat" style={{ color }}>{stat}</p>
-                <p className="ach-plat-stat-label">{statLabel}</p>
-                <p className="ach-plat-extra">{extra}</p>
-                <div className="ach-plat-glow" style={{ background: color }} />
               </motion.div>
             ))}
           </div>
@@ -1441,8 +1415,8 @@ function App() {
 
       {/* Contact Section */}
       <section className="contact section" id="contact">
+        <ParticlesBackground count={30} speed={0.3} color="rgba(124, 58, 237, 0.4)" />
         <div className="container" style={{ position: 'relative' }}>
-          <div className="contact-orb orb-1" />
           <div className="contact-orb orb-2" />
 
           <div className="section-header">
@@ -1505,7 +1479,7 @@ function App() {
                   <textarea id="heroMessage" name="message" rows="5" required placeholder="Tell me about your project, idea, or just say hi..." className="hero-input hero-textarea"></textarea>
                 </div>
                 <button type="submit" className="hero-submit-btn">
-                  <span>Send Message</span>
+                  <span><ShinyText speed="2.5s">Send Message</ShinyText></span>
                   <ChevronRight size={18} />
                 </button>
               </form>
@@ -1534,18 +1508,24 @@ function App() {
 
           {/* Social Row */}
           <motion.div className="contact-social-row" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.2 }}>
-            <a href="https://github.com/soujanya-7" target="_blank" rel="noreferrer" className="csocial-link">
-              <Github size={20} />
-              <span>GitHub</span>
-            </a>
-            <a href="https://linkedin.com" target="_blank" rel="noreferrer" className="csocial-link">
-              <Linkedin size={20} />
-              <span>LinkedIn</span>
-            </a>
-            <a href="mailto:soujanya.s2023@sece.ac.in" className="csocial-link">
-              <Mail size={20} />
-              <span>Email</span>
-            </a>
+            <Magnet padding={20}>
+              <a href="https://github.com/soujanya-7" target="_blank" rel="noreferrer" className="csocial-link">
+                <Github size={20} />
+                <span>GitHub</span>
+              </a>
+            </Magnet>
+            <Magnet padding={20}>
+              <a href="https://linkedin.com" target="_blank" rel="noreferrer" className="csocial-link">
+                <Linkedin size={20} />
+                <span>LinkedIn</span>
+              </a>
+            </Magnet>
+            <Magnet padding={20}>
+              <a href="mailto:soujanya.s2023@sece.ac.in" className="csocial-link">
+                <Mail size={20} />
+                <span>Email</span>
+              </a>
+            </Magnet>
           </motion.div>
         </div>
       </section>
@@ -1553,9 +1533,10 @@ function App() {
         <div className="container">
           <div className="footer-inner">
             <div className="footer-logo">
-              <div className="logo-container sm">
-                <img src={logo} alt="S Logo" className="logo-img-sm" />
-                <span className="logo-tm">TM</span>
+              <div className="text-logo sm">
+                <span className="logo-brace">&lt;</span>
+                <span className="logo-name">Soujanya</span>
+                <span className="logo-brace">/&gt;</span>
               </div>
             </div>
             <p className="footer-copy">Designed & Built with ❤️ by Soujanya S · 2026</p>
