@@ -24,9 +24,9 @@ const PROJECTS_DATA = [
     tech: ["Next.js", "React.js", "Firebase", "WebSockets"],
     status: "Active",
     statusColor: "#3b82f6",
-    url: "https://auravue.health.dev",
-    github: "https://github.com/soujanya-s",
-    demo: "#",
+    url: "https://auravue-c8b99.web.app/",
+    github: "https://github.com/soujanya-7/auravue-frontend.git",
+    demo: "https://auravue-c8b99.web.app/",
     highlights: [
       "Aggregates vital health metrics via responsive, multi-tier panels",
       "Executes real-time anomaly detection triggers for rapid alert routing",
