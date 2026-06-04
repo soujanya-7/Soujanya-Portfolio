@@ -1264,7 +1264,6 @@ function App() {
               { icon: Terminal,    title: 'Java Programming',                                       issuer: 'GreatLearning',       year: '2024', color: '#f89820', filename: 'cert_greatlearning.png', skills: ['Java Basics', 'Variables', 'Control Flow', 'Methods'] },
               { icon: Database,    title: 'SQL – Basics (Standard)',                              issuer: 'SkillRack',           year: '2024', color: '#6366f1', filename: 'cert_skillrack.png', skills: ['Database Joins', 'Grouping', 'SQL Schema', 'Indexing'] },
               { icon: Layers,      title: 'Mastering Data Structures & Algorithms using C and C++', issuer: 'Udemy',              year: '2024', color: '#a435f0', filename: 'cert_udemy_dsa.png', skills: ['Data Structures', 'C/C++', 'Time Complexity', 'Recursion'] },
-              { icon: Activity,    title: 'Debugging Techniques for Serial Communications',         issuer: 'Microchip',           year: '2025', color: '#ef4444', filename: 'cert_microchip.png', skills: ['Serial Protocols', 'Debugging', 'Hardware/Firmware', 'UART/SPI'] },
             ];
             return (
               <>
