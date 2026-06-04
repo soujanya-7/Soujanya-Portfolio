@@ -635,16 +635,15 @@ img { max-width: 100%; display: block; }
 
 .exp-dual-bg-glow {
   position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 200px;
-  background: radial-gradient(circle at 50% 0%, var(--exp-color), transparent 70%);
-  opacity: 0.08;
+  inset: 0;
+  background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), color-mix(in srgb, var(--exp-color) 12%, transparent), transparent 70%);
+  opacity: 0;
   transition: opacity 0.4s ease;
   pointer-events: none;
 }
 
 .exp-dual-card:hover .exp-dual-bg-glow {
-  opacity: 0.15;
+  opacity: 1;
 }
 
 .exp-dual-content {
@@ -5125,4 +5124,33 @@ img { max-width: 100%; display: block; }
     height: 320px;
     margin: 0 auto;
   }
+}
+
+/* ============================================================
+   GLOBAL SCROLL & SPOTLIGHT GLOW ANIMATIONS
+   ============================================================ */
+.scroll-progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: var(--grad-main);
+  z-index: 9999;
+  box-shadow: 0 0 10px rgba(124, 58, 237, 0.4);
+  transition: width 0.1s ease-out;
+}
+
+.skills-card-glow, .cert-grid-card-glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), color-mix(in srgb, var(--card-accent, var(--card-brand-glow)) 12%, transparent), transparent 70%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.skills-category-card:hover .skills-card-glow,
+.cert-grid-card:hover .cert-grid-card-glow {
+  opacity: 1;
 }

@@ -406,8 +406,10 @@ function CertGridCard({ cert, onView }) {
       className="cert-grid-card"
       style={{ '--card-brand-glow': cert.color }}
       whileHover={{ y: -6 }}
+      onMouseMove={handleMouseMove}
       transition={{ duration: 0.3 }}
     >
+      <div className="cert-grid-card-glow" />
       {imgOk ? (
         <div className="cert-grid-card-image-wrap" onClick={() => onView(cert)}>
           <img
@@ -478,9 +480,29 @@ function CertGridCard({ cert, onView }) {
   );
 }
 
+const handleMouseMove = (e) => {
+  const rect = e.currentTarget.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
+  e.currentTarget.style.setProperty('--mouse-x', `${x}px`);
+  e.currentTarget.style.setProperty('--mouse-y', `${y}px`);
+};
+
 function App() {
   const [loading, setLoading] = useState(true);
   const [loaderProgress, setLoaderProgress] = useState(0);
+  const [scrollProgress, setScrollProgress] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const totalScroll = document.documentElement.scrollHeight - window.innerHeight;
+      if (totalScroll > 0) {
+        setScrollProgress((window.pageYOffset / totalScroll) * 100);
+      }
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
   const [navOpen, setNavOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
@@ -827,6 +849,7 @@ function App() {
 
       <div className="cursor" ref={cursorRef}></div>
       <div className="cursor-follower" ref={followerRef}></div>
+      <div className="scroll-progress-bar" style={{ width: `${scrollProgress}%` }} />
 
       {/* Section Progress Indicator */}
       <div className="section-progress">
@@ -996,8 +1019,10 @@ function App() {
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: i * 0.12 }}
                   whileHover={{ y: -5, transition: { duration: 0.2 } }}
+                  onMouseMove={handleMouseMove}
                   style={{ '--card-accent': cat.color }}
                 >
+                  <div className="skills-card-glow" />
                   <div className="skills-category-header">
                     <div className="skills-category-icon-wrap" style={{ color: cat.color }}>
                       <IconComponent size={20} />
@@ -1217,6 +1242,7 @@ function App() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: i * 0.2 }}
+                onMouseMove={handleMouseMove}
                 style={{ '--exp-color': exp.color }}
               >
                 <div className="exp-dual-bg-glow" />
@@ -1332,6 +1358,7 @@ function App() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5 }}
+              onMouseMove={handleMouseMove}
               style={{ '--card-accent': '#f59e0b' }}
             >
               <div className="bento-card-inner">
@@ -1359,6 +1386,7 @@ function App() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.1 }}
+              onMouseMove={handleMouseMove}
               style={{ '--card-accent': '#06b6d4' }}
             >
               <div className="bento-card-inner">
@@ -1384,6 +1412,7 @@ function App() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.2 }}
+              onMouseMove={handleMouseMove}
               style={{ '--card-accent': '#f97316' }}
             >
               <div className="bento-card-inner">
@@ -1409,6 +1438,7 @@ function App() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.15 }}
+              onMouseMove={handleMouseMove}
               style={{ '--card-accent': '#f89820' }}
             >
               <div className="bento-card-inner">
@@ -1456,6 +1486,7 @@ function App() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.2 }}
+              onMouseMove={handleMouseMove}
               style={{ '--card-accent': '#6366f1' }}
             >
               <div className="bento-card-inner">
@@ -1481,6 +1512,7 @@ function App() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.25 }}
+              onMouseMove={handleMouseMove}
               style={{ '--card-accent': '#10b981' }}
             >
               <div className="bento-card-inner">
@@ -1506,6 +1538,7 @@ function App() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.3 }}
+              onMouseMove={handleMouseMove}
               style={{ '--card-accent': '#d97706' }}
             >
               <div className="bento-card-inner">
