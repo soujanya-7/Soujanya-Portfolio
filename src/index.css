@@ -1535,131 +1535,279 @@ img { max-width: 100%; display: block; }
 }
 
 /* ============================================================
-   ACHIEVEMENTS HOLOGRAPHIC GRID
+   ACHIEVEMENTS BENTO GRID LAYOUT
    ============================================================ */
-.ach-holo-grid {
+.achievements-bento-grid {
   display: grid;
-  gap: 2rem;
-  max-width: 1200px;
-  margin: 0 auto;
+  grid-template-columns: repeat(3, 1fr);
+  grid-auto-rows: minmax(180px, auto);
+  gap: 1.5rem;
+  max-width: 1100px;
+  margin: 3rem auto 0;
 }
 
-.trophies-row { grid-template-columns: repeat(3, 1fr); margin-bottom: 2rem; }
-.platforms-row { grid-template-columns: repeat(4, 1fr); }
-
-.holo-card {
+.bento-card {
   position: relative;
   border-radius: 20px;
-  background: rgba(13, 17, 23, 0.4);
-  padding: 1px; /* border thickness */
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: rgba(13, 17, 23, 0.45);
+  backdrop-filter: blur(12px);
   overflow: hidden;
-  isolation: isolate;
-  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  display: flex;
 }
 
-.holo-card:hover {
-  transform: translateY(-8px) scale(1.03);
-  z-index: 10;
-}
-
-/* The Animated Holographic Border */
-.holo-card::before {
-  content: '';
-  position: absolute;
-  inset: -50%;
-  background: conic-gradient(from 0deg, transparent 0%, var(--card-accent) 25%, transparent 50%, var(--card-accent) 75%, transparent 100%);
-  animation: spin-holo 6s linear infinite;
-  opacity: 0.3;
-  z-index: -1;
-  transition: opacity 0.4s ease;
-}
-
-@keyframes spin-holo { 100% { transform: rotate(360deg); } }
-
-.holo-card:hover::before {
-  opacity: 1;
-  animation-duration: 3s;
-}
-
-/* Card Background Plate */
-.holo-card-inner {
-  background: #0d1117;
-  border-radius: 19px;
-  height: 100%;
+.bento-card-inner {
   width: 100%;
-  position: relative;
-  overflow: hidden;
-}
-
-/* Inner Background Glow */
-.holo-bg {
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at 50% 0%, var(--card-accent), transparent 60%);
-  opacity: 0.05;
-  transition: opacity 0.4s ease;
-}
-
-.holo-card:hover .holo-bg { opacity: 0.2; }
-
-/* Content Wrapper */
-.holo-content {
+  height: 100%;
+  padding: 1.5rem;
   position: relative;
   z-index: 2;
-  padding: 2rem;
   display: flex;
   flex-direction: column;
+  box-sizing: border-box;
+}
+
+/* Mouse hover color glow */
+.bento-card-glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), color-mix(in srgb, var(--card-accent) 12%, transparent), transparent 70%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.bento-card:hover {
+  transform: translateY(-5px);
+  border-color: color-mix(in srgb, var(--card-accent) 30%, transparent);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), 0 0 25px color-mix(in srgb, var(--card-accent) 12%, transparent);
+}
+
+.bento-card:hover .bento-card-glow {
+  opacity: 1;
+}
+
+/* Specific bento configurations */
+.bento-card.tall {
+  grid-column: 1;
+  grid-row: 1 / 3;
+}
+
+.bento-card.wide {
+  grid-column: 2 / 4;
+  grid-row: 2;
+}
+
+/* Trophy Content (spans 2 rows) */
+.bento-trophy-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   height: 100%;
+  width: 100%;
+  gap: 1.5rem;
 }
 
-.holo-content.center-align {
-  align-items: center;
-  text-align: center;
-}
-
-/* Typography and Elements */
-.holo-icon-wrapper {
+.bento-trophy-orb {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--card-accent) 18%, transparent) 0%, transparent 70%);
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 56px;
-  height: 56px;
-  border-radius: 16px;
-  margin-bottom: 1.5rem;
-  box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-  border: 1px solid rgba(255,255,255,0.05);
-}
-.holo-icon-wrapper.small { width: 44px; height: 44px; margin-bottom: 1rem; border-radius: 12px; }
-
-.holo-sub { font-size: 0.75rem; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 0.5rem; font-weight: 600; }
-.holo-title { font-size: 1.5rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.5rem; }
-.holo-desc { font-size: 0.95rem; color: var(--text-secondary); line-height: 1.5; }
-
-.holo-platform { font-size: 0.8rem; letter-spacing: 1px; text-transform: uppercase; color: var(--text-secondary); margin-bottom: 1rem; }
-.holo-stat-block { margin-bottom: 1rem; }
-.holo-stat { font-size: 3rem; font-weight: 800; line-height: 1; margin-bottom: 0.25rem; text-shadow: 0 0 20px currentColor; }
-.holo-stat-label { font-size: 1.05rem; font-weight: 600; color: var(--text-primary); }
-
-.holo-extra-pill {
-  font-size: 0.75rem;
-  font-family: var(--font-mono);
-  padding: 0.4rem 0.8rem;
-  border: 1px solid;
-  border-radius: 99px;
-  margin-top: auto;
-  background: rgba(255,255,255,0.02);
+  border: 1px dashed color-mix(in srgb, var(--card-accent) 30%, transparent);
 }
 
-/* Responsiveness */
-@media (max-width: 1024px) {
-  .platforms-row { grid-template-columns: repeat(2, 1fr); }
+.bento-trophy-orb .glow-icon {
+  filter: drop-shadow(0 0 10px var(--card-accent));
 }
-@media (max-width: 860px) {
-  .trophies-row { grid-template-columns: 1fr; }
-  .platforms-row { grid-template-columns: repeat(2, 1fr); }
+
+.bento-tag {
+  font-size: 0.65rem;
+  letter-spacing: 1.5px;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+  display: inline-block;
 }
-@media (max-width: 540px) {
-  .platforms-row { grid-template-columns: 1fr; }
+
+.bento-title {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin: 0 0 0.4rem 0;
+}
+
+.bento-desc {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  margin: 0;
+}
+
+.bento-seal {
+  font-size: 0.6.rem;
+  color: var(--text-muted);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  padding-top: 0.75rem;
+  letter-spacing: 0.5px;
+}
+
+/* Standard Content Layout */
+.bento-standard-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  width: 100%;
+}
+
+.bento-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.bento-platform-tag {
+  font-size: 0.58rem;
+  color: var(--text-muted);
+  letter-spacing: 1.5px;
+}
+
+.bento-stat-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  margin: auto 0;
+}
+
+.bento-stat-value {
+  font-size: 1.8rem;
+  font-weight: 900;
+  line-height: 1.1;
+  text-shadow: 0 0 15px color-mix(in srgb, var(--card-accent) 30%, transparent);
+}
+
+.bento-stat-label {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.bento-card-desc {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.bento-footer-tag {
+  font-size: 0.6rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  padding-top: 0.5rem;
+  letter-spacing: 1px;
+  font-weight: 700;
+}
+
+/* LeetCode Custom Content */
+.bento-leetcode-content {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  gap: 1rem;
+}
+
+.leetcode-text-side {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.leetcode-graphics-side {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 1.5rem;
+}
+
+.leetcode-chart-circle {
+  filter: drop-shadow(0 0 10px rgba(248, 152, 32, 0.2));
+}
+
+.leetcode-metrics {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.leetcode-metrics .metric {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.leetcode-metrics .metric .m-label {
+  font-size: 0.52rem;
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+}
+
+.leetcode-metrics .metric .m-val {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+/* Responsiveness overrides for Bento */
+@media (max-width: 900px) {
+  .achievements-bento-grid {
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: minmax(170px, auto);
+  }
+  .bento-card.tall {
+    grid-column: span 1;
+    grid-row: span 1;
+    aspect-ratio: 16 / 11;
+  }
+  .bento-card.wide {
+    grid-column: span 2;
+    grid-row: span 1;
+    aspect-ratio: auto;
+  }
+  .bento-trophy-content {
+    justify-content: center;
+    gap: 1rem;
+  }
+  .bento-seal {
+    display: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .achievements-bento-grid {
+    grid-template-columns: 1fr;
+    grid-auto-rows: auto;
+    gap: 1rem;
+  }
+  .bento-card.wide {
+    grid-column: span 1;
+  }
+  .bento-card {
+    aspect-ratio: auto;
+    min-height: 160px;
+  }
+  .bento-leetcode-content {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  .leetcode-graphics-side {
+    justify-content: flex-start;
+  }
 }
 
 /* ============================================================

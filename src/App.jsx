@@ -1324,72 +1324,205 @@ function App() {
             <h2 className="section-title">Honors & Achievements</h2>
           </div>
 
-          {/* Trophies Row - 3 Columns */}
-          <div className="ach-holo-grid trophies-row">
-            {[
-              { icon: Award, title: 'Freshathon', sub: '3rd Place', desc: 'First-Year Student Project Expo', accent: 'var(--accent-1)' },
-              { icon: Cpu, title: 'Innohacks',  sub: 'Round 1 Cleared', desc: 'Hackathon at PSG College of Technology', accent: 'var(--accent-2)' },
-              { icon: Sparkles, title: 'Hacksagon',  sub: 'Round 1 Cleared', desc: 'ABV-IITM-IEEE Hackathon (Gwalior)', accent: '#f97316' },
-            ].map(({ icon: IconComponent, title, sub, desc, accent }, i) => (
-              <motion.div
-                key={i}
-                className="holo-card"
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.15 }}
-                style={{ '--card-accent': accent }}
-              >
-                <div className="holo-card-inner">
-                  <div className="holo-bg" />
-                  <div className="holo-content">
-                    <div className="holo-icon-wrapper" style={{ background: `linear-gradient(135deg, ${accent}22, transparent)` }}>
-                      <IconComponent size={28} style={{ color: accent }} />
-                    </div>
-                    <span className="holo-sub font-mono" style={{ color: accent }}>{sub}</span>
-                    <h4 className="holo-title">{title}</h4>
-                    <p className="holo-desc">{desc}</p>
+          <div className="achievements-bento-grid">
+            {/* 1. Freshathon (Tall: Col 1, Spans 2 Rows) */}
+            <motion.div
+              className="bento-card tall gold-theme"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+              style={{ '--card-accent': '#f59e0b' }}
+            >
+              <div className="bento-card-inner">
+                <div className="bento-card-glow" />
+                <div className="bento-trophy-content">
+                  <div className="bento-trophy-orb">
+                    <Award size={40} className="glow-icon" style={{ color: '#f59e0b' }} />
+                  </div>
+                  <div>
+                    <span className="bento-tag font-mono" style={{ color: '#f59e0b' }}>3RD PLACE</span>
+                    <h3 className="bento-title">Freshathon</h3>
+                    <p className="bento-desc">First-Year Student Project Expo</p>
+                  </div>
+                  <div className="bento-seal font-mono">
+                    VERIFIED PROJECT EXPO · 2023
                   </div>
                 </div>
-              </motion.div>
-            ))}
-          </div>
+              </div>
+            </motion.div>
 
-          {/* Platforms Row - 4 Columns */}
-          <div className="ach-holo-grid platforms-row">
-            {[
-              { icon: Code, platform: 'LeetCode',   stat: '400+', statLabel: 'Problems Solved', extra: 'Max Rating: 1,603 · Contests: 34',   color: '#f89820' },
-              { icon: CheckCircle, platform: 'SkillRack',  stat: '630+', statLabel: 'Problems Solved', extra: '1 Certificate Earned',                color: '#6366f1' },
-              { icon: Award, platform: 'HackerRank', stat: '1 Star',    statLabel: 'in Java',     extra: '1 Badge Earned',                      color: '#2ec866' },
-              { icon: Terminal, platform: 'CodeChef',   stat: '1037', statLabel: 'Highest Rating',   extra: 'Competitive Programming',             color: '#5b4638' },
-            ].map(({ icon: IconComponent, platform, stat, statLabel, extra, color }, i) => (
-              <motion.div
-                key={i}
-                className="holo-card stat-card"
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: i * 0.1 }}
-                style={{ '--card-accent': color }}
-              >
-                <div className="holo-card-inner">
-                  <div className="holo-bg" />
-                  <div className="holo-content center-align">
-                    <div className="holo-icon-wrapper small" style={{ background: `linear-gradient(135deg, ${color}22, transparent)` }}>
-                      <IconComponent size={20} style={{ color }} />
+            {/* 2. Innohacks (Col 2, Row 1) */}
+            <motion.div
+              className="bento-card cyan-theme"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              style={{ '--card-accent': '#06b6d4' }}
+            >
+              <div className="bento-card-inner">
+                <div className="bento-card-glow" />
+                <div className="bento-standard-content">
+                  <div className="bento-card-header">
+                    <span className="bento-platform-tag font-mono">HACKATHON</span>
+                    <Cpu size={18} style={{ color: '#06b6d4' }} />
+                  </div>
+                  <div className="bento-stat-block">
+                    <div className="bento-stat-value" style={{ color: '#06b6d4' }}>R1 Cleared</div>
+                    <div className="bento-stat-label">Innohacks</div>
+                  </div>
+                  <p className="bento-card-desc">PSG College of Technology</p>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* 3. Hacksagon (Col 3, Row 1) */}
+            <motion.div
+              className="bento-card orange-theme"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              style={{ '--card-accent': '#f97316' }}
+            >
+              <div className="bento-card-inner">
+                <div className="bento-card-glow" />
+                <div className="bento-standard-content">
+                  <div className="bento-card-header">
+                    <span className="bento-platform-tag font-mono">HACKATHON</span>
+                    <Sparkles size={18} style={{ color: '#f97316' }} />
+                  </div>
+                  <div className="bento-stat-block">
+                    <div className="bento-stat-value" style={{ color: '#f97316' }}>R1 Cleared</div>
+                    <div className="bento-stat-label">Hacksagon</div>
+                  </div>
+                  <p className="bento-card-desc">ABV-IITM-IEEE (Gwalior)</p>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* 4. LeetCode (Wide: Col 2 & 3, Row 2) */}
+            <motion.div
+              className="bento-card wide leetcode-theme"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.15 }}
+              style={{ '--card-accent': '#f89820' }}
+            >
+              <div className="bento-card-inner">
+                <div className="bento-card-glow" />
+                <div className="bento-leetcode-content">
+                  <div className="leetcode-text-side">
+                    <div className="bento-card-header">
+                      <span className="bento-platform-tag font-mono">CODING PLATFORM</span>
+                      <Code size={18} style={{ color: '#f89820' }} />
                     </div>
-                    <span className="holo-platform font-mono">{platform}</span>
-                    <div className="holo-stat-block">
-                      <h3 className="holo-stat" style={{ color }}>{stat}</h3>
-                      <p className="holo-stat-label">{statLabel}</p>
+                    <div className="bento-stat-block">
+                      <div className="bento-stat-value" style={{ color: '#f89820' }}>LeetCode</div>
+                      <div className="bento-stat-label">400+ Problems Solved</div>
                     </div>
-                    <div className="holo-extra-pill" style={{ borderColor: `${color}33`, color: 'var(--text-muted)' }}>
-                      {extra}
+                  </div>
+                  
+                  <div className="leetcode-graphics-side">
+                    <div className="leetcode-chart-circle">
+                      <svg width="80" height="80" viewBox="0 0 100 100">
+                        <circle cx="50" cy="50" r="40" stroke="rgba(248, 152, 32, 0.06)" strokeWidth="8" fill="transparent" />
+                        <circle cx="50" cy="50" r="40" stroke="#f89820" strokeWidth="8" fill="transparent"
+                                strokeDasharray="251.2" strokeDashoffset="75" strokeLinecap="round" />
+                        <text x="50" y="55" textAnchor="middle" fill="#ffffff" fontSize="16" fontWeight="800" fontFamily="monospace">400+</text>
+                      </svg>
+                    </div>
+                    <div className="leetcode-metrics">
+                      <div className="metric">
+                        <span className="m-label font-mono">MAX RATING</span>
+                        <span className="m-val font-mono">1,603</span>
+                      </div>
+                      <div className="metric">
+                        <span className="m-label font-mono">CONTESTS</span>
+                        <span className="m-val font-mono">34</span>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </motion.div>
-            ))}
+              </div>
+            </motion.div>
+
+            {/* 5. SkillRack (Col 1, Row 3) */}
+            <motion.div
+              className="bento-card indigo-theme"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              style={{ '--card-accent': '#6366f1' }}
+            >
+              <div className="bento-card-inner">
+                <div className="bento-card-glow" />
+                <div className="bento-standard-content">
+                  <div className="bento-card-header">
+                    <span className="bento-platform-tag font-mono">CODING PLATFORM</span>
+                    <CheckCircle size={18} style={{ color: '#6366f1' }} />
+                  </div>
+                  <div className="bento-stat-block">
+                    <div className="bento-stat-value" style={{ color: '#6366f1' }}>630+</div>
+                    <div className="bento-stat-label">SkillRack Solved</div>
+                  </div>
+                  <div className="bento-footer-tag font-mono" style={{ color: '#6366f1' }}>1 CERTIFICATE EARNED</div>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* 6. HackerRank (Col 2, Row 3) */}
+            <motion.div
+              className="bento-card green-theme"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.25 }}
+              style={{ '--card-accent': '#10b981' }}
+            >
+              <div className="bento-card-inner">
+                <div className="bento-card-glow" />
+                <div className="bento-standard-content">
+                  <div className="bento-card-header">
+                    <span className="bento-platform-tag font-mono">CODING PLATFORM</span>
+                    <Award size={18} style={{ color: '#10b981' }} />
+                  </div>
+                  <div className="bento-stat-block">
+                    <div className="bento-stat-value" style={{ color: '#10b981' }}>1 Star</div>
+                    <div className="bento-stat-label">HackerRank Java</div>
+                  </div>
+                  <div className="bento-footer-tag font-mono" style={{ color: '#10b981' }}>1 BADGE EARNED</div>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* 7. CodeChef (Col 3, Row 3) */}
+            <motion.div
+              className="bento-card brown-theme"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+              style={{ '--card-accent': '#d97706' }}
+            >
+              <div className="bento-card-inner">
+                <div className="bento-card-glow" />
+                <div className="bento-standard-content">
+                  <div className="bento-card-header">
+                    <span className="bento-platform-tag font-mono">COMPETITIVE</span>
+                    <Terminal size={18} style={{ color: '#d97706' }} />
+                  </div>
+                  <div className="bento-stat-block">
+                    <div className="bento-stat-value" style={{ color: '#d97706' }}>1037</div>
+                    <div className="bento-stat-label">CodeChef Rating</div>
+                  </div>
+                  <div className="bento-footer-tag font-mono" style={{ color: '#d97706' }}>COMPETITIVE CODING</div>
+                </div>
+              </div>
+            </motion.div>
           </div>
         </div>
       </section>
