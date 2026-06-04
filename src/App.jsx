@@ -400,6 +400,7 @@ function CertificateCard({ cert, index, onPreview }) {
 
 function CertStackImage({ cert }) {
   const [imgOk, setImgOk] = useState(true);
+  const IconComp = cert.icon;
   return (
     <div className="cert-stack-inner">
       {imgOk ? (
@@ -410,9 +411,43 @@ function CertStackImage({ cert }) {
           onError={() => setImgOk(false)}
         />
       ) : (
-        <div className="cert-stack-fallback" style={{ '--accent-glow': cert.color }}>
-          <Award size={40} style={{ color: cert.color, filter: `drop-shadow(0 0 12px ${cert.color})` }} />
-          <span className="cert-stack-fallback-label font-mono">{cert.title}</span>
+        <div className="cert-stack-fallback" style={{ '--cert-color': cert.color }}>
+          {/* Tech Style Corner Lines */}
+          <div className="cert-corner top-left"></div>
+          <div className="cert-corner top-right"></div>
+          <div className="cert-corner bottom-left"></div>
+          <div className="cert-corner bottom-right"></div>
+          
+          {/* Grid pattern background */}
+          <div className="cert-grid-pattern"></div>
+          
+          <div className="cert-card-header">
+            <span className="cert-card-issuer font-mono">{cert.issuer.toUpperCase()}</span>
+            <span className="cert-card-badge-icon" style={{ color: cert.color }}>
+              <IconComp size={16} />
+            </span>
+          </div>
+          
+          <div className="cert-card-body">
+            <div className="cert-card-subtitle font-mono">VERIFIED CREDENTIAL</div>
+            <h4 className="cert-card-title">{cert.title}</h4>
+            <div className="cert-card-recipient">
+              <span>Awarded to:</span> <strong>Soujanya S</strong>
+            </div>
+          </div>
+          
+          <div className="cert-card-footer">
+            <div className="cert-card-meta">
+              <div className="meta-label font-mono">DATE OF ISSUANCE</div>
+              <div className="meta-val font-mono">{cert.year}</div>
+            </div>
+            
+            <div className="cert-card-stamp" style={{ borderColor: `${cert.color}35` }}>
+              <div className="stamp-inner" style={{ background: `${cert.color}12` }}>
+                <Award size={16} style={{ color: cert.color }} />
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </div>
@@ -802,8 +837,23 @@ function App() {
               {item.charAt(0).toUpperCase() + item.slice(1)}
             </a>
           ))}
+          <a
+            href="/Soujanya_Resume.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            download="Soujanya_Resume.pdf"
+            className="nav-link resume-nav-link"
+            onClick={() => setNavOpen(false)}
+          >
+            Resume
+          </a>
         </div>
         <div className="nav-actions">
+          <Magnetic>
+            <a href="/Soujanya_Resume.pdf" target="_blank" rel="noopener noreferrer" download="Soujanya_Resume.pdf" className="btn-resume">
+              <ShinyText speed="3s">Resume</ShinyText>
+            </a>
+          </Magnetic>
           <Magnetic><a href="mailto:soujanya.s2023@sece.ac.in" className="btn-hire"><ShinyText speed="3s">Hire Me</ShinyText></a></Magnetic>
           <button className="nav-toggle" id="navToggle" onClick={() => setNavOpen(!navOpen)}>
             <span style={{ transform: navOpen ? 'rotate(45deg) translate(5px,5px)' : '' }}></span>
@@ -1185,13 +1235,13 @@ function App() {
 
           {(() => {
             const CERTS = [
-              { icon: Cpu,         title: 'Learning React',                                        issuer: 'Infosys Springboard', year: '2025', color: '#61dafb', filename: 'cert_react.png' },
-              { icon: Code,        title: 'Programming with Java',                                  issuer: 'NPTEL',               year: '2025', color: '#f89820', filename: 'cert_java_nptel.png' },
-              { icon: Award,       title: 'Problem Solving (Basics) | SQL (Basics)',               issuer: 'HackerRank',          year: '2024', color: '#2ec866', filename: 'cert_hackerrank.png' },
-              { icon: Terminal,    title: 'Java Programming',                                       issuer: 'GreatLearning',       year: '2024', color: '#f89820', filename: 'cert_greatlearning.png' },
-              { icon: Database,    title: 'SQL – Basics (Standard)',                              issuer: 'SkillRack',           year: '2024', color: '#6366f1', filename: 'cert_skillrack.png' },
-              { icon: Layers,      title: 'Mastering Data Structures & Algorithms using C and C++', issuer: 'Udemy',              year: '2024', color: '#a435f0', filename: 'cert_udemy_dsa.png' },
-              { icon: Activity,    title: 'Debugging Techniques for Serial Communications',         issuer: 'Microchip',           year: '2025', color: '#ef4444', filename: 'cert_microchip.png' },
+              { icon: Cpu,         title: 'Learning React',                                        issuer: 'Infosys Springboard', year: '2025', color: '#61dafb', filename: 'cert_react.png', skills: ['React.js', 'Hooks', 'State Management', 'Components'] },
+              { icon: Code,        title: 'Programming with Java',                                  issuer: 'NPTEL',               year: '2025', color: '#f89820', filename: 'cert_java_nptel.png', skills: ['OOPs', 'Java SE', 'Multithreading', 'Data Structures'] },
+              { icon: Award,       title: 'Problem Solving (Basics) | SQL (Basics)',               issuer: 'HackerRank',          year: '2024', color: '#2ec866', filename: 'cert_hackerrank.png', skills: ['Problem Solving', 'SQL Queries', 'Relational Databases', 'Algorithms'] },
+              { icon: Terminal,    title: 'Java Programming',                                       issuer: 'GreatLearning',       year: '2024', color: '#f89820', filename: 'cert_greatlearning.png', skills: ['Java Basics', 'Variables', 'Control Flow', 'Methods'] },
+              { icon: Database,    title: 'SQL – Basics (Standard)',                              issuer: 'SkillRack',           year: '2024', color: '#6366f1', filename: 'cert_skillrack.png', skills: ['Database Joins', 'Grouping', 'SQL Schema', 'Indexing'] },
+              { icon: Layers,      title: 'Mastering Data Structures & Algorithms using C and C++', issuer: 'Udemy',              year: '2024', color: '#a435f0', filename: 'cert_udemy_dsa.png', skills: ['Data Structures', 'C/C++', 'Time Complexity', 'Recursion'] },
+              { icon: Activity,    title: 'Debugging Techniques for Serial Communications',         issuer: 'Microchip',           year: '2025', color: '#ef4444', filename: 'cert_microchip.png', skills: ['Serial Protocols', 'Debugging', 'Hardware/Firmware', 'UART/SPI'] },
             ];
             const total = CERTS.length;
             const prevCert = () => setActiveCert((p) => (p === 0 ? total - 1 : p - 1));
@@ -1273,6 +1323,17 @@ function App() {
                     <h3 className="cert-info-title">{activeCertData.title}</h3>
                     <p className="cert-info-issuer font-mono" style={{ color: activeCertData.color }}>{activeCertData.issuer}</p>
                     <div className="cert-info-divider" style={{ background: `linear-gradient(90deg, ${activeCertData.color}, transparent)` }} />
+                    
+                    {/* Skills list tags */}
+                    {activeCertData.skills && (
+                      <div className="cert-skills-list">
+                        {activeCertData.skills.map((skill, k) => (
+                          <span key={k} className="cert-skill-tag font-mono" style={{ '--tag-glow': activeCertData.color }}>
+                            {skill}
+                          </span>
+                        ))}
+                      </div>
+                    )}
                     <div className="cert-info-actions">
                       <button className="cert-view-btn font-mono" onClick={() => setLightboxImage(activeCertData)} style={{ borderColor: `${activeCertData.color}40`, color: activeCertData.color }}>
                         VIEW CERTIFICATE
@@ -1456,7 +1517,6 @@ function App() {
                 <span className="cchip-label font-mono">LOCAL TIME</span>
                 <span className="cchip-val">{currentTime || '...'} IST</span>
               </div>
-              <span className="cchip-status font-mono"><span className="cchip-live-dot" />Available</span>
             </div>
           </motion.div>
 

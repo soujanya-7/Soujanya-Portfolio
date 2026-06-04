@@ -77,16 +77,6 @@ export default function SpotlightHero({ onNavigate }) {
       <div className="clean-hero-container">
         {/* ── LEFT ── */}
         <div className="clean-hero-left">
-          {/* Status badge */}
-          <motion.div
-            className="hero-status-badge"
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-          >
-            <span className="status-dot" />
-            Available for Work
-          </motion.div>
 
           {/* Big title */}
           <h1 className="clean-hero-title">
