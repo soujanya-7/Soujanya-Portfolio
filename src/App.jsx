@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Tilt from 'react-parallax-tilt';
 import CodeHero from './CodeHero';
 import SpotlightHero from './SpotlightHero';
+import PhysicsHero from './PhysicsHero';
 import soujanyaPhoto from './assets/soujanya.png';
 import ShinyText from './components/animations/ShinyText';
 import Magnet from './components/animations/Magnet';
@@ -502,6 +503,7 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [loaderProgress, setLoaderProgress] = useState(0);
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [heroMode, setHeroMode] = useState('spotlight');
 
   useEffect(() => {
     const handleScroll = () => {
@@ -919,7 +921,33 @@ function App() {
         </div>
       </nav>
 
-      <SpotlightHero onNavigate={handleNavClick} />
+      <div className="hero-wrapper" style={{ position: 'relative' }}>
+        {heroMode === 'spotlight' && <SpotlightHero onNavigate={handleNavClick} />}
+        {heroMode === 'physics' && <PhysicsHero onNavigate={handleNavClick} />}
+        {heroMode === 'code' && <CodeHero onNavigate={handleNavClick} />}
+
+        {/* Floating cyber mode selector */}
+        <div className="hero-mode-selector">
+          <button 
+            className={`hero-mode-btn ${heroMode === 'spotlight' ? 'active' : ''}`} 
+            onClick={() => setHeroMode('spotlight')}
+          >
+            <Sparkles size={13} /> <span>Spotlight</span>
+          </button>
+          <button 
+            className={`hero-mode-btn ${heroMode === 'physics' ? 'active' : ''}`} 
+            onClick={() => setHeroMode('physics')}
+          >
+            <Cpu size={13} /> <span>Physics</span>
+          </button>
+          <button 
+            className={`hero-mode-btn ${heroMode === 'code' ? 'active' : ''}`} 
+            onClick={() => setHeroMode('code')}
+          >
+            <Terminal size={13} /> <span>Terminal</span>
+          </button>
+        </div>
+      </div>
 
       <InfiniteMarquee items={MARQUEE_ITEMS_1} direction="left" speed="28s" />
 
