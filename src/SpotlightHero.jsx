@@ -118,19 +118,31 @@ export default function SpotlightHero({ onNavigate }) {
           </motion.div>
         </div>
 
-        {/* ── RIGHT: Blob Photo ── */}
+        {/* ── RIGHT: Concentric HUD Telemetry ── */}
         <motion.div
           className="clean-hero-right"
           initial={{ opacity: 0, scale: 0.85 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.9, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
         >
-          <div className="clean-hero-blob-wrap">
-            <div className="clean-hero-blob">
+          <div className="hud-telemetry-container">
+            {/* Layered concentric rings */}
+            <div className="hud-ring r1" />
+            <div className="hud-ring r2" />
+            <div className="hud-ring r3" />
+            
+            {/* Hexagon-ish rounded avatar core */}
+            <div className="hud-avatar-hex">
               <img src={soujanyaPhoto} alt="Soujanya" className="clean-hero-photo" />
             </div>
-            {/* Orbiting ring */}
-            <div className="blob-ring" aria-hidden />
+
+            {/* Glowing active nodes / status readouts */}
+            <div className="hud-readout loc font-mono">
+              SYS_LOC: COIMBATORE_IN
+            </div>
+            <div className="hud-readout status font-mono">
+              SYS_STAT: NOMINAL_UPLINK
+            </div>
           </div>
         </motion.div>
       </div>

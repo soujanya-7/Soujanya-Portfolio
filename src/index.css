@@ -5184,3 +5184,467 @@ img { max-width: 100%; display: block; }
   pointer-events: none;
   z-index: 0;
 }
+
+/* ============================================================
+   FUTURISTIC CYBER-DASHBOARD REDESIGN OVERRIDES
+   ============================================================ */
+
+/* Sci-fi layout utilities */
+.tech-bracket {
+  position: relative;
+}
+.tech-bracket::before, .tech-bracket::after {
+  content: '';
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-color: var(--accent-2);
+  border-style: solid;
+  opacity: 0.7;
+}
+.tech-bracket::before { top: 0; left: 0; border-width: 1.5px 0 0 1.5px; }
+.tech-bracket::after { bottom: 0; right: 0; border-width: 0 1.5px 1.5px 0; }
+
+/* Navbar console widget */
+.navbar-clock {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--accent-3);
+  background: rgba(16, 185, 129, 0.05);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  padding: 0.25rem 0.75rem;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.1);
+}
+.navbar-clock-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--accent-3);
+  border-radius: 50%;
+  animation: pulseGlow 1.5s infinite ease-in-out;
+}
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; filter: drop-shadow(0 0 3px var(--accent-3)); }
+}
+
+/* Nav links styling */
+.nav-link-scifi {
+  font-family: var(--font-mono);
+  letter-spacing: 1px;
+  font-size: 0.8rem;
+  position: relative;
+  transition: all 0.3s ease;
+}
+.nav-link-scifi:hover, .nav-link-scifi.active {
+  color: var(--accent-2) !important;
+  text-shadow: 0 0 8px rgba(14, 165, 233, 0.4);
+}
+
+/* Hero Concentric Telemetry Rings */
+.hud-telemetry-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.hud-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px dashed rgba(14, 165, 233, 0.15);
+  pointer-events: none;
+}
+.hud-ring.r1 {
+  width: 320px;
+  height: 320px;
+  border-style: solid;
+  border-width: 1px;
+  border-color: rgba(14, 165, 233, 0.1);
+  animation: rotateCW 24s linear infinite;
+}
+.hud-ring.r2 {
+  width: 280px;
+  height: 280px;
+  border-width: 2px;
+  border-color: rgba(139, 92, 246, 0.2) transparent;
+  border-style: solid;
+  animation: rotateCCW 15s linear infinite;
+}
+.hud-ring.r3 {
+  width: 240px;
+  height: 240px;
+  border-style: dashed;
+  animation: rotateCW 8s linear infinite;
+}
+.hud-avatar-hex {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid var(--accent-2);
+  box-shadow: 0 0 25px rgba(14, 165, 233, 0.3);
+  position: relative;
+  z-index: 5;
+}
+.hud-avatar-hex img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.hud-readout {
+  position: absolute;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  background: rgba(3, 7, 18, 0.85);
+  border: 1px solid var(--border);
+  padding: 0.35rem 0.65rem;
+  border-radius: 4px;
+  z-index: 10;
+  white-space: nowrap;
+}
+.hud-readout.loc { top: 10%; left: -10%; border-left: 2px solid var(--accent-2); }
+.hud-readout.status { bottom: 12%; right: -12%; border-right: 2px solid var(--accent-3); }
+
+@keyframes rotateCW {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+@keyframes rotateCCW {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(-360deg); }
+}
+
+/* Specialties Deck scanline */
+.deck-card-glow-mouse {
+  z-index: 0;
+}
+.deck-card::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--card-accent, var(--accent-1)), transparent);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 2;
+  transition: opacity 0.3s ease;
+}
+.deck-card:hover::after {
+  opacity: 0.8;
+  animation: scanlineVertical 2s linear infinite;
+}
+@keyframes scanlineVertical {
+  0% { top: 0%; }
+  100% { top: 100%; }
+}
+
+/* Circular Telemetry Progress Gauge (Skills) */
+.skills-card-core {
+  position: relative;
+  background: rgba(13, 17, 23, 0.45);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.skills-progress-gauge {
+  position: relative;
+  width: 52px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.skills-progress-gauge svg {
+  transform: rotate(-90deg);
+}
+.skills-progress-gauge-text {
+  position: absolute;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--text-primary);
+  font-weight: 700;
+}
+
+/* Cyber-Terminal Layout (Projects) */
+.projects-cyber-grid {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 3rem auto 0;
+  min-height: 520px;
+}
+@media (max-width: 900px) {
+  .projects-cyber-grid {
+    grid-template-columns: 1fr;
+  }
+}
+.cyber-tabs-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  background: rgba(13, 17, 23, 0.55);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1rem;
+}
+@media (max-width: 900px) {
+  .cyber-tabs-panel {
+    flex-direction: row;
+    overflow-x: auto;
+    white-space: nowrap;
+    padding: 0.75rem;
+  }
+}
+.cyber-tab-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.85rem 1.2rem;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+.cyber-tab-btn:hover {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(14, 165, 233, 0.3);
+  color: var(--text-primary);
+}
+.cyber-tab-btn.active {
+  background: rgba(14, 165, 233, 0.05);
+  border-color: var(--accent-2);
+  color: var(--text-primary);
+  box-shadow: inset 0 0 10px rgba(14, 165, 233, 0.08);
+}
+.cyber-tab-indicator {
+  width: 6px;
+  height: 6px;
+  background: var(--text-muted);
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+.cyber-tab-btn.active .cyber-tab-indicator {
+  background: var(--accent-2);
+  box-shadow: 0 0 8px var(--accent-2);
+}
+
+.cyber-console-panel {
+  background: rgba(13, 17, 23, 0.45);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+}
+@media (max-width: 768px) {
+  .cyber-console-panel {
+    grid-template-columns: 1fr;
+  }
+}
+.cyber-console-ide {
+  padding: 1.5rem;
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+@media (max-width: 768px) {
+  .cyber-console-ide {
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+}
+.cyber-console-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--accent-2);
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.5rem;
+}
+.cyber-console-preview {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: rgba(3, 7, 18, 0.3);
+  position: relative;
+}
+.cyber-hologram-screen {
+  aspect-ratio: 16 / 10;
+  width: 100%;
+  border: 1px dashed rgba(14, 165, 233, 0.2);
+  border-radius: 8px;
+  background: radial-gradient(circle at 50% 50%, rgba(14, 165, 233, 0.05), transparent 80%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+.cyber-hologram-grid {
+  position: absolute;
+  inset: 0;
+  background-size: 20px 20px;
+  background-image: linear-gradient(rgba(14, 165, 233, 0.02) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(14, 165, 233, 0.02) 1px, transparent 1px);
+}
+.cyber-metrics-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  margin-top: 1rem;
+}
+.cyber-metric-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+.cyber-metric-label {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+}
+.cyber-metric-track {
+  height: 4px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.cyber-metric-fill {
+  height: 100%;
+  background: var(--grad-main);
+  border-radius: 2px;
+  transition: width 1s ease-out;
+}
+
+/* Experience circuit timeline */
+.circuit-timeline-container {
+  position: relative;
+  max-width: 900px;
+  margin: 3rem auto 0;
+  padding: 2rem 0;
+}
+.circuit-line {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(180deg, transparent, rgba(139, 92, 246, 0.3) 10%, rgba(14, 165, 233, 0.3) 90%, transparent);
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+@media (max-width: 768px) {
+  .circuit-line {
+    left: 20px;
+  }
+}
+.circuit-pulse-node {
+  position: absolute;
+  left: 50%;
+  width: 12px;
+  height: 12px;
+  background: var(--accent-2);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 10px var(--accent-2);
+  z-index: 5;
+  animation: pulseCurrent 3s infinite linear;
+}
+@keyframes pulseCurrent {
+  0% { top: 0%; opacity: 0; }
+  5% { opacity: 1; }
+  95% { opacity: 1; }
+  100% { top: 100%; opacity: 0; }
+}
+
+.experience-cyber-row {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 3.5rem;
+  position: relative;
+}
+@media (max-width: 768px) {
+  .experience-cyber-row {
+    flex-direction: column;
+    padding-left: 45px;
+  }
+}
+.experience-cyber-cell {
+  width: 45%;
+}
+@media (max-width: 768px) {
+  .experience-cyber-cell {
+    width: 100%;
+  }
+}
+.experience-cyber-cell.empty {
+  display: block;
+}
+@media (max-width: 768px) {
+  .experience-cyber-cell.empty {
+    display: none;
+  }
+}
+.circuit-connector-dot {
+  position: absolute;
+  left: 50%;
+  top: 30px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--bg-primary);
+  border: 2px solid var(--accent-1);
+  transform: translate(-50%, -50%);
+  z-index: 4;
+}
+@media (max-width: 768px) {
+  .circuit-connector-dot {
+    left: 20px;
+  }
+}
+
+/* Contact terminal logs output */
+.contact-terminal-log {
+  background: #030712;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.25rem;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--accent-3);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  text-align: left;
+  max-width: 500px;
+  margin: 1.5rem auto 0;
+  box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.8);
+}
+.contact-terminal-line {
+  display: flex;
+  gap: 0.5rem;
+}
+.contact-terminal-prompt {
+  color: var(--accent-2);
+}
