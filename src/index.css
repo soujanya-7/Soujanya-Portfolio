@@ -5154,3 +5154,102 @@ img { max-width: 100%; display: block; }
 .cert-grid-card:hover .cert-grid-card-glow {
   opacity: 1;
 }
+
+/* ============================================================
+   INFINITE MARQUEE BANNER
+   ============================================================ */
+.marquee-container {
+  display: flex;
+  overflow: hidden;
+  user-select: none;
+  gap: 0px;
+  padding: 1.5rem 0;
+  background: rgba(13, 17, 23, 0.45);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  position: relative;
+  width: 100vw;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  z-index: 10;
+}
+
+.marquee-track {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  gap: 0;
+  min-width: 100%;
+}
+
+.marquee-container.left .marquee-track {
+  animation: scroll-left var(--marquee-speed, 25s) linear infinite;
+}
+
+.marquee-container.right .marquee-track {
+  animation: scroll-right var(--marquee-speed, 25s) linear infinite;
+}
+
+.marquee-container:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+.marquee-item {
+  display: flex;
+  align-items: center;
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--text-secondary);
+  padding: 0 1rem;
+  white-space: nowrap;
+  transition: color 0.3s ease;
+}
+
+.marquee-item:hover {
+  color: var(--text-primary);
+  text-shadow: 0 0 10px rgba(124, 58, 237, 0.5);
+}
+
+.marquee-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--grad-main);
+  margin-left: 3rem;
+  box-shadow: 0 0 8px var(--accent-1);
+}
+
+@keyframes scroll-left {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes scroll-right {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(0%);
+  }
+}
+
+/* ============================================================
+   DECRYPTED TEXT
+   ============================================================ */
+.decrypted-text {
+  font-family: inherit;
+}
+

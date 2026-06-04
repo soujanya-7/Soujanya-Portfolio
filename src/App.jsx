@@ -7,12 +7,22 @@ import soujanyaPhoto from './assets/soujanya.png';
 import ShinyText from './components/animations/ShinyText';
 import Magnet from './components/animations/Magnet';
 import ParticlesBackground from './components/animations/ParticlesBackground';
+import DecryptedText from './components/animations/DecryptedText';
+import InfiniteMarquee from './components/animations/InfiniteMarquee';
 
 import { 
   Mail, ChevronRight, Award,
   Code, Globe, Layout, Database, Blocks, Terminal, Edit3, Monitor, CheckCircle, Shield,
   ExternalLink, Activity, Check, Cpu, Layers, Lock, RefreshCw, Play, Sparkles, Heart, Clock, Server
 } from 'lucide-react';
+
+const MARQUEE_ITEMS_1 = [
+  'MERN Stack', 'IoT Architect', 'Embedded Systems', 'Full Stack Developer', 'Problem Solver', 'UI/UX Design'
+];
+
+const MARQUEE_ITEMS_2 = [
+  'React.js', 'Node.js', 'Express.js', 'MongoDB', 'Next.js', 'C++', 'Arduino', 'ESP32', 'Firebase'
+];
 
 /* ── Interactive Projects Dataset ── */
 const PROJECTS_DATA = [
@@ -911,12 +921,16 @@ function App() {
 
       <SpotlightHero onNavigate={handleNavClick} />
 
+      <InfiniteMarquee items={MARQUEE_ITEMS_1} direction="left" speed="28s" />
+
       {/* Services Section */}
       <section className="services section" id="services">
         <div className="container">
           <div className="section-header">
             <span className="section-tag">01. Specialties</span>
-            <h2 className="section-title">Areas of Expertise</h2>
+            <h2 className="section-title">
+              <DecryptedText text="Areas of Expertise" />
+            </h2>
           </div>
           
           <div className="services-deck">
@@ -1004,7 +1018,9 @@ function App() {
         <div className="container">
           <div className="section-header">
             <span className="section-tag">02. Skills</span>
-            <h2 className="section-title">Technical Mastery</h2>
+            <h2 className="section-title">
+              <DecryptedText text="Technical Mastery" />
+            </h2>
           </div>
 
           <div className="skills-grid">
@@ -1060,6 +1076,8 @@ function App() {
         </div>
       </section>
 
+      <InfiniteMarquee items={MARQUEE_ITEMS_2} direction="right" speed="32s" />
+
       {/* Projects Section */}
       <section className="projects section" id="projects">
         <div className="container">
@@ -1070,7 +1088,9 @@ function App() {
             
             <div className="section-header centered">
               <span className="section-tag">03. Projects</span>
-              <h2 className="section-title">Featured Projects</h2>
+              <h2 className="section-title">
+                <DecryptedText text="Featured Projects" />
+              </h2>
               <p className="section-sub-centered">
                 A showcase of production-ready applications, secure database systems, and low-latency environmental monitors engineered with high-performance architectures.
               </p>
@@ -1230,7 +1250,9 @@ function App() {
         <div className="container">
           <div className="section-header">
             <span className="section-tag">04. Internships</span>
-            <h2 className="section-title">Professional Experience</h2>
+            <h2 className="section-title">
+              <DecryptedText text="Professional Experience" />
+            </h2>
           </div>
 
           <div className="exp-dual-grid">
@@ -1279,7 +1301,9 @@ function App() {
         <div className="container">
           <div className="section-header">
             <span className="section-tag">05. Credentials</span>
-            <h2 className="section-title">Credentials & Certifications</h2>
+            <h2 className="section-title">
+              <DecryptedText text="Credentials & Certifications" />
+            </h2>
           </div>
 
           {(() => {
@@ -1347,7 +1371,9 @@ function App() {
         <div className="container">
           <div className="section-header">
             <span className="section-tag">06. Achievements</span>
-            <h2 className="section-title">Honors & Achievements</h2>
+            <h2 className="section-title">
+              <DecryptedText text="Honors & Achievements" />
+            </h2>
           </div>
 
           <div className="achievements-bento-grid">
@@ -1568,7 +1594,9 @@ function App() {
 
           <div className="section-header">
             <span className="section-tag">07. Contact</span>
-            <h2 className="section-title">Let's Work Together</h2>
+            <h2 className="section-title">
+              <DecryptedText text="Let's Work Together" />
+            </h2>
             <p className="section-sub">Have a project in mind or want to collaborate? I'd love to hear from you.</p>
           </div>
 
