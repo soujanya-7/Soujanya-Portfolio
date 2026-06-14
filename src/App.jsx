@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Tilt from 'react-parallax-tilt';
 import CodeHero from './CodeHero';
 import SpotlightHero from './SpotlightHero';
+import PhysicsHero from './PhysicsHero';
 import soujanyaPhoto from './assets/soujanya.png';
 import ShinyText from './components/animations/ShinyText';
 import Magnet from './components/animations/Magnet';
@@ -502,6 +503,7 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [loaderProgress, setLoaderProgress] = useState(0);
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [heroMode, setHeroMode] = useState('physics');
 
   useEffect(() => {
     const handleScroll = () => {
@@ -528,7 +530,6 @@ function App() {
   const [lightboxImage, setLightboxImage] = useState(null);
   const [formState, setFormState] = useState('idle');
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
-  const [terminalLogs, setTerminalLogs] = useState([]);
   const [emailCopied, setEmailCopied] = useState(false);
   const [currentTime, setCurrentTime] = useState('');
 
@@ -848,40 +849,17 @@ function App() {
   const handleContactSubmit = (e) => {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
-    const nameVal = data.get('name') || '';
-    const emailVal = data.get('email') || '';
-    const messageVal = data.get('message') || '';
-    
     setFormData({
-      name: nameVal,
-      email: emailVal,
-      message: messageVal
+      name: data.get('name') || '',
+      email: data.get('email') || '',
+      message: data.get('message') || ''
     });
     setFormState('sending');
-    setTerminalLogs([]);
     
-    const logs = [
-      "Initializing secure terminal transmission protocol...",
-      "Establishing uplink to soujanya-portfolio.net...",
-      "Uplink established. Secure handshake verified.",
-      `Packaging telemetry payload for: "${nameVal}" <${emailVal}>`,
-      "Encrypting packet payload with 256-bit quantum key...",
-      "Transmitting packet payload over secure fiber line...",
-      "Waiting for ACK signal from host...",
-      "Telemetry ACK received. Signal broadcast successful.",
-      "Closing connection... Session ended."
-    ];
-    
-    logs.forEach((log, index) => {
-      setTimeout(() => {
-        setTerminalLogs(prev => [...prev, log]);
-        if (index === logs.length - 1) {
-          setTimeout(() => {
-            setFormState('success');
-          }, 600);
-        }
-      }, (index + 1) * 450);
-    });
+    // Simulate terminal transmission delay
+    setTimeout(() => {
+      setFormState('success');
+    }, 3500);
   };
 
   return (
@@ -931,12 +909,10 @@ function App() {
             <Magnet key={item} padding={12}>
               <a
                 href={`#${item}`}
-                className={`nav-link nav-link-scifi ${activeSection === item || (item === 'experience' && (activeSection === 'certifications' || activeSection === 'achievements')) ? 'active' : ''}`}
+                className={`nav-link ${activeSection === item || (item === 'experience' && (activeSection === 'certifications' || activeSection === 'achievements')) ? 'active' : ''}`}
                 onClick={(e) => { e.preventDefault(); handleNavClick(item); }}
               >
-                <span className="text-muted" style={{ marginRight: '3px', opacity: 0.5 }}>[</span>
-                {item.toUpperCase()}
-                <span className="text-muted" style={{ marginLeft: '3px', opacity: 0.5 }}>]</span>
+                {item.charAt(0).toUpperCase() + item.slice(1)}
               </a>
             </Magnet>
           ))}
@@ -954,10 +930,6 @@ function App() {
           </Magnet>
         </div>
         <div className="nav-actions">
-          <div className="navbar-clock">
-            <div className="navbar-clock-dot" />
-            <span style={{ fontSize: '0.75rem', fontWeight: 600 }}>COIMBATORE: {currentTime || '00:00:00 AM'}</span>
-          </div>
           <Magnetic>
             <a href="/Soujanya_Resume.pdf" target="_blank" rel="noopener noreferrer" download="Soujanya_Resume.pdf" className="btn-resume">
               <ShinyText speed="3s">Resume</ShinyText>
@@ -972,7 +944,71 @@ function App() {
         </div>
       </nav>
 
-      <SpotlightHero onNavigate={handleNavClick} />
+      {/* Sleek Floating Mode Switcher */}
+      <div className="hero-mode-switcher font-mono">
+        <span className="switcher-label">INTERACTION MODE</span>
+        <div className="switcher-buttons">
+          <button 
+            className={`switcher-btn ${heroMode === 'physics' ? 'active' : ''}`}
+            onClick={() => setHeroMode('physics')}
+          >
+            <span className="dot" /> Physics
+          </button>
+          <button 
+            className={`switcher-btn ${heroMode === 'code' ? 'active' : ''}`}
+            onClick={() => setHeroMode('code')}
+          >
+            <span className="dot" /> Code
+          </button>
+          <button 
+            className={`switcher-btn ${heroMode === 'spotlight' ? 'active' : ''}`}
+            onClick={() => setHeroMode('spotlight')}
+          >
+            <span className="dot" /> Aurora
+          </button>
+        </div>
+      </div>
+
+      <div style={{ position: 'relative', overflow: 'hidden', minHeight: '100vh', width: '100vw' }}>
+        <AnimatePresence mode="wait">
+          {heroMode === 'physics' && (
+            <motion.div
+              key="physics"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              style={{ width: '100%', height: '100%' }}
+            >
+              <PhysicsHero onNavigate={handleNavClick} />
+            </motion.div>
+          )}
+          {heroMode === 'code' && (
+            <motion.div
+              key="code"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              style={{ width: '100%', height: '100%' }}
+            >
+              <CodeHero onNavigate={handleNavClick} />
+            </motion.div>
+          )}
+          {heroMode === 'spotlight' && (
+            <motion.div
+              key="spotlight"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              style={{ width: '100%', height: '100%' }}
+            >
+              <SpotlightHero onNavigate={handleNavClick} />
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
 
       {/* Services Section */}
       <section className="services section" id="services">
@@ -991,7 +1027,7 @@ function App() {
                   key={service.title}
                   layout
                   onClick={() => setActiveService(idx)}
-                  className={`deck-card tech-bracket ${isActive ? 'active' : ''}`}
+                  className={`deck-card ${isActive ? 'active' : ''}`}
                   onMouseMove={handleMouseMove}
                   transition={{ type: "spring", stiffness: 220, damping: 22 }}
                   style={{
@@ -1105,47 +1141,25 @@ function App() {
                       </div>
                     </div>
 
-                    <div className="skills-list" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '0.75rem', marginTop: '1.5rem' }}>
-                      {cat.items.map((skill, idx) => {
-                        const radius = 20;
-                        const circumference = 2 * Math.PI * radius;
-                        const offset = circumference - (skill.value / 100) * circumference;
-
-                        return (
-                          <div key={skill.name} className="skills-card-core tech-bracket" style={{ '--card-accent': cat.color }}>
-                            <div className="skill-info" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', textAlign: 'center' }}>
-                              <div className="skills-progress-gauge">
-                                <svg width="52" height="52">
-                                  <circle
-                                    cx="26"
-                                    cy="26"
-                                    r={radius}
-                                    stroke="rgba(255, 255, 255, 0.04)"
-                                    strokeWidth="3"
-                                    fill="transparent"
-                                  />
-                                  <motion.circle
-                                    cx="26"
-                                    cy="26"
-                                    r={radius}
-                                    stroke={cat.color}
-                                    strokeWidth="3"
-                                    fill="transparent"
-                                    strokeDasharray={circumference}
-                                    initial={{ strokeDashoffset: circumference }}
-                                    whileInView={{ strokeDashoffset: offset }}
-                                    viewport={{ once: true }}
-                                    transition={{ duration: 1.2, delay: 0.2 + idx * 0.08, ease: "easeOut" }}
-                                  />
-                                </svg>
-                                <span className="skills-progress-gauge-text">{skill.value}%</span>
-                              </div>
-                              <span className="skill-name" style={{ fontSize: '0.8rem', fontWeight: 600 }}>{skill.name}</span>
-                              <span className="skill-level font-mono" style={{ color: cat.color, fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>{skill.level}</span>
-                            </div>
+                    <div className="skills-list">
+                      {cat.items.map((skill, idx) => (
+                        <div key={skill.name} className="skill-progress-item">
+                          <div className="skill-info">
+                            <span className="skill-name">{skill.name}</span>
+                            <span className="skill-level font-mono" style={{ color: cat.color }}>{skill.level}</span>
                           </div>
-                        );
-                      })}
+                          <div className="skill-track">
+                            <motion.div 
+                              className="skill-bar" 
+                              style={{ background: `linear-gradient(90deg, var(--border), ${cat.color})` }}
+                              initial={{ width: 0 }}
+                              whileInView={{ width: `${skill.value}%` }}
+                              viewport={{ once: true }}
+                              transition={{ duration: 1.2, delay: 0.2 + idx * 0.08, ease: "easeOut" }}
+                            />
+                          </div>
+                        </div>
+                      ))}
                     </div>
                   </motion.div>
                 </Tilt>
@@ -1158,176 +1172,164 @@ function App() {
       {/* Projects Section */}
       <section className="projects section" id="projects">
         <div className="container">
-          <div className="section-header centered">
-            <span className="section-tag">03. Projects</span>
-            <h2 className="section-title"><SplitText>Featured Projects</SplitText></h2>
-            <p className="section-sub-centered" style={{ maxWidth: '600px', margin: '1rem auto 0', color: 'var(--text-secondary)' }}>
-              A showcase of production-ready applications, secure database systems, and low-latency environmental monitors engineered with high-performance architectures.
-            </p>
+          <div className="projects-header-wrap">
+            <button className="carousel-nav-btn prev" onClick={prevProject} aria-label="Previous Project">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+            </button>
+            
+            <div className="section-header centered">
+              <span className="section-tag">03. Projects</span>
+              <h2 className="section-title"><SplitText>Featured Projects</SplitText></h2>
+              <p className="section-sub-centered">
+                A showcase of production-ready applications, secure database systems, and low-latency environmental monitors engineered with high-performance architectures.
+              </p>
+            </div>
+            
+            <button className="carousel-nav-btn next" onClick={nextProject} aria-label="Next Project">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            </button>
           </div>
 
-          <div className="projects-cyber-grid">
-            {/* Left Column: Cyber-tab selectors */}
-            <div className="cyber-tabs-panel">
-              {PROJECTS_DATA.map((project, idx) => (
-                <button
-                  key={project.title}
-                  className={`cyber-tab-btn ${activeProject === idx ? 'active' : ''}`}
-                  onClick={() => setActiveProject(idx)}
-                >
-                  <span style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                    <span className="text-muted" style={{ fontSize: '0.7rem' }}>0{idx + 1}.</span>
-                    <strong>{project.title.toUpperCase()}</strong>
-                  </span>
-                  <div className="cyber-tab-indicator" />
-                </button>
-              ))}
-            </div>
-
-            {/* Right Column: Interactive IDE console */}
-            {(() => {
-              const project = PROJECTS_DATA[activeProject];
-              return (
-                <Tilt
-                  tiltMaxAngleX={4}
-                  tiltMaxAngleY={4}
-                  perspective={1000}
-                  scale={1.01}
-                  transitionSpeed={2000}
-                  style={{ width: '100%', height: '100%' }}
-                >
-                  <div className="cyber-console-panel tech-bracket" style={{ '--card-accent': project.statusColor }}>
-                    {/* IDE Side */}
-                    <div className="cyber-console-ide">
-                      <div className="cyber-console-header font-mono">
-                        <Terminal size={14} />
-                        <span>{project.title.toLowerCase()}.config.json</span>
-                      </div>
-                      
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                        <span className="project-card-subtitle font-mono" style={{ color: project.statusColor, fontSize: '0.85rem' }}>
-                          // {project.subtitle.toUpperCase()}
-                        </span>
-                        <h3 style={{ fontSize: '1.75rem', fontWeight: 800 }}>{project.title}</h3>
-                        <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: '1.6' }}>
-                          {project.desc}
-                        </p>
-                      </div>
-
-                      <div className="cyber-metrics-row">
-                        <div className="cyber-metric-bar">
-                          <div className="cyber-metric-label font-mono">
-                            <span>SYSTEM STABILITY</span>
-                            <span>98%</span>
-                          </div>
-                          <div className="cyber-metric-track">
-                            <div className="cyber-metric-fill" style={{ width: '98%', background: project.statusColor }} />
-                          </div>
-                        </div>
-                        <div className="cyber-metric-bar">
-                          <div className="cyber-metric-label font-mono">
-                            <span>TEST COVERAGE</span>
-                            <span>92%</span>
-                          </div>
-                          <div className="cyber-metric-track">
-                            <div className="cyber-metric-fill" style={{ width: '92%', background: project.statusColor }} />
-                          </div>
-                        </div>
-                      </div>
-
-                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginTop: '0.5rem' }}>
-                        {project.tech.map((t) => (
-                          <span key={t} className="tech-badge font-mono" style={{ fontSize: '0.7rem' }}>{t}</span>
-                        ))}
-                      </div>
-
-                      <div className="project-card-actions" style={{ marginTop: '1rem' }}>
-                        <a href={project.github} className="project-action-link secondary" target="_blank" rel="noopener noreferrer">
-                          <Github size={14} />
-                          <span className="font-mono">SOURCE_CODE</span>
-                        </a>
-                        <a href={project.demo} className="project-action-link primary" target="_blank" rel="noopener noreferrer" style={{ background: project.statusColor, borderColor: project.statusColor }}>
-                          <ExternalLink size={14} />
-                          <span className="font-mono">LIVE_DEPLOY</span>
-                        </a>
-                      </div>
-                    </div>
-
-                    {/* Hologram Preview Side */}
-                    <div className="cyber-console-preview">
-                      <div className="cyber-hologram-screen">
-                        <div className="cyber-hologram-grid" />
-                        
-                        {/* Background graphic telemetry */}
-                        {activeProject === 0 && (
-                          <svg viewBox="0 0 100 40" style={{ width: '80%', color: project.statusColor, position: 'relative', zIndex: 2 }}>
-                            <motion.path 
+          <div className="projects-carousel-wrapper">
+            <div className="projects-carousel-track">
+              {PROJECTS_DATA.map((project, idx) => {
+                const isActive = activeProject === idx;
+                
+                return (
+                  <motion.div
+                    key={project.title}
+                    onClick={() => setActiveProject(idx)}
+                    className={`project-carousel-card ${isActive ? 'active' : ''}`}
+                    layout
+                    transition={{ type: "spring", stiffness: 180, damping: 24 }}
+                  >
+                    {/* Background Art Graphics per project */}
+                    <div className="project-card-bg-art">
+                      {idx === 0 && (
+                        <div className="bg-art-graphic auravue-art">
+                          <div className="mesh-grid" />
+                          <svg viewBox="0 0 100 40" className="art-sparkline text-red" style={{ color: '#ef4444' }}>
+                            <path 
                               d="M0,20 L20,20 L25,5 L30,35 L33,20 L60,20 L65,5 L70,35 L73,20 L100,20" 
                               fill="none" 
                               stroke="currentColor" 
-                              strokeWidth="1.5" 
-                              initial={{ pathLength: 0 }}
-                              animate={{ pathLength: 1 }}
-                              transition={{ duration: 2, repeat: Infinity, repeatType: 'loop' }}
+                              strokeWidth="1" 
                             />
                           </svg>
-                        )}
-                        {activeProject === 1 && (
-                          <div className="isometric-box-grid" style={{ transform: 'scale(1.5)', opacity: 0.6 }}>
+                          <div className="pulse-circle red" />
+                        </div>
+                      )}
+                      {idx === 1 && (
+                        <div className="bg-art-graphic propelfoundry-art">
+                          <div className="mesh-grid" />
+                          <div className="isometric-box-grid">
                             <div className="iso-line line-1" />
                             <div className="iso-line line-2" />
                             <div className="iso-line line-3" />
                           </div>
-                        )}
-                        {activeProject === 2 && (
-                          <div className="font-mono" style={{ fontSize: '0.75rem', color: project.statusColor, opacity: 0.8, textAlign: 'left', width: '80%' }}>
-                            <div>admin@policypro:~$ select *</div>
-                            <div className="text-muted">&gt; Connecting to JDBC MySQL...</div>
-                            <div style={{ color: '#fff' }}>&gt; [OK] Loaded 14 policy models</div>
+                        </div>
+                      )}
+                      {idx === 2 && (
+                        <div className="bg-art-graphic policypro-art font-mono">
+                          <div className="mesh-grid" />
+                          <div className="terminal-lines-art">
+                            <span>admin@db:~$ select *</span>
+                            <span>[INFO] Connection ok</span>
+                            <span>+----+------------+</span>
+                            <span>| 01 | SOUJANYA S |</span>
+                            <span>+----+------------+</span>
                           </div>
-                        )}
-                        {activeProject === 3 && (
-                          <svg viewBox="0 0 100 40" style={{ width: '80%', color: project.statusColor, position: 'relative', zIndex: 2 }}>
-                            <motion.path 
+                        </div>
+                      )}
+                      {idx === 3 && (
+                        <div className="bg-art-graphic ecosense-art">
+                          <div className="mesh-grid" />
+                          <div className="circular-dials">
+                            <div className="dial-circle green" style={{ borderColor: '#10b981' }} />
+                            <div className="dial-circle blue" style={{ borderColor: '#3b82f6' }} />
+                          </div>
+                          <svg viewBox="0 0 100 40" className="art-sparkline text-green" style={{ color: '#10b981' }}>
+                            <path 
                               d="M0,30 Q20,10 40,22 T80,5 T100,15" 
                               fill="none" 
                               stroke="currentColor" 
-                              strokeWidth="1.5" 
-                              initial={{ pathLength: 0 }}
-                              animate={{ pathLength: 1 }}
-                              transition={{ duration: 2, repeat: Infinity, repeatType: 'loop' }}
+                              strokeWidth="1" 
                             />
                           </svg>
-                        )}
-                        {activeProject === 4 && (
-                          <div className="network-nodes" style={{ transform: 'scale(1.5)', opacity: 0.6 }}>
+                        </div>
+                      )}
+                      {idx === 4 && (
+                        <div className="bg-art-graphic genzolver-art">
+                          <div className="mesh-grid" />
+                          <div className="network-nodes">
                             <span className="node node-1" />
                             <span className="node node-2" />
                             <span className="node node-3" />
                             <span className="node-line l1" />
                             <span className="node-line l2" />
                           </div>
-                        )}
-                      </div>
-
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginTop: '1.5rem' }}>
-                        <div className="font-mono" style={{ fontSize: '0.7rem', color: 'var(--text-secondary)' }}>
-                          // CORE HIGHLIGHTS
                         </div>
-                        <ul style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem', listStyle: 'none' }}>
-                          {project.highlights.map((h, i) => (
-                            <li key={i} style={{ display: 'flex', gap: '0.5rem', fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
-                              <span style={{ color: project.statusColor }}>»</span>
-                              <span>{h}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
+                      )}
                     </div>
-                  </div>
-                </Tilt>
-              );
-            })()}
+
+                    {/* Dark gradient overlay for readability */}
+                    <div className="project-card-overlay" />
+
+                    {/* Content Top */}
+                    <div className="project-card-top-info">
+                      <span className="project-card-num font-mono">0{idx + 1}</span>
+                      <span className="project-card-status font-mono" style={{ color: project.statusColor, borderColor: `${project.statusColor}30`, backgroundColor: `${project.statusColor}08` }}>
+                        {project.status}
+                      </span>
+                    </div>
+
+                    {/* Content Bottom / Center */}
+                    <div className="project-card-content">
+                      <h3 className="project-card-title">{project.title}</h3>
+                      <p className="project-card-subtitle font-mono">{project.subtitle}</p>
+                      
+                      {isActive && (
+                        <motion.div
+                          initial={{ opacity: 0, y: 15 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.3, delay: 0.15 }}
+                          className="project-card-expanded-body"
+                        >
+                          <p className="project-card-desc">{project.desc}</p>
+                          
+                          <div className="project-card-tech font-mono">
+                            {project.tech.map(t => (
+                              <span key={t} className="tech-badge">{t}</span>
+                            ))}
+                          </div>
+
+                          <div className="project-card-actions">
+                            <a href={project.github} className="project-action-link secondary" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
+                              <Github size={14} />
+                              <span>Code</span>
+                            </a>
+                            <a href={project.demo} className="project-action-link primary" onClick={(e) => e.stopPropagation()}>
+                              <ExternalLink size={14} />
+                              <span>Live Demo</span>
+                            </a>
+                          </div>
+                        </motion.div>
+                      )}
+                    </div>
+
+                    {/* Diagonal indicator arrow bottom-right (just like screenshot) */}
+                    {!isActive && (
+                      <div className="project-card-enter-arrow">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                          <line x1="7" y1="17" x2="17" y2="7"></line>
+                          <polyline points="7 7 17 7 17 17"></polyline>
+                        </svg>
+                      </div>
+                    )}
+                  </motion.div>
+                );
+              })}
+            </div>
           </div>
         </div>
       </section>
@@ -1340,114 +1342,51 @@ function App() {
             <h2 className="section-title"><SplitText>Professional Experience</SplitText></h2>
           </div>
 
-          <div className="circuit-timeline-container">
-            <div className="circuit-line" />
-            <div className="circuit-pulse-node" />
-            
-            {EXPERIENCE_DATA.map((exp, i) => {
-              const isEven = i % 2 === 0;
-              return (
-                <div key={i} className="experience-cyber-row">
-                  <div className="circuit-connector-dot" style={{ borderColor: exp.color }} />
-                  
-                  {isEven ? (
-                    <>
-                      <div className="experience-cyber-cell">
-                        <Tilt
-                          tiltMaxAngleX={5}
-                          tiltMaxAngleY={5}
-                          perspective={1000}
-                          scale={1.02}
-                          transitionSpeed={1500}
-                        >
-                          <motion.div 
-                            className="exp-dual-card"
-                            initial={{ opacity: 0, x: -30 }}
-                            whileInView={{ opacity: 1, x: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.5, delay: i * 0.2 }}
-                            onMouseMove={handleMouseMove}
-                            style={{ '--exp-color': exp.color }}
-                          >
-                            <div className="exp-dual-bg-glow" />
-                            <div className="exp-dual-content">
-                              <div className="exp-dual-top">
-                                <div className="exp-dual-logo font-mono">{exp.icon}</div>
-                                <div className="exp-dual-status">
-                                  <CheckCircle size={16} /> Completed
-                                </div>
-                              </div>
-                              
-                              <div className="exp-dual-main">
-                                <h3 className="exp-dual-role">{exp.role}</h3>
-                                <div className="exp-dual-company font-mono">@ {exp.company}</div>
-                                <div className="exp-dual-duration">{exp.duration}</div>
-                              </div>
-
-                              <p className="exp-dual-desc">{exp.desc}</p>
-
-                              <div className="exp-dual-tech">
-                                {exp.tech.map((t, j) => (
-                                  <span key={j} className="dual-tech-badge font-mono">{t}</span>
-                                ))}
-                              </div>
-                            </div>
-                          </motion.div>
-                        </Tilt>
+          <div className="exp-dual-grid">
+            {EXPERIENCE_DATA.map((exp, i) => (
+              <Tilt
+                key={i}
+                tiltMaxAngleX={5}
+                tiltMaxAngleY={5}
+                perspective={1000}
+                scale={1.02}
+                transitionSpeed={1500}
+              >
+                <motion.div 
+                  className="exp-dual-card"
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: i * 0.2 }}
+                  onMouseMove={handleMouseMove}
+                  style={{ '--exp-color': exp.color }}
+                >
+                  <div className="exp-dual-bg-glow" />
+                  <div className="exp-dual-content">
+                    <div className="exp-dual-top">
+                      <div className="exp-dual-logo font-mono">{exp.icon}</div>
+                      <div className="exp-dual-status">
+                        <CheckCircle size={16} /> Completed
                       </div>
-                      <div className="experience-cyber-cell empty" />
-                    </>
-                  ) : (
-                    <>
-                      <div className="experience-cyber-cell empty" />
-                      <div className="experience-cyber-cell">
-                        <Tilt
-                          tiltMaxAngleX={5}
-                          tiltMaxAngleY={5}
-                          perspective={1000}
-                          scale={1.02}
-                          transitionSpeed={1500}
-                        >
-                          <motion.div 
-                            className="exp-dual-card"
-                            initial={{ opacity: 0, x: 30 }}
-                            whileInView={{ opacity: 1, x: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.5, delay: i * 0.2 }}
-                            onMouseMove={handleMouseMove}
-                            style={{ '--exp-color': exp.color }}
-                          >
-                            <div className="exp-dual-bg-glow" />
-                            <div className="exp-dual-content">
-                              <div className="exp-dual-top">
-                                <div className="exp-dual-logo font-mono">{exp.icon}</div>
-                                <div className="exp-dual-status">
-                                  <CheckCircle size={16} /> Completed
-                                </div>
-                              </div>
-                              
-                              <div className="exp-dual-main">
-                                <h3 className="exp-dual-role">{exp.role}</h3>
-                                <div className="exp-dual-company font-mono">@ {exp.company}</div>
-                                <div className="exp-dual-duration">{exp.duration}</div>
-                              </div>
+                    </div>
+                    
+                    <div className="exp-dual-main">
+                      <h3 className="exp-dual-role">{exp.role}</h3>
+                      <div className="exp-dual-company font-mono">@ {exp.company}</div>
+                      <div className="exp-dual-duration">{exp.duration}</div>
+                    </div>
 
-                              <p className="exp-dual-desc">{exp.desc}</p>
+                    <p className="exp-dual-desc">{exp.desc}</p>
 
-                              <div className="exp-dual-tech">
-                                {exp.tech.map((t, j) => (
-                                  <span key={j} className="dual-tech-badge font-mono">{t}</span>
-                                ))}
-                              </div>
-                            </div>
-                          </motion.div>
-                        </Tilt>
-                      </div>
-                    </>
-                  )}
-                </div>
-              );
-            })}
+                    <div className="exp-dual-tech">
+                      {exp.tech.map((t, j) => (
+                        <span key={j} className="dual-tech-badge font-mono">{t}</span>
+                      ))}
+                    </div>
+                  </div>
+                </motion.div>
+              </Tilt>
+            ))}
           </div>
         </div>
       </section>
@@ -1898,15 +1837,6 @@ function App() {
                 <h3 className="hero-sending-title">Sending your message...</h3>
                 <p className="hero-sending-sub font-mono">Establishing secure connection</p>
                 <div className="hero-progress"><div className="hero-progress-fill" /></div>
-                
-                <div className="contact-terminal-log">
-                  {terminalLogs.map((log, index) => (
-                    <div key={index} className="contact-terminal-line">
-                      <span className="contact-terminal-prompt">&gt;</span>
-                      <span>{log}</span>
-                    </div>
-                  ))}
-                </div>
               </div>
             )}
             {formState === 'success' && (
@@ -1918,17 +1848,7 @@ function App() {
                   <div className="hsd-item"><span className="hsd-label font-mono">From:</span><span>{formData.name}</span></div>
                   <div className="hsd-item"><span className="hsd-label font-mono">At:</span><span>{currentTime} IST</span></div>
                 </div>
-                
-                <div className="contact-terminal-log" style={{ marginTop: '1.5rem', opacity: 0.8 }}>
-                  {terminalLogs.map((log, index) => (
-                    <div key={index} className="contact-terminal-line">
-                      <span className="contact-terminal-prompt">&gt;</span>
-                      <span>{log}</span>
-                    </div>
-                  ))}
-                </div>
-                
-                <button className="hero-reset-btn font-mono" onClick={() => setFormState('idle')} style={{ marginTop: '1.5rem' }}>Send Another Message</button>
+                <button className="hero-reset-btn font-mono" onClick={() => setFormState('idle')}>Send Another Message</button>
               </div>
             )}
           </motion.div>
