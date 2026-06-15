@@ -406,8 +406,18 @@ function CertificateCard({ cert, index, onPreview }) {
 }
 
 function CertGridCard({ cert, onView }) {
-  const [imgOk, setImgOk] = useState(true);
+  const [imgOk, setImgOk] = useState(!!cert.filename);
   const IconComp = cert.icon;
+
+  const handleView = (e) => {
+    if (e) e.stopPropagation();
+    if (cert.credentialUrl) {
+      window.open(cert.credentialUrl, '_blank', 'noopener,noreferrer');
+    } else {
+      onView(cert);
+    }
+  };
+
   return (
     <Tilt
       tiltMaxAngleX={6}
@@ -426,7 +436,7 @@ function CertGridCard({ cert, onView }) {
       >
         <div className="cert-grid-card-glow" />
         {imgOk ? (
-          <div className="cert-grid-card-image-wrap" onClick={() => onView(cert)}>
+          <div className="cert-grid-card-image-wrap" onClick={handleView}>
             <img
               src={`/certificates/${cert.filename}`}
               alt={`${cert.title} Certificate`}
@@ -481,7 +491,7 @@ function CertGridCard({ cert, onView }) {
               <div className="cert-card-actions">
                 <button 
                   className="cert-view-btn font-mono" 
-                  onClick={(e) => { e.stopPropagation(); onView(cert); }}
+                  onClick={handleView}
                   style={{ borderColor: `${cert.color}40`, color: cert.color }}
                 >
                   VIEW
@@ -1420,7 +1430,7 @@ function App() {
               { icon: Code,        title: 'Programming with Java',                                  issuer: 'NPTEL',               year: '2025', color: '#f89820', filename: 'cert_java_nptel.jpg', skills: ['OOPs', 'Java SE', 'Multithreading', 'Data Structures'] },
               { icon: Award,       title: 'Problem Solving (Basics) | SQL (Basics)',               issuer: 'HackerRank',          year: '2024', color: '#2ec866', filename: 'cert_hackerrank.png', skills: ['Problem Solving', 'SQL Queries', 'Relational Databases', 'Algorithms'] },
               { icon: Terminal,    title: 'Java Programming',                                       issuer: 'GreatLearning',       year: '2024', color: '#f89820', filename: 'cert_greatlearning.png', skills: ['Java Basics', 'Variables', 'Control Flow', 'Methods'] },
-              { icon: Database,    title: 'SQL – Basics (Standard)',                              issuer: 'SkillRack',           year: '2024', color: '#6366f1', filename: 'cert_skillrack.png', skills: ['Database Joins', 'Grouping', 'SQL Schema', 'Indexing'] },
+              { icon: Database,    title: 'SQL – Basics (Standard)',                              issuer: 'SkillRack',           year: '2024', color: '#6366f1', filename: '', credentialUrl: 'https://www.skillrack.com/faces/free/certificate.xhtml?t=cert&id=530779&key=WEQ', skills: ['Database Joins', 'Grouping', 'SQL Schema', 'Indexing'] },
               { icon: Layers,      title: 'Mastering Data Structures & Algorithms using C and C++', issuer: 'Udemy',              year: '2024', color: '#a435f0', filename: 'cert_udemy_dsa.png', skills: ['Data Structures', 'C/C++', 'Time Complexity', 'Recursion'] },
             ];
             return (
