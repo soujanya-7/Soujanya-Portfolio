@@ -216,7 +216,8 @@ const EXPERIENCE_DATA = [
     tech: ["MongoDB", "Express", "React.js", "Node.js"],
     color: "var(--accent-2)",
     logo: btLogo,
-    icon: "BT"
+    icon: "BT",
+    certFilename: "better_tomorrow_cert.jpg"
   },
   {
     role: "Web Development Intern",
@@ -226,7 +227,8 @@ const EXPERIENCE_DATA = [
     tech: ["HTML5", "CSS3", "React.js"],
     color: "var(--accent-1)",
     logo: pfLogo,
-    icon: "PF"
+    icon: "PF",
+    certFilename: "propel_foundry_cert.png"
   }
 ];
 
@@ -1367,6 +1369,24 @@ function App() {
                     </div>
 
                     <p className="exp-dual-desc">{exp.desc}</p>
+
+                    {exp.certFilename && (
+                       <div className="exp-cert-btn-container">
+                         <button 
+                           className="exp-cert-btn font-mono"
+                           onClick={() => setLightboxImage({
+                             filename: exp.certFilename,
+                             title: `${exp.role} Certificate`,
+                             issuer: exp.company,
+                             year: exp.duration.split(' ').pop(),
+                             color: exp.color
+                           })}
+                           style={{ '--btn-accent': exp.color }}
+                         >
+                           <Award size={14} /> View Certificate
+                         </button>
+                       </div>
+                     )}
 
                     <div className="exp-dual-tech">
                       {exp.tech.map((t, j) => (

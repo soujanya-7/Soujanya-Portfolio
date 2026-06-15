@@ -730,6 +730,48 @@ img { max-width: 100%; display: block; }
   flex-grow: 1;
 }
 
+.exp-cert-btn-container {
+  margin-bottom: 1.5rem;
+  display: flex;
+}
+
+.exp-cert-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.exp-cert-btn svg {
+  transition: transform 0.3s ease;
+}
+
+.exp-cert-btn:hover {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: var(--btn-accent);
+  color: var(--btn-accent);
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.03);
+  transform: translateY(-2px);
+}
+
+.exp-cert-btn:hover svg {
+  transform: scale(1.1) rotate(5deg);
+}
+
+.exp-cert-btn:active {
+  transform: translateY(0);
+}
+
 .exp-dual-tech {
   display: flex;
   flex-wrap: wrap;
