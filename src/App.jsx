@@ -42,9 +42,9 @@ const PROJECTS_DATA = [
     tech: ["HTML5", "CSS3", "JavaScript", "React.js"],
     status: "Completed",
     statusColor: "#10b981",
-    url: "https://propelfoundry.com",
-    github: "https://github.com/soujanya-s",
-    demo: "#",
+    url: "https://www.propelfoundry.com/",
+    github: "https://github.com/vivekkumar3987/PropelFoundry-Ver.1.git",
+    demo: "https://www.propelfoundry.com/",
     highlights: [
       "Custom responsive design utilizing curated, clean layout standards",
       "Smooth modern interaction triggers and transitions built in pure CSS/React",
