@@ -70,19 +70,18 @@ html.custom-cursor-active select {
 }
 
 .cursor {
-  position: fixed; top: 0; left: 0; width: 8px; height: 8px;
-  border-radius: 50%; background: #ffffff; pointer-events: none;
+  position: fixed; top: 0; left: 0; width: 6px; height: 6px;
+  border-radius: 50%; background: var(--accent-1); pointer-events: none;
   z-index: 999999; transform: translate(-50%,-50%);
   transition: transform 0.1s cubic-bezier(0.25, 1, 0.5, 1),
               width 0.2s ease,
               height 0.2s ease,
               opacity 0.2s ease;
-  mix-blend-mode: difference;
 }
 
 .cursor-follower {
-  position: fixed; top: 0; left: 0; width: 32px; height: 32px;
-  border-radius: 50%; border: 1.5px solid rgba(255, 255, 255, 0.6);
+  position: fixed; top: 0; left: 0; width: 24px; height: 24px;
+  border-radius: 50%; border: 1.5px solid rgba(139, 92, 246, 0.35);
   background: transparent; pointer-events: none; z-index: 999998; transform: translate(-50%,-50%);
   transition: transform 0.15s cubic-bezier(0.25, 1, 0.5, 1),
               width 0.3s cubic-bezier(0.25, 1, 0.5, 1),
@@ -90,30 +89,30 @@ html.custom-cursor-active select {
               background-color 0.3s ease,
               border-color 0.3s ease,
               opacity 0.3s ease;
-  mix-blend-mode: difference;
 }
 
 /* Hover State */
 .cursor.cursor-hover {
-  transform: translate(-50%,-50%) scale(0);
-  opacity: 0;
+  transform: translate(-50%,-50%) scale(1.25);
+  background: var(--accent-1);
 }
 .cursor-follower.cursor-hover {
-  width: 56px;
-  height: 56px;
-  background: #ffffff;
-  border-color: transparent;
+  width: 38px;
+  height: 38px;
+  border-color: var(--accent-1);
+  background: rgba(139, 92, 246, 0.08);
 }
 
 /* Clicked State */
 .cursor.cursor-clicked {
-  transform: translate(-50%,-50%) scale(1.6);
+  transform: translate(-50%,-50%) scale(1.5);
+  background: var(--accent-2);
 }
 .cursor-follower.cursor-clicked {
-  width: 24px;
-  height: 24px;
-  background: rgba(255,255,255,0.2);
-  border-color: rgba(255,255,255,0.8);
+  width: 16px;
+  height: 16px;
+  background: rgba(14, 165, 233, 0.1);
+  border-color: var(--accent-2);
 }
 
 /* Hidden State */
