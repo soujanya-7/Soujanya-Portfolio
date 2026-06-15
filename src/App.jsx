@@ -4,6 +4,8 @@ import Tilt from 'react-parallax-tilt';
 import CodeHero from './CodeHero';
 import SpotlightHero from './SpotlightHero';
 import soujanyaPhoto from './assets/soujanya.png';
+import btLogo from './assets/better_tomorrow_logo.png';
+import pfLogo from './assets/propel_foundry_logo.png';
 import ShinyText from './components/animations/ShinyText';
 import Magnet from './components/animations/Magnet';
 import ParticlesBackground from './components/animations/ParticlesBackground';
@@ -213,6 +215,7 @@ const EXPERIENCE_DATA = [
     desc: "Engineered robust full-stack applications using the MERN stack (MongoDB, Express, React, Node.js). Designed secure RESTful APIs to bridge the frontend and backend architectures for seamless data flow.",
     tech: ["MongoDB", "Express", "React.js", "Node.js"],
     color: "var(--accent-2)",
+    logo: btLogo,
     icon: "BT"
   },
   {
@@ -222,6 +225,7 @@ const EXPERIENCE_DATA = [
     desc: "Spearheaded the development and maintenance of the official company website. Overhauled the UI/UX design to build highly responsive, clean, and engaging user interfaces that boosted online presence.",
     tech: ["HTML5", "CSS3", "React.js"],
     color: "var(--accent-1)",
+    logo: pfLogo,
     icon: "PF"
   }
 ];
@@ -1344,7 +1348,13 @@ function App() {
                   <div className="exp-dual-bg-glow" />
                   <div className="exp-dual-content">
                     <div className="exp-dual-top">
-                      <div className="exp-dual-logo font-mono">{exp.icon}</div>
+                      <div className="exp-dual-logo">
+                        {exp.logo ? (
+                          <img src={exp.logo} alt={exp.company} className="exp-logo-img" />
+                        ) : (
+                          <span className="font-mono">{exp.icon}</span>
+                        )}
+                      </div>
                       <div className="exp-dual-status">
                         <CheckCircle size={16} /> Completed
                       </div>

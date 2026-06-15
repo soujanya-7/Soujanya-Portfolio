@@ -676,6 +676,16 @@ img { max-width: 100%; display: block; }
   box-shadow: 0 10px 25px rgba(0,0,0,0.2);
 }
 
+.exp-logo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 15px;
+  background: #ffffff;
+  padding: 5px;
+  box-sizing: border-box;
+}
+
 .exp-dual-status {
   display: flex;
   align-items: center;
