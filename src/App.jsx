@@ -1417,7 +1417,7 @@ function App() {
           {(() => {
             const CERTS = [
               { icon: Cpu,         title: 'Learning React',                                        issuer: 'Infosys Springboard', year: '2025', color: '#61dafb', filename: 'cert_react.png', skills: ['React.js', 'Hooks', 'State Management', 'Components'] },
-              { icon: Code,        title: 'Programming with Java',                                  issuer: 'NPTEL',               year: '2025', color: '#f89820', filename: 'cert_java_nptel.png', skills: ['OOPs', 'Java SE', 'Multithreading', 'Data Structures'] },
+              { icon: Code,        title: 'Programming with Java',                                  issuer: 'NPTEL',               year: '2025', color: '#f89820', filename: 'cert_java_nptel.jpg', skills: ['OOPs', 'Java SE', 'Multithreading', 'Data Structures'] },
               { icon: Award,       title: 'Problem Solving (Basics) | SQL (Basics)',               issuer: 'HackerRank',          year: '2024', color: '#2ec866', filename: 'cert_hackerrank.png', skills: ['Problem Solving', 'SQL Queries', 'Relational Databases', 'Algorithms'] },
               { icon: Terminal,    title: 'Java Programming',                                       issuer: 'GreatLearning',       year: '2024', color: '#f89820', filename: 'cert_greatlearning.png', skills: ['Java Basics', 'Variables', 'Control Flow', 'Methods'] },
               { icon: Database,    title: 'SQL – Basics (Standard)',                              issuer: 'SkillRack',           year: '2024', color: '#6366f1', filename: 'cert_skillrack.png', skills: ['Database Joins', 'Grouping', 'SQL Schema', 'Indexing'] },
