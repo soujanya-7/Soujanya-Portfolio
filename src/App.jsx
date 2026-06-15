@@ -932,7 +932,6 @@ function App() {
               href="/Soujanya_Resume.pdf"
               target="_blank"
               rel="noopener noreferrer"
-              download="Soujanya_Resume.pdf"
               className="nav-link resume-nav-link"
               onClick={() => setNavOpen(false)}
             >
@@ -942,7 +941,7 @@ function App() {
         </div>
         <div className="nav-actions">
           <Magnetic>
-            <a href="/Soujanya_Resume.pdf" target="_blank" rel="noopener noreferrer" download="Soujanya_Resume.pdf" className="btn-resume">
+            <a href="/Soujanya_Resume.pdf" target="_blank" rel="noopener noreferrer" className="btn-resume">
               <ShinyText speed="3s">Resume</ShinyText>
             </a>
           </Magnetic>
