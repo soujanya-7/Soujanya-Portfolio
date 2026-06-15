@@ -894,19 +894,6 @@ function App() {
       <div className="scroll-progress-bar" style={{ width: `${scrollProgress}%` }} />
       <canvas ref={canvasRef} className="global-particles-canvas" />
 
-      {/* Section Progress Indicator */}
-      <div className="section-progress">
-        {['home', 'services', 'skills', 'projects', 'experience', 'achievements', 'contact'].map((item) => (
-          <div 
-            key={item}
-            className={`progress-dot ${activeSection === item || (item === 'experience' && activeSection === 'certifications') ? 'active' : ''}`}
-            onClick={() => handleNavClick(item)}
-          >
-            <span className="progress-label">{item}</span>
-          </div>
-        ))}
-      </div>
-
       <nav className={`navbar ${scrolled ? 'scrolled' : ''}`} id="navbar">
         <div className="nav-logo" onClick={() => handleNavClick('home')}>
           <div className="text-logo">
