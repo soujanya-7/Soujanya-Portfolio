@@ -986,14 +986,14 @@ function App() {
                     <h3 className="deck-title">{service.title}</h3>
                     <p className="deck-subtitle font-mono">{service.subtitle}</p>
                     
-                    {/* Expanded details */}
                     <AnimatePresence>
                       {isActive && (
                         <motion.div
-                          initial={{ opacity: 0, y: 8 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: 4 }}
-                          transition={{ duration: 0.2 }}
+                          initial={{ height: 0, opacity: 0, y: 8 }}
+                          animate={{ height: "auto", opacity: 1, y: 0 }}
+                          exit={{ height: 0, opacity: 0, y: 4 }}
+                          transition={{ duration: 0.35, ease: [0.25, 1, 0.5, 1] }}
+                          style={{ overflow: "hidden" }}
                           className="deck-expanded-content"
                         >
                           <p className="deck-desc">{service.desc}</p>

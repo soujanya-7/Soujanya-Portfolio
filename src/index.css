@@ -4275,7 +4275,7 @@ img { max-width: 100%; display: block; }
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
-  margin-top: 1rem;
+  padding-top: 1rem;
 }
 
 .deck-desc {
