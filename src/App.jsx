@@ -483,11 +483,6 @@ function CertGridCard({ cert, onView }) {
             </div>
             
             <div className="cert-card-footer">
-              <div className="cert-card-meta">
-                <div className="meta-label font-mono">DATE OF ISSUANCE</div>
-                <div className="meta-val font-mono">{cert.year}</div>
-              </div>
-              
               <div className="cert-card-actions">
                 <button 
                   className="cert-view-btn font-mono" 
@@ -496,7 +491,6 @@ function CertGridCard({ cert, onView }) {
                 >
                   VIEW
                 </button>
-                <span className="verified-pill-lg font-mono">✔ Verified</span>
               </div>
             </div>
           </div>
@@ -1478,7 +1472,7 @@ function App() {
                         />
                         <div className="lightbox-caption">
                           <h3 className="lightbox-title">{lightboxImage.title}</h3>
-                          <p className="lightbox-subtitle font-mono" style={{ color: lightboxImage.color }}>{lightboxImage.issuer} ({lightboxImage.year})</p>
+                          <p className="lightbox-subtitle font-mono" style={{ color: lightboxImage.color }}>{lightboxImage.issuer}</p>
                         </div>
                       </motion.div>
                     </motion.div>
