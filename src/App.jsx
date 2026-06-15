@@ -958,11 +958,9 @@ function App() {
               return (
                 <motion.div
                   key={service.title}
-                  layout
                   onClick={() => setActiveService(idx)}
                   className={`deck-card ${isActive ? 'active' : ''}`}
                   onMouseMove={handleMouseMove}
-                  transition={{ type: "spring", stiffness: 220, damping: 22 }}
                   style={{
                     '--card-accent': service.color
                   }}
@@ -989,7 +987,7 @@ function App() {
                     <p className="deck-subtitle font-mono">{service.subtitle}</p>
                     
                     {/* Expanded details */}
-                    <AnimatePresence mode="wait">
+                    <AnimatePresence>
                       {isActive && (
                         <motion.div
                           initial={{ opacity: 0, y: 8 }}
