@@ -468,9 +468,6 @@ function CertGridCard({ cert, onView }) {
             <div className="cert-card-body">
               <div className="cert-card-subtitle font-mono" style={{ color: cert.color }}>VERIFIED CREDENTIAL</div>
               <h4 className="cert-card-title">{cert.title}</h4>
-              <div className="cert-card-recipient">
-                <span>Awarded to:</span> <strong>Soujanya S</strong>
-              </div>
               {cert.skills && (
                 <div className="cert-skills-list">
                   {cert.skills.map((skill, k) => (
