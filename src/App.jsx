@@ -3,7 +3,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Tilt from 'react-parallax-tilt';
 import CodeHero from './CodeHero';
 import SpotlightHero from './SpotlightHero';
-import PhysicsHero from './PhysicsHero';
 import soujanyaPhoto from './assets/soujanya.png';
 import ShinyText from './components/animations/ShinyText';
 import Magnet from './components/animations/Magnet';
@@ -503,7 +502,6 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [loaderProgress, setLoaderProgress] = useState(0);
   const [scrollProgress, setScrollProgress] = useState(0);
-  const [heroMode, setHeroMode] = useState('physics');
 
   useEffect(() => {
     const handleScroll = () => {
@@ -520,6 +518,7 @@ function App() {
   const [activeSection, setActiveSection] = useState('home');
   const [activeProject, setActiveProject] = useState(0);
   const [activeService, setActiveService] = useState(0);
+  const [activeSkillCat, setActiveSkillCat] = useState(0);
 
   const prevProject = () => {
     setActiveProject((prev) => (prev === 0 ? PROJECTS_DATA.length - 1 : prev - 1));
@@ -944,71 +943,7 @@ function App() {
         </div>
       </nav>
 
-      {/* Sleek Floating Mode Switcher */}
-      <div className="hero-mode-switcher font-mono">
-        <span className="switcher-label">INTERACTION MODE</span>
-        <div className="switcher-buttons">
-          <button 
-            className={`switcher-btn ${heroMode === 'physics' ? 'active' : ''}`}
-            onClick={() => setHeroMode('physics')}
-          >
-            <span className="dot" /> Physics
-          </button>
-          <button 
-            className={`switcher-btn ${heroMode === 'code' ? 'active' : ''}`}
-            onClick={() => setHeroMode('code')}
-          >
-            <span className="dot" /> Code
-          </button>
-          <button 
-            className={`switcher-btn ${heroMode === 'spotlight' ? 'active' : ''}`}
-            onClick={() => setHeroMode('spotlight')}
-          >
-            <span className="dot" /> Aurora
-          </button>
-        </div>
-      </div>
-
-      <div style={{ position: 'relative', overflow: 'hidden', minHeight: '100vh', width: '100vw' }}>
-        <AnimatePresence mode="wait">
-          {heroMode === 'physics' && (
-            <motion.div
-              key="physics"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.3 }}
-              style={{ width: '100%', height: '100%' }}
-            >
-              <PhysicsHero onNavigate={handleNavClick} />
-            </motion.div>
-          )}
-          {heroMode === 'code' && (
-            <motion.div
-              key="code"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.3 }}
-              style={{ width: '100%', height: '100%' }}
-            >
-              <CodeHero onNavigate={handleNavClick} />
-            </motion.div>
-          )}
-          {heroMode === 'spotlight' && (
-            <motion.div
-              key="spotlight"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.3 }}
-              style={{ width: '100%', height: '100%' }}
-            >
-              <SpotlightHero onNavigate={handleNavClick} />
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
+      <SpotlightHero onNavigate={handleNavClick} />
 
       {/* Services Section */}
       <section className="services section" id="services">
@@ -1108,63 +1043,108 @@ function App() {
             <h2 className="section-title"><SplitText>Technical Mastery</SplitText></h2>
           </div>
 
-          <div className="skills-grid">
-            {SKILLS_DATA.map((cat, i) => {
-              const IconComponent = cat.icon;
-              return (
-                <Tilt
-                  key={cat.category}
-                  tiltMaxAngleX={6}
-                  tiltMaxAngleY={6}
-                  perspective={1000}
-                  scale={1.02}
-                  transitionSpeed={1500}
-                >
-                  <motion.div
-                    className="skills-category-card glass-card"
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5, delay: i * 0.12 }}
-                    whileHover={{ y: -5, transition: { duration: 0.2 } }}
-                    onMouseMove={handleMouseMove}
-                    style={{ '--card-accent': cat.color }}
-                  >
-                    <div className="skills-card-glow" />
-                    <div className="skills-category-header">
-                      <div className="skills-category-icon-wrap" style={{ color: cat.color }}>
-                        <IconComponent size={20} />
+          <div className="skills-dashboard-layout">
+            {/* Left Nav Column */}
+            <div className="skills-nav-column">
+              <div className="skills-nav-deck">
+                {SKILLS_DATA.map((cat, idx) => {
+                  const IconComp = cat.icon;
+                  const isActive = activeSkillCat === idx;
+                  return (
+                    <Magnet key={cat.category} padding={12} className="skills-nav-magnet">
+                      <div 
+                        className={`skills-nav-item ${isActive ? 'active' : ''}`}
+                        onClick={() => setActiveSkillCat(idx)}
+                        style={{ '--nav-accent': cat.color }}
+                      >
+                        <div className="skills-nav-glow" />
+                        <div className="skills-nav-icon-wrap" style={{ color: cat.color }}>
+                          <IconComp size={18} />
+                        </div>
+                        <div className="skills-nav-info">
+                          <h3 className="skills-nav-title">{cat.category}</h3>
+                          <span className="skills-nav-subtitle font-mono">{cat.subtitle}</span>
+                        </div>
                       </div>
-                      <div>
-                        <h3 className="skills-category-title">{cat.category}</h3>
-                        <span className="skills-category-subtitle font-mono">{cat.subtitle}</span>
-                      </div>
-                    </div>
+                    </Magnet>
+                  );
+                })}
+              </div>
+            </div>
 
-                    <div className="skills-list">
-                      {cat.items.map((skill, idx) => (
-                        <div key={skill.name} className="skill-progress-item">
-                          <div className="skill-info">
-                            <span className="skill-name">{skill.name}</span>
-                            <span className="skill-level font-mono" style={{ color: cat.color }}>{skill.level}</span>
+            {/* Right Showcase Column */}
+            <div className="skills-showcase-column">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeSkillCat}
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  transition={{ duration: 0.35, ease: "easeOut" }}
+                  className="skills-showcase-panel glass-card"
+                  style={{ '--showcase-accent': SKILLS_DATA[activeSkillCat].color }}
+                >
+                  <div className="skills-showcase-glow" />
+                  <div className="skills-showcase-header">
+                    <div className="skills-showcase-icon-wrap" style={{ color: SKILLS_DATA[activeSkillCat].color }}>
+                      {(() => {
+                        const ShowIcon = SKILLS_DATA[activeSkillCat].icon;
+                        return <ShowIcon size={24} />;
+                      })()}
+                    </div>
+                    <div>
+                      <span className="skills-showcase-tag font-mono" style={{ color: SKILLS_DATA[activeSkillCat].color }}>ACTIVE SHOWCASE</span>
+                      <h3 className="skills-showcase-title">{SKILLS_DATA[activeSkillCat].category}</h3>
+                    </div>
+                  </div>
+
+                  <div className="skill-tiles-grid">
+                    {SKILLS_DATA[activeSkillCat].items.map((skill, idx) => (
+                      <Tilt
+                        key={skill.name}
+                        tiltMaxAngleX={8}
+                        tiltMaxAngleY={8}
+                        perspective={800}
+                        scale={1.04}
+                        transitionSpeed={1200}
+                        style={{ display: 'flex' }}
+                      >
+                        <div
+                          className="skill-tile-card"
+                          onMouseMove={handleMouseMove}
+                          style={{ '--tile-accent': SKILLS_DATA[activeSkillCat].color }}
+                        >
+                          <div className="skill-tile-glow" />
+                          <div className="skill-tile-radial-wrap">
+                            <svg width="72" height="72" viewBox="0 0 72 72" className="skill-tile-radial">
+                              <circle cx="36" cy="36" r="26" stroke="rgba(255,255,255,0.03)" strokeWidth="5" fill="transparent" />
+                              <motion.circle 
+                                cx="36" cy="36" r="26" 
+                                stroke={SKILLS_DATA[activeSkillCat].color} 
+                                strokeWidth="5" 
+                                fill="transparent"
+                                strokeDasharray={163.36}
+                                initial={{ strokeDashoffset: 163.36 }}
+                                animate={{ strokeDashoffset: 163.36 - (163.36 * skill.value) / 100 }}
+                                transition={{ duration: 1.2, delay: idx * 0.06, ease: "easeOut" }}
+                                strokeLinecap="round"
+                              />
+                              <text x="36" y="41" textAnchor="middle" fill="#ffffff" fontSize="12" fontWeight="800" fontFamily="monospace">{skill.value}%</text>
+                            </svg>
                           </div>
-                          <div className="skill-track">
-                            <motion.div 
-                              className="skill-bar" 
-                              style={{ background: `linear-gradient(90deg, var(--border), ${cat.color})` }}
-                              initial={{ width: 0 }}
-                              whileInView={{ width: `${skill.value}%` }}
-                              viewport={{ once: true }}
-                              transition={{ duration: 1.2, delay: 0.2 + idx * 0.08, ease: "easeOut" }}
-                            />
+                          <div className="skill-tile-info">
+                            <h4 className="skill-tile-name">{skill.name}</h4>
+                            <span className="skill-tile-badge font-mono" style={{ color: SKILLS_DATA[activeSkillCat].color, borderColor: `${SKILLS_DATA[activeSkillCat].color}30` }}>
+                              {skill.level}
+                            </span>
                           </div>
                         </div>
-                      ))}
-                    </div>
-                  </motion.div>
-                </Tilt>
-              );
-            })}
+                      </Tilt>
+                    ))}
+                  </div>
+                </motion.div>
+              </AnimatePresence>
+            </div>
           </div>
         </div>
       </section>
