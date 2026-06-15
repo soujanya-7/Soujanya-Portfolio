@@ -40,8 +40,6 @@ body {
   background: var(--bg-primary);
   color: var(--text-primary);
   overflow-x: hidden;
-  /* Cursor hidden for custom cursor */
-  cursor: none;
 }
 
 a { text-decoration: none; color: inherit; }
@@ -58,19 +56,70 @@ img { max-width: 100%; display: block; }
 /* ============================================================
    CUSTOM CURSOR
    ============================================================ */
-.cursor {
-  position: fixed; top: 0; left: 0; width: 12px; height: 12px;
-  border-radius: 50%; background: var(--accent-1); pointer-events: none;
-  z-index: 999999; transform: translate(-50%,-50%);
-  transition: transform 0.1s, background 0.3s;
-  mix-blend-mode: screen;
+/* Only hide standard cursor when custom cursor is active and initialized */
+html.custom-cursor-active,
+html.custom-cursor-active body,
+html.custom-cursor-active a,
+html.custom-cursor-active button,
+html.custom-cursor-active [role="button"],
+html.custom-cursor-active .clickable,
+html.custom-cursor-active input,
+html.custom-cursor-active textarea,
+html.custom-cursor-active select {
+  cursor: none !important;
 }
+
+.cursor {
+  position: fixed; top: 0; left: 0; width: 8px; height: 8px;
+  border-radius: 50%; background: #ffffff; pointer-events: none;
+  z-index: 999999; transform: translate(-50%,-50%);
+  transition: transform 0.1s cubic-bezier(0.25, 1, 0.5, 1),
+              width 0.2s ease,
+              height 0.2s ease,
+              opacity 0.2s ease;
+  mix-blend-mode: difference;
+}
+
 .cursor-follower {
-  position: fixed; top: 0; left: 0; width: 36px; height: 36px;
-  border-radius: 50%; border: 1.5px solid rgba(124,58,237,0.5);
-  pointer-events: none; z-index: 999998; transform: translate(-50%,-50%);
-  transition: transform 0.15s ease, opacity 0.3s;
-  mix-blend-mode: screen;
+  position: fixed; top: 0; left: 0; width: 32px; height: 32px;
+  border-radius: 50%; border: 1.5px solid rgba(255, 255, 255, 0.6);
+  background: transparent; pointer-events: none; z-index: 999998; transform: translate(-50%,-50%);
+  transition: transform 0.15s cubic-bezier(0.25, 1, 0.5, 1),
+              width 0.3s cubic-bezier(0.25, 1, 0.5, 1),
+              height 0.3s cubic-bezier(0.25, 1, 0.5, 1),
+              background-color 0.3s ease,
+              border-color 0.3s ease,
+              opacity 0.3s ease;
+  mix-blend-mode: difference;
+}
+
+/* Hover State */
+.cursor.cursor-hover {
+  transform: translate(-50%,-50%) scale(0);
+  opacity: 0;
+}
+.cursor-follower.cursor-hover {
+  width: 56px;
+  height: 56px;
+  background: #ffffff;
+  border-color: transparent;
+}
+
+/* Clicked State */
+.cursor.cursor-clicked {
+  transform: translate(-50%,-50%) scale(1.6);
+}
+.cursor-follower.cursor-clicked {
+  width: 24px;
+  height: 24px;
+  background: rgba(255,255,255,0.2);
+  border-color: rgba(255,255,255,0.8);
+}
+
+/* Hidden State */
+.cursor.cursor-hidden,
+.cursor-follower.cursor-hidden {
+  opacity: 0;
 }
 
 /* ============================================================

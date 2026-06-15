@@ -595,6 +595,8 @@ function App() {
   useEffect(() => {
     if ('ontouchstart' in window) return;
 
+    document.documentElement.classList.add('custom-cursor-active');
+
     let mx = window.innerWidth / 2;
     let my = window.innerHeight / 2;
     let fx = mx;
@@ -607,6 +609,41 @@ function App() {
         cursorRef.current.style.left = `${mx}px`;
         cursorRef.current.style.top = `${my}px`;
       }
+    };
+
+    const handleMouseOver = (e) => {
+      const target = e.target;
+      if (!target) return;
+      
+      const isInteractive = target.closest('a, button, [role="button"], .clickable, .deck-card, .project-card, .cert-box, .btn-resume, .btn-hire, .nav-toggle, #backToTop, .skill-tile-card, .social-icon');
+      
+      if (isInteractive) {
+        cursorRef.current?.classList.add('cursor-hover');
+        followerRef.current?.classList.add('cursor-hover');
+      } else {
+        cursorRef.current?.classList.remove('cursor-hover');
+        followerRef.current?.classList.remove('cursor-hover');
+      }
+    };
+
+    const handleMouseDown = () => {
+      cursorRef.current?.classList.add('cursor-clicked');
+      followerRef.current?.classList.add('cursor-clicked');
+    };
+
+    const handleMouseUp = () => {
+      cursorRef.current?.classList.remove('cursor-clicked');
+      followerRef.current?.classList.remove('cursor-clicked');
+    };
+
+    const handleMouseLeaveDoc = () => {
+      cursorRef.current?.classList.add('cursor-hidden');
+      followerRef.current?.classList.add('cursor-hidden');
+    };
+
+    const handleMouseEnterDoc = () => {
+      cursorRef.current?.classList.remove('cursor-hidden');
+      followerRef.current?.classList.remove('cursor-hidden');
     };
 
     let active = true;
@@ -622,11 +659,22 @@ function App() {
     };
 
     window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mouseover', handleMouseOver);
+    window.addEventListener('mousedown', handleMouseDown);
+    window.addEventListener('mouseup', handleMouseUp);
+    document.addEventListener('mouseleave', handleMouseLeaveDoc);
+    document.addEventListener('mouseenter', handleMouseEnterDoc);
     requestAnimationFrame(updateFollower);
 
     return () => {
       active = false;
       window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseover', handleMouseOver);
+      window.removeEventListener('mousedown', handleMouseDown);
+      window.removeEventListener('mouseup', handleMouseUp);
+      document.removeEventListener('mouseleave', handleMouseLeaveDoc);
+      document.removeEventListener('mouseenter', handleMouseEnterDoc);
+      document.documentElement.classList.remove('custom-cursor-active');
     };
   }, []);
 
