@@ -1490,7 +1490,6 @@ img { max-width: 100%; display: block; }
 
 .lightbox-content {
   position: relative;
-  max-width: 900px;
   width: 100%;
   background: rgba(13, 17, 23, 0.95);
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -1500,6 +1499,15 @@ img { max-width: 100%; display: block; }
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
+  transition: max-width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.lightbox-content.landscape {
+  max-width: 900px;
+}
+
+.lightbox-content.portrait {
+  max-width: 500px;
 }
 
 .lightbox-close {

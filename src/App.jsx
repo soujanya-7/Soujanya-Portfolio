@@ -533,6 +533,11 @@ function App() {
     setActiveProject((prev) => (prev === PROJECTS_DATA.length - 1 ? 0 : prev + 1));
   };
   const [lightboxImage, setLightboxImage] = useState(null);
+  const [isLightboxPortrait, setIsLightboxPortrait] = useState(false);
+
+  useEffect(() => {
+    setIsLightboxPortrait(false);
+  }, [lightboxImage]);
   const [formState, setFormState] = useState('idle');
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
   const [emailCopied, setEmailCopied] = useState(false);
@@ -1437,7 +1442,7 @@ function App() {
                       onClick={() => setLightboxImage(null)}
                     >
                       <motion.div
-                        className="lightbox-content"
+                        className={`lightbox-content ${isLightboxPortrait ? 'portrait' : 'landscape'}`}
                         initial={{ scale: 0.9, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
                         exit={{ scale: 0.9, opacity: 0 }}
@@ -1451,6 +1456,12 @@ function App() {
                           src={`/certificates/${lightboxImage.filename}`}
                           alt={`${lightboxImage.title} Certificate Full Preview`}
                           className="lightbox-img"
+                          onLoad={(e) => {
+                            const { naturalWidth, naturalHeight } = e.target;
+                            if (naturalHeight > naturalWidth) {
+                              setIsLightboxPortrait(true);
+                            }
+                          }}
                           onError={(e) => {
                             e.target.src = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='800' height='600' viewBox='0 0 800 600'><rect width='100%' height='100%' fill='%230b0f19'/><text x='50%' y='50%' font-family='monospace' font-size='24' fill='%23ef4444' text-anchor='middle'>Certificate Image Not Found</text><text x='50%' y='56%' font-family='monospace' font-size='14' fill='%236b7280' text-anchor='middle'>Place the file in /public/certificates/" + lightboxImage.filename + "</text></svg>";
                           }}
