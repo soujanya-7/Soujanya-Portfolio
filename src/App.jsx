@@ -10,7 +10,6 @@ import ShinyText from './components/animations/ShinyText';
 import Magnet from './components/animations/Magnet';
 import ParticlesBackground from './components/animations/ParticlesBackground';
 import SplitText from './components/animations/SplitText';
-import DecryptedText from './components/animations/DecryptedText';
 
 import { 
   Mail, ChevronRight, Award,
@@ -543,25 +542,6 @@ function App() {
   const [formState, setFormState] = useState('idle');
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
   const [emailCopied, setEmailCopied] = useState(false);
-  const [currentTime, setCurrentTime] = useState('');
-
-  // Live Coimbatore Time Clock (IST is UTC + 5:50 or 5:30)
-  useEffect(() => {
-    const updateTime = () => {
-      const options = {
-        timeZone: 'Asia/Kolkata',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        hour12: true
-      };
-      const formatter = new Intl.DateTimeFormat([], options);
-      setCurrentTime(formatter.format(new Date()));
-    };
-    updateTime();
-    const interval = setInterval(updateTime, 1000);
-    return () => clearInterval(interval);
-  }, []);
 
   const handleCopyEmail = () => {
     navigator.clipboard.writeText('soujanya.s2023@sece.ac.in').then(() => {
@@ -996,8 +976,8 @@ function App() {
       <section className="services section" id="services">
         <div className="container">
           <div className="section-header">
-            <span className="section-tag"><DecryptedText text="01. Specialties" animateOn="hover" /></span>
-            <h2 className="section-title"><DecryptedText text="Areas of Expertise" /></h2>
+            <span className="section-tag">01. Specialties</span>
+            <h2 className="section-title"><SplitText>Areas of Expertise</SplitText></h2>
           </div>
           
           <div className="services-deck">
@@ -1084,8 +1064,8 @@ function App() {
       <section className="skills section" id="skills">
         <div className="container">
           <div className="section-header">
-            <span className="section-tag"><DecryptedText text="02. Skills" animateOn="hover" /></span>
-            <h2 className="section-title"><DecryptedText text="Technical Mastery" /></h2>
+            <span className="section-tag">02. Skills</span>
+            <h2 className="section-title"><SplitText>Technical Mastery</SplitText></h2>
           </div>
 
           <div className="skills-dashboard-layout">
@@ -1198,25 +1178,21 @@ function App() {
       <section className="projects section" id="projects">
         <div className="container">
           <div className="projects-header-wrap">
-            <Magnet padding={12}>
-              <button className="carousel-nav-btn prev" onClick={prevProject} aria-label="Previous Project">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
-              </button>
-            </Magnet>
+            <button className="carousel-nav-btn prev" onClick={prevProject} aria-label="Previous Project">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+            </button>
             
             <div className="section-header centered">
-              <span className="section-tag"><DecryptedText text="03. Projects" animateOn="hover" /></span>
-              <h2 className="section-title"><DecryptedText text="Featured Projects" /></h2>
+              <span className="section-tag">03. Projects</span>
+              <h2 className="section-title"><SplitText>Featured Projects</SplitText></h2>
               <p className="section-sub-centered">
                 A showcase of production-ready applications, secure database systems, and low-latency environmental monitors engineered with high-performance architectures.
               </p>
             </div>
             
-            <Magnet padding={12}>
-              <button className="carousel-nav-btn next" onClick={nextProject} aria-label="Next Project">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-              </button>
-            </Magnet>
+            <button className="carousel-nav-btn next" onClick={nextProject} aria-label="Next Project">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            </button>
           </div>
 
           <div className="projects-carousel-wrapper">
@@ -1367,8 +1343,8 @@ function App() {
       <section className="experience section" id="experience">
         <div className="container">
           <div className="section-header">
-            <span className="section-tag"><DecryptedText text="04. Internships" animateOn="hover" /></span>
-            <h2 className="section-title"><DecryptedText text="Professional Experience" /></h2>
+            <span className="section-tag">04. Internships</span>
+            <h2 className="section-title"><SplitText>Professional Experience</SplitText></h2>
           </div>
 
           <div className="exp-dual-grid">
@@ -1448,8 +1424,8 @@ function App() {
       <section className="certifications section" id="certifications">
         <div className="container">
           <div className="section-header">
-            <span className="section-tag"><DecryptedText text="05. Credentials" animateOn="hover" /></span>
-            <h2 className="section-title"><DecryptedText text="Credentials & Certifications" /></h2>
+            <span className="section-tag">05. Credentials</span>
+            <h2 className="section-title"><SplitText>Credentials & Certifications</SplitText></h2>
           </div>
 
           {(() => {
@@ -1524,8 +1500,8 @@ function App() {
       <section className="achievements section" id="achievements">
         <div className="container">
           <div className="section-header">
-            <span className="section-tag"><DecryptedText text="06. Achievements" animateOn="hover" /></span>
-            <h2 className="section-title"><DecryptedText text="Honors & Achievements" /></h2>
+            <span className="section-tag">06. Achievements</span>
+            <h2 className="section-title"><SplitText>Honors & Achievements</SplitText></h2>
           </div>
 
           <div className="achievements-bento-grid">
@@ -1829,8 +1805,8 @@ function App() {
           <div className="contact-orb orb-2" />
 
           <div className="section-header">
-            <span className="section-tag"><DecryptedText text="07. Contact" animateOn="hover" /></span>
-            <h2 className="section-title"><DecryptedText text="Let's Work Together" /></h2>
+            <span className="section-tag">07. Contact</span>
+            <h2 className="section-title"><SplitText>Let's Work Together</SplitText></h2>
             <p className="section-sub">Have a project in mind or want to collaborate? I'd love to hear from you.</p>
           </div>
 
@@ -1855,15 +1831,6 @@ function App() {
               <div className="cchip-text">
                 <span className="cchip-label font-mono">LOCATION</span>
                 <span className="cchip-val">Coimbatore, India</span>
-              </div>
-            </div>
-            <div className="contact-chip-card">
-              <div className="cchip-icon" style={{ background: 'rgba(16,185,129,0.15)' }}>
-                <Clock size={18} style={{ color: '#10b981' }} />
-              </div>
-              <div className="cchip-text">
-                <span className="cchip-label font-mono">LOCAL TIME</span>
-                <span className="cchip-val">{currentTime || '...'} IST</span>
               </div>
             </div>
           </motion.div>
@@ -1907,7 +1874,6 @@ function App() {
                 <p className="hero-success-sub">Thank you for reaching out. I'll get back to you soon.</p>
                 <div className="hero-success-details">
                   <div className="hsd-item"><span className="hsd-label font-mono">From:</span><span>{formData.name}</span></div>
-                  <div className="hsd-item"><span className="hsd-label font-mono">At:</span><span>{currentTime} IST</span></div>
                 </div>
                 <button className="hero-reset-btn font-mono" onClick={() => setFormState('idle')}>Send Another Message</button>
               </div>
