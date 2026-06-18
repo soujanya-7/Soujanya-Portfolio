@@ -512,15 +512,12 @@ function App() {
 
   useEffect(() => {
     const handleScroll = () => {
-      const scrollY = window.pageYOffset || document.documentElement.scrollTop;
       const totalScroll = document.documentElement.scrollHeight - window.innerHeight;
       if (totalScroll > 0) {
-        setScrollProgress((scrollY / totalScroll) * 100);
+        setScrollProgress((window.pageYOffset / totalScroll) * 100);
       }
-      document.documentElement.style.setProperty('--scroll-y', `${scrollY}px`);
     };
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll();
+    window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
   const [navOpen, setNavOpen] = useState(false);
@@ -772,13 +769,14 @@ function App() {
     return () => obs.disconnect();
   }, [loading]);
 
-  // Canvas Particles (Unique Parallax Starfield & Constellation)
+  // Canvas: Synthwave / Cyberpunk Interactive Perspective Grid
   useEffect(() => {
     if (loading || !canvasRef.current) return;
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
-    let W, H, particles = [];
+    let W, H;
     let animationId;
+    let time = 0;
     let mouse = { x: null, y: null };
     let smoothScrollY = window.scrollY;
 
@@ -799,131 +797,180 @@ function App() {
 
     window.addEventListener('mousemove', handleMouseMove);
     window.addEventListener('mouseout', handleMouseLeave);
+    window.addEventListener('resize', resize);
 
-    class Particle {
-      constructor() {
-        this.x = Math.random() * W;
-        this.y = Math.random() * H;
-        this.depth = Math.random() * 0.9 + 0.1; // Parallax layers: 0.1 (far) to 1.0 (close)
-        
-        // Speed scaling based on depth
-        this.vx = (Math.random() - 0.5) * 0.25 * this.depth;
-        this.vy = (Math.random() - 0.5) * 0.25 * this.depth;
-        
-        // Closer particles are larger and brighter
-        this.r = this.depth * 1.8 + 0.4;
-        this.a = this.depth * 0.4 + 0.1;
-        this.colorType = Math.floor(Math.random() * 3); // 0: Violet, 1: Cyan, 2: Emerald
-      }
-      
-      update() {
-        this.x += this.vx;
-        this.y += this.vy;
-        
-        // Wraparound borders
-        if (this.x < 0) this.x = W;
-        if (this.x > W) this.x = 0;
-        if (this.y < 0) this.y = H;
-        if (this.y > H) this.y = 0;
-      }
-    }
+    // Initial starry sky nodes (for the top neon horizon half)
+    const stars = Array.from({ length: 45 }, () => ({
+      x: Math.random(),
+      y: Math.random() * 0.45, // Top half
+      size: Math.random() * 1.2 + 0.3,
+      alpha: Math.random() * 0.4 + 0.1,
+      speed: Math.random() * 0.02 + 0.005
+    }));
 
-    const init = () => {
-      resize();
-      particles = Array.from({ length: 130 }, () => new Particle());
-    };
+    resize();
 
     const draw = () => {
       ctx.clearRect(0, 0, W, H);
-      
-      // Interpolate scroll position for buttery smooth parallax scrolling
-      smoothScrollY += (window.scrollY - smoothScrollY) * 0.12;
+      time += 0.4; // Grid speed speed multiplier
 
-      particles.forEach((p) => {
-        // Calculate Y position adjusted by depth (parallax factor)
-        const py = (p.y - smoothScrollY * p.depth * 0.15) % H;
-        const finalY = py < 0 ? py + H : py;
-        const finalX = p.x;
+      // Horizon position
+      const horizonY = H * 0.45;
+      
+      // Interpolate page scroll position for parallax and rolling speed
+      smoothScrollY += (window.scrollY - smoothScrollY) * 0.1;
+
+      // 1. Draw Synthwave Stars (Top Half)
+      stars.forEach(star => {
+        // Star coordinates mapped to screen width/height
+        const sx = star.x * W;
+        // Parallax scroll stars
+        const sy = (star.y * H - smoothScrollY * 0.05) % (H * 0.45);
+        const finalSy = sy < 0 ? sy + (H * 0.45) : sy;
 
         ctx.beginPath();
-        ctx.arc(finalX, finalY, p.r, 0, Math.PI * 2);
-        
-        let color;
-        if (p.colorType === 0) {
-          color = `rgba(139, 92, 246, ${p.a})`; // Violet
-        } else if (p.colorType === 1) {
-          color = `rgba(14, 165, 233, ${p.a})`; // Cyan
-        } else {
-          color = `rgba(16, 185, 129, ${p.a * 0.7})`; // Emerald
-        }
-        
-        ctx.fillStyle = color;
+        ctx.arc(sx, finalSy, star.size, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 255, 255, ${star.alpha * (1 - finalSy / (H * 0.45))})`; // Fade out near horizon
         ctx.fill();
-        p.update();
 
-        // Attraction / Line-drawing to Mouse
-        if (mouse.x != null && mouse.y != null) {
-          const dx = mouse.x - finalX;
-          const dy = mouse.y - finalY;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 180) {
-            ctx.beginPath();
-            ctx.moveTo(finalX, finalY);
-            ctx.lineTo(mouse.x, mouse.y);
-            // Light up link lines based on proximity and depth
-            ctx.strokeStyle = `rgba(14, 165, 233, ${0.15 * (1 - dist / 180) * p.depth})`;
-            ctx.lineWidth = p.depth * 0.8;
-            ctx.stroke();
-            
-            // Soft attraction to mouse
-            p.x += dx * 0.002 * p.depth;
-            p.y += dy * 0.002 * p.depth;
-          }
-        }
+        // Slow drift
+        star.x += star.speed * 0.01;
+        if (star.x > 1) star.x = 0;
       });
 
-      // Draw constellation connections between adjacent layer nodes
-      for (let i = 0; i < particles.length; i++) {
-        const pi = particles[i];
-        const pyI = (pi.y - smoothScrollY * pi.depth * 0.15) % H;
-        const finalYI = pyI < 0 ? pyI + H : pyI;
+      // 2. Draw Perspective Ground Grid (Bottom Half)
+      const numCols = 26;
+      const numRows = 16;
+      const points = [];
 
-        for (let j = i + 1; j < particles.length; j++) {
-          const pj = particles[j];
+      // Auto roll forward + speed up/down with page scroll
+      const rollOffset = (time * 0.02 + smoothScrollY * 0.007) % 1.0;
+
+      for (let r = 0; r <= numRows; r++) {
+        points[r] = [];
+        // Calculate depth ratio 'v' using exponential curve to compress spacing at the horizon
+        const v = (r - rollOffset) / numRows;
+        if (v < 0) continue;
+        
+        const yBase = horizonY + (H - horizonY) * Math.pow(v, 2.3);
+        
+        for (let c = 0; c <= numCols; c++) {
+          const u = c / numCols;
+          // Column lines radiate outwards towards the bottom of the screen
+          const xBase = W / 2 + (u - 0.5) * W * 1.35 * (0.05 + v * 2.8);
           
-          // Connect only if they are on a similar layer (depth check) to create structural dimensions
-          if (Math.abs(pi.depth - pj.depth) > 0.25) continue;
+          let x = xBase;
+          let y = yBase;
 
-          const pyJ = (pj.y - smoothScrollY * pj.depth * 0.15) % H;
-          const finalYJ = pyJ < 0 ? pyJ + H : pyJ;
-
-          const dx = pi.x - pj.x;
-          const dy = finalYI - finalYJ;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-
-          if (dist < 110) {
-            ctx.beginPath();
-            ctx.moveTo(pi.x, finalYI);
-            ctx.lineTo(pj.x, finalYJ);
-            const alpha = 0.08 * (1 - dist / 110);
-            ctx.strokeStyle = `rgba(139, 92, 246, ${alpha * pi.depth})`;
-            ctx.lineWidth = pi.depth * 0.6;
-            ctx.stroke();
+          // Mouse distortion (Cyberpunk Grid Warp Field)
+          if (mouse.x !== null && mouse.y !== null) {
+            const dx = mouse.x - x;
+            const dy = mouse.y - y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            
+            if (dist < 200) {
+              const force = Math.pow(1 - dist / 200, 1.8);
+              // Push mesh points away from the cursor (magnetic warp)
+              x -= dx * force * 0.38;
+              y -= dy * force * 0.38;
+            }
           }
+
+          points[r][c] = { x, y, v };
+        }
+      }
+
+      // Draw Grid Line Mesh
+      ctx.lineWidth = 1;
+      
+      // Vertical Lines (Perspective rays)
+      for (let c = 0; c <= numCols; c++) {
+        ctx.beginPath();
+        let first = true;
+        for (let r = 0; r <= numRows; r++) {
+          if (!points[r] || !points[r][c]) continue;
+          const pt = points[r][c];
+          
+          if (first) {
+            ctx.moveTo(pt.x, pt.y);
+            first = false;
+          } else {
+            ctx.lineTo(pt.x, pt.y);
+          }
+        }
+        
+        // Gradient color for lines (violet near horizon to cyan at bottom)
+        const grad = ctx.createLinearGradient(W/2, horizonY, W/2, H);
+        grad.addColorStop(0, 'rgba(139, 92, 246, 0.02)');
+        grad.addColorStop(0.35, 'rgba(139, 92, 246, 0.2)');
+        grad.addColorStop(1, 'rgba(14, 165, 233, 0.45)');
+        
+        ctx.strokeStyle = grad;
+        ctx.stroke();
+      }
+
+      // Horizontal Lines (Depth lines)
+      for (let r = 0; r <= numRows; r++) {
+        if (!points[r] || points[r].length === 0) continue;
+        
+        ctx.beginPath();
+        let first = true;
+        let vVal = 0;
+        
+        for (let c = 0; c <= numCols; c++) {
+          if (!points[r][c]) continue;
+          const pt = points[r][c];
+          vVal = pt.v;
+          
+          if (first) {
+            ctx.moveTo(pt.x, pt.y);
+            first = false;
+          } else {
+            ctx.lineTo(pt.x, pt.y);
+          }
+        }
+
+        // Color depends on distance (compress opacity near horizon)
+        const opacity = Math.min(0.4, Math.pow(vVal, 1.8) * 0.45);
+        
+        // Blend between violet (#8b5cf6) and cyan (#0ea5e9)
+        const rVal = Math.floor(139 + (14 - 139) * vVal);
+        const gVal = Math.floor(92 + (165 - 92) * vVal);
+        const bVal = Math.floor(246 + (233 - 246) * vVal);
+        
+        ctx.strokeStyle = `rgba(${rVal}, ${gVal}, ${bVal}, ${opacity})`;
+        ctx.stroke();
+      }
+
+      // Draw glowing intersection points (closer points only)
+      for (let r = 0; r <= numRows; r++) {
+        if (!points[r]) continue;
+        for (let c = 0; c <= numCols; c++) {
+          if (!points[r][c]) continue;
+          const pt = points[r][c];
+          if (pt.v < 0.35) continue; // Keep horizon clear
+
+          // Draw small intersections
+          const size = pt.v * 1.5;
+          ctx.beginPath();
+          ctx.arc(pt.x, pt.y, size, 0, Math.PI * 2);
+          
+          const dotOpacity = pt.v * 0.4;
+          ctx.fillStyle = `rgba(14, 165, 233, ${dotOpacity})`;
+          ctx.fill();
         }
       }
 
       animationId = requestAnimationFrame(draw);
     };
 
-    window.addEventListener('resize', resize);
     init();
     draw();
 
     return () => {
-      window.removeEventListener('resize', resize);
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mouseout', handleMouseLeave);
+      window.removeEventListener('resize', resize);
       cancelAnimationFrame(animationId);
     };
   }, [loading]);
@@ -1033,13 +1080,6 @@ function App() {
 
       {/* Services Section */}
       <section className="services section" id="services">
-        <div className="parallax-watermark watermark-ltr">SPECIALTIES</div>
-        <div className="floating-parallax-container">
-          <div className="floating-parallax-card floating-card-1" style={{ '--card-accent': '#8b5cf6' }}>
-            <Sparkles size={14} className="floating-card-icon" />
-            <span className="floating-card-text">React.js</span>
-          </div>
-        </div>
         <div className="container">
           <div className="section-header">
             <span className="section-tag">01. Specialties</span>
@@ -1128,13 +1168,6 @@ function App() {
 
       {/* Skills Section */}
       <section className="skills section" id="skills">
-        <div className="parallax-watermark watermark-rtl">EXPERTISE</div>
-        <div className="floating-parallax-container">
-          <div className="floating-parallax-card floating-card-2" style={{ '--card-accent': '#0ea5e9' }}>
-            <Layers size={14} className="floating-card-icon" />
-            <span className="floating-card-text">MERN STACK</span>
-          </div>
-        </div>
         <div className="container">
           <div className="section-header">
             <span className="section-tag">02. Skills</span>
@@ -1249,13 +1282,6 @@ function App() {
 
       {/* Projects Section */}
       <section className="projects section" id="projects">
-        <div className="parallax-watermark watermark-ltr">PORTFOLIO</div>
-        <div className="floating-parallax-container">
-          <div className="floating-parallax-card floating-card-3" style={{ '--card-accent': '#10b981' }}>
-            <Database size={14} className="floating-card-icon" />
-            <span className="floating-card-text">MongoDB</span>
-          </div>
-        </div>
         <div className="container">
           <div className="projects-header-wrap">
             <button className="carousel-nav-btn prev" onClick={prevProject} aria-label="Previous Project">
@@ -1421,13 +1447,6 @@ function App() {
 
       {/* Experience Section */}
       <section className="experience section" id="experience">
-        <div className="parallax-watermark watermark-rtl">JOURNEY</div>
-        <div className="floating-parallax-container">
-          <div className="floating-parallax-card floating-card-4" style={{ '--card-accent': '#f43f5e' }}>
-            <Award size={14} className="floating-card-icon" />
-            <span className="floating-card-text">INTERN</span>
-          </div>
-        </div>
         <div className="container">
           <div className="section-header">
             <span className="section-tag">04. Internships</span>
@@ -1509,7 +1528,6 @@ function App() {
 
       {/* Certifications Section */}
       <section className="certifications section" id="certifications">
-        <div className="parallax-watermark watermark-ltr">CREDENTIALS</div>
         <div className="container">
           <div className="section-header">
             <span className="section-tag">05. Credentials</span>
@@ -1586,7 +1604,6 @@ function App() {
 
       {/* Achievements Section */}
       <section className="achievements section" id="achievements">
-        <div className="parallax-watermark watermark-rtl">HONORS</div>
         <div className="container">
           <div className="section-header">
             <span className="section-tag">06. Achievements</span>
@@ -1889,7 +1906,6 @@ function App() {
 
       {/* Contact Section */}
       <section className="contact section" id="contact">
-        <div className="parallax-watermark watermark-ltr">CONTACT</div>
         <ParticlesBackground count={30} speed={0.3} color="rgba(124, 58, 237, 0.4)" />
         <div className="container" style={{ position: 'relative' }}>
           <div className="contact-orb orb-2" />
