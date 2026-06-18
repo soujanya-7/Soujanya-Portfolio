@@ -798,69 +798,120 @@ function App() {
 
     class Particle {
       constructor() {
+        this.reset();
         this.x = Math.random() * W;
         this.y = Math.random() * H;
-        this.vx = (Math.random() - 0.5) * 0.3;
-        this.vy = (Math.random() - 0.5) * 0.3;
-        this.r = Math.random() * 1.5 + 0.5;
-        this.a = Math.random() * 0.5 + 0.1;
       }
-      update() {
+      reset() {
+        this.x = Math.random() * W;
+        this.y = Math.random() * H;
+        this.vx = (Math.random() - 0.5) * 0.4;
+        this.vy = (Math.random() - 0.5) * 0.4;
+        this.r = Math.random() * 1.5 + 0.6; // Elegant tiny glowing dust
+        this.maxSpeed = Math.random() * 1.2 + 0.8;
+        this.colorIndex = Math.floor(Math.random() * 3);
+        const colors = [
+          { r: 139, g: 92, b: 246 }, // var(--accent-1) (violet)
+          { r: 6, g: 182, b: 212 },  // var(--accent-2) (cyan)
+          { r: 244, g: 63, b: 94 }   // var(--accent-4) (rose/magenta)
+        ];
+        this.color = colors[this.colorIndex];
+        this.alpha = Math.random() * 0.35 + 0.15;
+      }
+      update(timeState) {
+        // Flow field wave force based on sine and cosine waves
+        const angle = Math.sin(this.x * 0.0035 + timeState) * Math.cos(this.y * 0.0035 + timeState) * Math.PI * 2;
+        const flowForceX = Math.cos(angle) * 0.035;
+        const flowForceY = Math.sin(angle) * 0.035;
+        
+        this.vx += flowForceX;
+        this.vy += flowForceY;
+
+        // Mouse vortex influence
+        if (mouse.x !== null && mouse.y !== null) {
+          const dx = mouse.x - this.x;
+          const dy = mouse.y - this.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 260) {
+            const pull = (1 - dist / 260) * 0.4;
+            // Gravity pull towards mouse
+            this.vx += (dx / dist) * pull * 0.06;
+            this.vy += (dy / dist) * pull * 0.06;
+            // Swirling orbital velocity around mouse
+            this.vx += (-dy / dist) * pull * 0.16;
+            this.vy += (dx / dist) * pull * 0.16;
+          }
+        }
+
+        // Limit speed
+        const speed = Math.sqrt(this.vx * this.vx + this.vy * this.vy);
+        if (speed > this.maxSpeed) {
+          this.vx = (this.vx / speed) * this.maxSpeed;
+          this.vy = (this.vy / speed) * this.maxSpeed;
+        }
+
         this.x += this.vx;
         this.y += this.vy;
-        if (this.x < 0) this.x = W;
-        if (this.x > W) this.x = 0;
-        if (this.y < 0) this.y = H;
-        if (this.y > H) this.y = 0;
+
+        // Wrap around margins with fade reset if too far out
+        if (this.x < -20 || this.x > W + 20 || this.y < -20 || this.y > H + 20) {
+          this.reset();
+        }
       }
     }
 
     const init = () => {
       resize();
-      particles = Array.from({ length: 120 }, () => new Particle());
+      particles = Array.from({ length: 90 }, () => new Particle());
     };
 
+    let timeState = 0;
     const draw = () => {
-      ctx.clearRect(0, 0, W, H);
+      // Clear with very light trails
+      ctx.fillStyle = 'rgba(3, 7, 18, 0.12)';
+      ctx.fillRect(0, 0, W, H);
+
+      timeState += 0.0018;
+
       particles.forEach((p) => {
+        p.update(timeState);
+
+        // Draw soft glow ring around particle
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r * 2.8, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${p.color.r}, ${p.color.g}, ${p.color.b}, ${p.alpha * 0.15})`;
+        ctx.fill();
+
+        // Draw solid core particle
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(124,58,237,${p.a})`;
+        ctx.fillStyle = `rgba(${p.color.r}, ${p.color.g}, ${p.color.b}, ${p.alpha * 0.9})`;
         ctx.fill();
-        p.update();
-        
-        if (mouse.x != null && mouse.y != null) {
-          const dx = mouse.x - p.x;
-          const dy = mouse.y - p.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 150) {
-            ctx.beginPath();
-            ctx.moveTo(p.x, p.y);
-            ctx.lineTo(mouse.x, mouse.y);
-            ctx.strokeStyle = `rgba(6,182,212,${0.2 * (1 - dist / 150)})`;
-            ctx.lineWidth = 1;
-            ctx.stroke();
-            // Subtle pull
-            p.x += dx * 0.005;
-            p.y += dy * 0.005;
-          }
-        }
       });
+
+      // Draw local web connections with soft trails
       for (let i = 0; i < particles.length; i++) {
         for (let j = i + 1; j < particles.length; j++) {
           const dx = particles[i].x - particles[j].x;
           const dy = particles[i].y - particles[j].y;
           const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 100) {
+          if (dist < 80) {
             ctx.beginPath();
             ctx.moveTo(particles[i].x, particles[i].y);
             ctx.lineTo(particles[j].x, particles[j].y);
-            ctx.strokeStyle = `rgba(124,58,237,${0.12 * (1 - dist / 100)})`;
-            ctx.lineWidth = 0.5;
+            // Blend colors for connecting lines
+            const mixedColor = {
+              r: Math.floor((particles[i].color.r + particles[j].color.r) / 2),
+              g: Math.floor((particles[i].color.g + particles[j].color.g) / 2),
+              b: Math.floor((particles[i].color.b + particles[j].color.b) / 2)
+            };
+            ctx.strokeStyle = `rgba(${mixedColor.r}, ${mixedColor.g}, ${mixedColor.b}, ${0.08 * (1 - dist / 80)})`;
+            ctx.lineWidth = 0.4;
             ctx.stroke();
           }
         }
       }
+
       animationId = requestAnimationFrame(draw);
     };
 
