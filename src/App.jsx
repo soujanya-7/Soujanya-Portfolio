@@ -512,12 +512,15 @@ function App() {
 
   useEffect(() => {
     const handleScroll = () => {
+      const scrollY = window.pageYOffset || document.documentElement.scrollTop;
       const totalScroll = document.documentElement.scrollHeight - window.innerHeight;
       if (totalScroll > 0) {
-        setScrollProgress((window.pageYOffset / totalScroll) * 100);
+        setScrollProgress((scrollY / totalScroll) * 100);
       }
+      document.documentElement.style.setProperty('--scroll-y', `${scrollY}px`);
     };
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
   const [navOpen, setNavOpen] = useState(false);
@@ -1030,6 +1033,13 @@ function App() {
 
       {/* Services Section */}
       <section className="services section" id="services">
+        <div className="parallax-watermark watermark-ltr">SPECIALTIES</div>
+        <div className="floating-parallax-container">
+          <div className="floating-parallax-card floating-card-1" style={{ '--card-accent': '#8b5cf6' }}>
+            <Sparkles size={14} className="floating-card-icon" />
+            <span className="floating-card-text">React.js</span>
+          </div>
+        </div>
         <div className="container">
           <div className="section-header">
             <span className="section-tag">01. Specialties</span>
@@ -1118,6 +1128,13 @@ function App() {
 
       {/* Skills Section */}
       <section className="skills section" id="skills">
+        <div className="parallax-watermark watermark-rtl">EXPERTISE</div>
+        <div className="floating-parallax-container">
+          <div className="floating-parallax-card floating-card-2" style={{ '--card-accent': '#0ea5e9' }}>
+            <Layers size={14} className="floating-card-icon" />
+            <span className="floating-card-text">MERN STACK</span>
+          </div>
+        </div>
         <div className="container">
           <div className="section-header">
             <span className="section-tag">02. Skills</span>
@@ -1232,6 +1249,13 @@ function App() {
 
       {/* Projects Section */}
       <section className="projects section" id="projects">
+        <div className="parallax-watermark watermark-ltr">PORTFOLIO</div>
+        <div className="floating-parallax-container">
+          <div className="floating-parallax-card floating-card-3" style={{ '--card-accent': '#10b981' }}>
+            <Database size={14} className="floating-card-icon" />
+            <span className="floating-card-text">MongoDB</span>
+          </div>
+        </div>
         <div className="container">
           <div className="projects-header-wrap">
             <button className="carousel-nav-btn prev" onClick={prevProject} aria-label="Previous Project">
@@ -1397,6 +1421,13 @@ function App() {
 
       {/* Experience Section */}
       <section className="experience section" id="experience">
+        <div className="parallax-watermark watermark-rtl">JOURNEY</div>
+        <div className="floating-parallax-container">
+          <div className="floating-parallax-card floating-card-4" style={{ '--card-accent': '#f43f5e' }}>
+            <Award size={14} className="floating-card-icon" />
+            <span className="floating-card-text">INTERN</span>
+          </div>
+        </div>
         <div className="container">
           <div className="section-header">
             <span className="section-tag">04. Internships</span>
@@ -1478,6 +1509,7 @@ function App() {
 
       {/* Certifications Section */}
       <section className="certifications section" id="certifications">
+        <div className="parallax-watermark watermark-ltr">CREDENTIALS</div>
         <div className="container">
           <div className="section-header">
             <span className="section-tag">05. Credentials</span>
@@ -1554,6 +1586,7 @@ function App() {
 
       {/* Achievements Section */}
       <section className="achievements section" id="achievements">
+        <div className="parallax-watermark watermark-rtl">HONORS</div>
         <div className="container">
           <div className="section-header">
             <span className="section-tag">06. Achievements</span>
@@ -1856,6 +1889,7 @@ function App() {
 
       {/* Contact Section */}
       <section className="contact section" id="contact">
+        <div className="parallax-watermark watermark-ltr">CONTACT</div>
         <ParticlesBackground count={30} speed={0.3} color="rgba(124, 58, 237, 0.4)" />
         <div className="container" style={{ position: 'relative' }}>
           <div className="contact-orb orb-2" />
