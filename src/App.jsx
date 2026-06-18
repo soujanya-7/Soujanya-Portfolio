@@ -796,7 +796,7 @@ function App() {
     window.addEventListener('mousemove', handleMouseMove);
     window.addEventListener('mouseout', handleMouseLeave);
 
-    class Particle {
+    class Star {
       constructor() {
         this.reset();
         this.x = Math.random() * W;
@@ -805,112 +805,77 @@ function App() {
       reset() {
         this.x = Math.random() * W;
         this.y = Math.random() * H;
-        this.vx = (Math.random() - 0.5) * 0.4;
-        this.vy = (Math.random() - 0.5) * 0.4;
-        this.r = Math.random() * 1.5 + 0.6; // Elegant tiny glowing dust
-        this.maxSpeed = Math.random() * 1.2 + 0.8;
-        this.colorIndex = Math.floor(Math.random() * 3);
+        // Slow elegant space drift
+        this.vx = (Math.random() - 0.5) * 0.12;
+        this.vy = (Math.random() - 0.5) * 0.12;
+        this.r = Math.random() * 1.5 + 0.4; // Tiny clean stars
+        this.baseAlpha = Math.random() * 0.5 + 0.2;
+        this.alpha = this.baseAlpha;
+        this.twinklePhase = Math.random() * Math.PI * 2;
+        this.twinkleSpeed = Math.random() * 0.015 + 0.005;
+        this.parallaxFactor = this.r * 0.015; // 3D depth: larger/closer stars move more
+        
         const colors = [
           { r: 139, g: 92, b: 246 }, // var(--accent-1) (violet)
           { r: 6, g: 182, b: 212 },  // var(--accent-2) (cyan)
-          { r: 244, g: 63, b: 94 }   // var(--accent-4) (rose/magenta)
+          { r: 249, g: 250, b: 251 }  // White stars
         ];
-        this.color = colors[this.colorIndex];
-        this.alpha = Math.random() * 0.35 + 0.15;
+        this.color = colors[Math.floor(Math.random() * colors.length)];
       }
       update(timeState) {
-        // Flow field wave force based on sine and cosine waves
-        const angle = Math.sin(this.x * 0.0035 + timeState) * Math.cos(this.y * 0.0035 + timeState) * Math.PI * 2;
-        const flowForceX = Math.cos(angle) * 0.035;
-        const flowForceY = Math.sin(angle) * 0.035;
-        
-        this.vx += flowForceX;
-        this.vy += flowForceY;
-
-        // Mouse vortex influence
-        if (mouse.x !== null && mouse.y !== null) {
-          const dx = mouse.x - this.x;
-          const dy = mouse.y - this.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 260) {
-            const pull = (1 - dist / 260) * 0.4;
-            // Gravity pull towards mouse
-            this.vx += (dx / dist) * pull * 0.06;
-            this.vy += (dy / dist) * pull * 0.06;
-            // Swirling orbital velocity around mouse
-            this.vx += (-dy / dist) * pull * 0.16;
-            this.vy += (dx / dist) * pull * 0.16;
-          }
-        }
-
-        // Limit speed
-        const speed = Math.sqrt(this.vx * this.vx + this.vy * this.vy);
-        if (speed > this.maxSpeed) {
-          this.vx = (this.vx / speed) * this.maxSpeed;
-          this.vy = (this.vy / speed) * this.maxSpeed;
-        }
-
         this.x += this.vx;
         this.y += this.vy;
 
-        // Wrap around margins with fade reset if too far out
-        if (this.x < -20 || this.x > W + 20 || this.y < -20 || this.y > H + 20) {
-          this.reset();
-        }
+        // Soft twinkling
+        this.alpha = this.baseAlpha + Math.sin(timeState * this.twinkleSpeed + this.twinklePhase) * 0.18;
+        if (this.alpha < 0.05) this.alpha = 0.05;
+        if (this.alpha > 0.8) this.alpha = 0.8;
+
+        // Wrap around borders
+        if (this.x < 0) this.x = W;
+        if (this.x > W) this.x = 0;
+        if (this.y < 0) this.y = H;
+        if (this.y > H) this.y = 0;
       }
     }
 
     const init = () => {
       resize();
-      particles = Array.from({ length: 90 }, () => new Particle());
+      particles = Array.from({ length: 90 }, () => new Star());
     };
 
     let timeState = 0;
     const draw = () => {
-      // Clear with very light trails
-      ctx.fillStyle = 'rgba(3, 7, 18, 0.12)';
-      ctx.fillRect(0, 0, W, H);
+      // Clear completely (solid background) to ensure absolutely NO trails or lines
+      ctx.clearRect(0, 0, W, H);
 
-      timeState += 0.0018;
+      timeState += 1;
 
       particles.forEach((p) => {
         p.update(timeState);
 
-        // Draw soft glow ring around particle
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r * 2.8, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(${p.color.r}, ${p.color.g}, ${p.color.b}, ${p.alpha * 0.15})`;
-        ctx.fill();
-
-        // Draw solid core particle
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(${p.color.r}, ${p.color.g}, ${p.color.b}, ${p.alpha * 0.9})`;
-        ctx.fill();
-      });
-
-      // Draw local web connections with soft trails
-      for (let i = 0; i < particles.length; i++) {
-        for (let j = i + 1; j < particles.length; j++) {
-          const dx = particles[i].x - particles[j].x;
-          const dy = particles[i].y - particles[j].y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 80) {
-            ctx.beginPath();
-            ctx.moveTo(particles[i].x, particles[i].y);
-            ctx.lineTo(particles[j].x, particles[j].y);
-            // Blend colors for connecting lines
-            const mixedColor = {
-              r: Math.floor((particles[i].color.r + particles[j].color.r) / 2),
-              g: Math.floor((particles[i].color.g + particles[j].color.g) / 2),
-              b: Math.floor((particles[i].color.b + particles[j].color.b) / 2)
-            };
-            ctx.strokeStyle = `rgba(${mixedColor.r}, ${mixedColor.g}, ${mixedColor.b}, ${0.08 * (1 - dist / 80)})`;
-            ctx.lineWidth = 0.4;
-            ctx.stroke();
-          }
+        // Apply mouse parallax offset to create a 3D depth effect
+        let px = 0;
+        let py = 0;
+        if (mouse.x !== null && mouse.y !== null) {
+          px = (mouse.x - W / 2) * p.parallaxFactor;
+          py = (mouse.y - H / 2) * p.parallaxFactor;
         }
-      }
+
+        // Draw solid star core
+        ctx.beginPath();
+        ctx.arc(p.x + px, p.y + py, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${p.color.r}, ${p.color.g}, ${p.color.b}, ${p.alpha})`;
+        ctx.fill();
+
+        // Soft glow surrounding brighter stars
+        if (p.r > 1.2 && p.alpha > 0.4) {
+          ctx.beginPath();
+          ctx.arc(p.x + px, p.y + py, p.r * 2.8, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(${p.color.r}, ${p.color.g}, ${p.color.b}, ${p.alpha * 0.2})`;
+          ctx.fill();
+        }
+      });
 
       animationId = requestAnimationFrame(draw);
     };
