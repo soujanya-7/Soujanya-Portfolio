@@ -964,7 +964,6 @@ function App() {
       animationId = requestAnimationFrame(draw);
     };
 
-    init();
     draw();
 
     return () => {
