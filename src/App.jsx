@@ -769,7 +769,7 @@ function App() {
     return () => obs.disconnect();
   }, [loading]);
 
-  // Canvas Particles
+  // Canvas Particles (Unique Parallax Starfield & Constellation)
   useEffect(() => {
     if (loading || !canvasRef.current) return;
     const canvas = canvasRef.current;
@@ -777,6 +777,7 @@ function App() {
     let W, H, particles = [];
     let animationId;
     let mouse = { x: null, y: null };
+    let smoothScrollY = window.scrollY;
 
     const resize = () => {
       W = canvas.width = window.innerWidth;
@@ -796,42 +797,27 @@ function App() {
     window.addEventListener('mousemove', handleMouseMove);
     window.addEventListener('mouseout', handleMouseLeave);
 
-    class Star {
+    class Particle {
       constructor() {
-        this.reset();
         this.x = Math.random() * W;
         this.y = Math.random() * H;
-      }
-      reset() {
-        this.x = Math.random() * W;
-        this.y = Math.random() * H;
-        // Slow elegant space drift
-        this.vx = (Math.random() - 0.5) * 0.12;
-        this.vy = (Math.random() - 0.5) * 0.12;
-        this.r = Math.random() * 1.5 + 0.4; // Tiny clean stars
-        this.baseAlpha = Math.random() * 0.5 + 0.2;
-        this.alpha = this.baseAlpha;
-        this.twinklePhase = Math.random() * Math.PI * 2;
-        this.twinkleSpeed = Math.random() * 0.015 + 0.005;
-        this.parallaxFactor = this.r * 0.015; // 3D depth: larger/closer stars move more
+        this.depth = Math.random() * 0.9 + 0.1; // Parallax layers: 0.1 (far) to 1.0 (close)
         
-        const colors = [
-          { r: 139, g: 92, b: 246 }, // var(--accent-1) (violet)
-          { r: 6, g: 182, b: 212 },  // var(--accent-2) (cyan)
-          { r: 249, g: 250, b: 251 }  // White stars
-        ];
-        this.color = colors[Math.floor(Math.random() * colors.length)];
+        // Speed scaling based on depth
+        this.vx = (Math.random() - 0.5) * 0.25 * this.depth;
+        this.vy = (Math.random() - 0.5) * 0.25 * this.depth;
+        
+        // Closer particles are larger and brighter
+        this.r = this.depth * 1.8 + 0.4;
+        this.a = this.depth * 0.4 + 0.1;
+        this.colorType = Math.floor(Math.random() * 3); // 0: Violet, 1: Cyan, 2: Emerald
       }
-      update(timeState) {
+      
+      update() {
         this.x += this.vx;
         this.y += this.vy;
-
-        // Soft twinkling
-        this.alpha = this.baseAlpha + Math.sin(timeState * this.twinkleSpeed + this.twinklePhase) * 0.18;
-        if (this.alpha < 0.05) this.alpha = 0.05;
-        if (this.alpha > 0.8) this.alpha = 0.8;
-
-        // Wrap around borders
+        
+        // Wraparound borders
         if (this.x < 0) this.x = W;
         if (this.x > W) this.x = 0;
         if (this.y < 0) this.y = H;
@@ -841,41 +827,88 @@ function App() {
 
     const init = () => {
       resize();
-      particles = Array.from({ length: 90 }, () => new Star());
+      particles = Array.from({ length: 130 }, () => new Particle());
     };
 
-    let timeState = 0;
     const draw = () => {
-      // Clear completely (solid background) to ensure absolutely NO trails or lines
       ctx.clearRect(0, 0, W, H);
-
-      timeState += 1;
+      
+      // Interpolate scroll position for buttery smooth parallax scrolling
+      smoothScrollY += (window.scrollY - smoothScrollY) * 0.12;
 
       particles.forEach((p) => {
-        p.update(timeState);
+        // Calculate Y position adjusted by depth (parallax factor)
+        const py = (p.y - smoothScrollY * p.depth * 0.15) % H;
+        const finalY = py < 0 ? py + H : py;
+        const finalX = p.x;
 
-        // Apply mouse parallax offset to create a 3D depth effect
-        let px = 0;
-        let py = 0;
-        if (mouse.x !== null && mouse.y !== null) {
-          px = (mouse.x - W / 2) * p.parallaxFactor;
-          py = (mouse.y - H / 2) * p.parallaxFactor;
-        }
-
-        // Draw solid star core
         ctx.beginPath();
-        ctx.arc(p.x + px, p.y + py, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(${p.color.r}, ${p.color.g}, ${p.color.b}, ${p.alpha})`;
+        ctx.arc(finalX, finalY, p.r, 0, Math.PI * 2);
+        
+        let color;
+        if (p.colorType === 0) {
+          color = `rgba(139, 92, 246, ${p.a})`; // Violet
+        } else if (p.colorType === 1) {
+          color = `rgba(14, 165, 233, ${p.a})`; // Cyan
+        } else {
+          color = `rgba(16, 185, 129, ${p.a * 0.7})`; // Emerald
+        }
+        
+        ctx.fillStyle = color;
         ctx.fill();
+        p.update();
 
-        // Soft glow surrounding brighter stars
-        if (p.r > 1.2 && p.alpha > 0.4) {
-          ctx.beginPath();
-          ctx.arc(p.x + px, p.y + py, p.r * 2.8, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(${p.color.r}, ${p.color.g}, ${p.color.b}, ${p.alpha * 0.2})`;
-          ctx.fill();
+        // Attraction / Line-drawing to Mouse
+        if (mouse.x != null && mouse.y != null) {
+          const dx = mouse.x - finalX;
+          const dy = mouse.y - finalY;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 180) {
+            ctx.beginPath();
+            ctx.moveTo(finalX, finalY);
+            ctx.lineTo(mouse.x, mouse.y);
+            // Light up link lines based on proximity and depth
+            ctx.strokeStyle = `rgba(14, 165, 233, ${0.15 * (1 - dist / 180) * p.depth})`;
+            ctx.lineWidth = p.depth * 0.8;
+            ctx.stroke();
+            
+            // Soft attraction to mouse
+            p.x += dx * 0.002 * p.depth;
+            p.y += dy * 0.002 * p.depth;
+          }
         }
       });
+
+      // Draw constellation connections between adjacent layer nodes
+      for (let i = 0; i < particles.length; i++) {
+        const pi = particles[i];
+        const pyI = (pi.y - smoothScrollY * pi.depth * 0.15) % H;
+        const finalYI = pyI < 0 ? pyI + H : pyI;
+
+        for (let j = i + 1; j < particles.length; j++) {
+          const pj = particles[j];
+          
+          // Connect only if they are on a similar layer (depth check) to create structural dimensions
+          if (Math.abs(pi.depth - pj.depth) > 0.25) continue;
+
+          const pyJ = (pj.y - smoothScrollY * pj.depth * 0.15) % H;
+          const finalYJ = pyJ < 0 ? pyJ + H : pyJ;
+
+          const dx = pi.x - pj.x;
+          const dy = finalYI - finalYJ;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+
+          if (dist < 110) {
+            ctx.beginPath();
+            ctx.moveTo(pi.x, finalYI);
+            ctx.lineTo(pj.x, finalYJ);
+            const alpha = 0.08 * (1 - dist / 110);
+            ctx.strokeStyle = `rgba(139, 92, 246, ${alpha * pi.depth})`;
+            ctx.lineWidth = pi.depth * 0.6;
+            ctx.stroke();
+          }
+        }
+      }
 
       animationId = requestAnimationFrame(draw);
     };
@@ -938,6 +971,13 @@ function App() {
       <div className="cursor-follower" ref={followerRef}></div>
       <div className="scroll-progress-bar" style={{ width: `${scrollProgress}%` }} />
       <canvas ref={canvasRef} className="global-particles-canvas" />
+
+      {/* Ambient background orbs for unique UI glow */}
+      <div className="bg-ambient-glow" aria-hidden="true">
+        <div className="bg-glow-orb orb-purple"></div>
+        <div className="bg-glow-orb orb-blue"></div>
+        <div className="bg-glow-orb orb-green"></div>
+      </div>
 
       <nav className={`navbar ${scrolled ? 'scrolled' : ''}`} id="navbar">
         <div className="nav-logo" onClick={() => handleNavClick('home')}>
