@@ -272,7 +272,7 @@ html.custom-cursor-active select {
 /* ============================================================
    SECTION COMMONS
    ============================================================ */
-.section { padding: 6rem 0; position: relative; overflow: hidden; }
+.section { padding: 6rem 0; }
 .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
 .section-header { text-align: center; margin-bottom: 4rem; }
 .section-tag {
@@ -5224,6 +5224,104 @@ html.custom-cursor-active select {
   pointer-events: none;
 }
 
+/* Holographic outer and inner rings */
+.blob-ring-outer {
+  position: absolute;
+  inset: -32px;
+  border: 1.5px dashed rgba(14, 165, 233, 0.2);
+  border-radius: 50%;
+  animation: spinClockwise 25s linear infinite;
+  pointer-events: none;
+}
+.blob-ring-inner {
+  position: absolute;
+  inset: -50px;
+  border: 1px dotted rgba(139, 92, 246, 0.12);
+  border-radius: 50%;
+  animation: spinCounterClockwise 35s linear infinite;
+  pointer-events: none;
+}
+
+/* ---- HERO FLOATING BADGES ---- */
+.hero-floating-badge {
+  position: absolute;
+  background: rgba(11, 15, 26, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  padding: 0.8rem 1.1rem;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+  z-index: 10;
+  pointer-events: auto;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.hero-floating-badge:hover {
+  border-color: var(--accent-1);
+  box-shadow: 0 20px 40px rgba(139, 92, 246, 0.18);
+}
+.badge-icon-wrap {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.badge-info {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+.badge-title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+.badge-sub {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  margin-top: 1px;
+  white-space: nowrap;
+}
+
+/* Placement and Keyframe drift */
+.badge-top-left {
+  top: 12%;
+  left: -20px;
+  animation: floatSlowly1 6s infinite alternate ease-in-out;
+}
+.badge-bottom-right {
+  bottom: 12%;
+  right: -20px;
+  animation: floatSlowly2 6s infinite alternate ease-in-out;
+}
+
+@keyframes floatSlowly1 {
+  0% { transform: translateY(0) rotate(-2deg); }
+  100% { transform: translateY(-12px) rotate(1deg); }
+}
+@keyframes floatSlowly2 {
+  0% { transform: translateY(0) rotate(2deg); }
+  100% { transform: translateY(12px) rotate(-1deg); }
+}
+
+@keyframes spinClockwise {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+@keyframes spinCounterClockwise {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(-360deg); }
+}
+
 @keyframes blobMorph {
   0%   { border-radius: 60% 40% 55% 45% / 50% 60% 40% 50%; }
   33%  { border-radius: 40% 60% 45% 55% / 60% 40% 60% 40%; }
@@ -5548,130 +5646,4 @@ html.custom-cursor-active select {
 @keyframes floatOrb3 {
   0% { transform: translate(-50%, -50%) translate(-5vw, 5vh) scale(0.9); }
   100% { transform: translate(-50%, -50%) translate(8vw, -8vh) scale(1.1); }
-}
-
-/* ---- SCROLL PARALLAX WATERMARKS ---- */
-.parallax-watermark {
-  position: absolute;
-  font-size: 11rem;
-  font-weight: 950;
-  font-family: var(--font-main);
-  color: rgba(255, 255, 255, 0.012);
-  pointer-events: none;
-  z-index: 0;
-  white-space: nowrap;
-  letter-spacing: 12px;
-  text-transform: uppercase;
-  user-select: none;
-  line-height: 1;
-  will-change: transform;
-}
-
-/* Left-to-right drift */
-.watermark-ltr {
-  left: -20%;
-  transform: translateX(calc(var(--scroll-y) * 0.08));
-}
-
-/* Right-to-left drift */
-.watermark-rtl {
-  right: -20%;
-  transform: translateX(calc(var(--scroll-y) * -0.08));
-}
-
-/* Specific offsets for sections to keep them centered vertically */
-#services .parallax-watermark { top: 15%; }
-#skills .parallax-watermark { top: 25%; }
-#projects .parallax-watermark { top: 8%; }
-#experience .parallax-watermark { top: 12%; }
-#certifications .parallax-watermark { top: 15%; }
-#achievements .parallax-watermark { top: 20%; }
-#contact .parallax-watermark { top: 25%; }
-
-@media (max-width: 768px) {
-  .parallax-watermark {
-    font-size: 5.5rem;
-    letter-spacing: 6px;
-  }
-}
-
-/* ---- FLOATING PARALLAX DECORATIVE CARDS ---- */
-.floating-parallax-container {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 1;
-  overflow: hidden;
-}
-
-.floating-parallax-card {
-  position: absolute;
-  padding: 0.85rem 1.15rem;
-  background: rgba(255, 255, 255, 0.015);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border-radius: 12px;
-  color: var(--text-secondary);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  pointer-events: none;
-  will-change: transform;
-  transition: border-color 0.3s ease;
-}
-
-.floating-parallax-card::before {
-  content: '';
-  position: absolute;
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background: var(--card-accent, var(--accent-1));
-  box-shadow: 0 0 10px var(--card-accent, var(--accent-1));
-  top: 8px;
-  right: 8px;
-}
-
-.floating-card-icon {
-  color: var(--card-accent, var(--accent-1));
-}
-
-.floating-card-text {
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-}
-
-/* Position and speeds for floating cards */
-.floating-card-1 {
-  left: 3%;
-  top: 15%;
-  transform: translateY(calc(var(--scroll-y) * -0.12)) rotate(-4deg);
-}
-
-.floating-card-2 {
-  right: 3%;
-  top: 42%;
-  transform: translateY(calc(var(--scroll-y) * -0.08)) rotate(6deg);
-}
-
-.floating-card-3 {
-  left: 2%;
-  top: 65%;
-  transform: translateY(calc(var(--scroll-y) * -0.15)) rotate(-8deg);
-}
-
-.floating-card-4 {
-  right: 4%;
-  top: 85%;
-  transform: translateY(calc(var(--scroll-y) * -0.1)) rotate(5deg);
-}
-
-@media (max-width: 1280px) {
-  .floating-parallax-card {
-    display: none; /* Hide on smaller screens to avoid overlapping main content */
-  }
 }

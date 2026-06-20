@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import soujanyaPhoto from './assets/soujanya.png';
 import ShinyText from './components/animations/ShinyText';
+import Magnet from './components/animations/Magnet';
+import { Database, Cpu, Terminal, Blocks, ArrowRight } from 'lucide-react';
 
 /* ── Animated Split Text ── */
 function SplitText({ text, className, delay = 0 }) {
@@ -108,13 +110,17 @@ export default function SpotlightHero({ onNavigate }) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 1.4 }}
           >
-            <button className="btn-glow" onClick={() => onNavigate('projects')}>
-              <ShinyText speed="3s">View My Work</ShinyText>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            </button>
-            <button className="btn-outline-hero" onClick={() => onNavigate('contact')}>
-              <ShinyText color="#7c3aed" speed="3s">Contact Me</ShinyText>
-            </button>
+            <Magnet padding={40} className="hero-cta-magnet">
+              <button className="btn-glow" onClick={() => onNavigate('projects')}>
+                <ShinyText speed="3s">View My Work</ShinyText>
+                <ArrowRight size={16} />
+              </button>
+            </Magnet>
+            <Magnet padding={40} className="hero-cta-magnet">
+              <button className="btn-outline-hero" onClick={() => onNavigate('contact')}>
+                <ShinyText color="#7c3aed" speed="3s">Contact Me</ShinyText>
+              </button>
+            </Magnet>
           </motion.div>
         </div>
 
@@ -126,11 +132,45 @@ export default function SpotlightHero({ onNavigate }) {
           transition={{ duration: 0.9, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
         >
           <div className="clean-hero-blob-wrap">
+            {/* Holographic background rings */}
+            <div className="blob-ring-outer" aria-hidden />
+            <div className="blob-ring-inner" aria-hidden />
+            
             <div className="clean-hero-blob">
               <img src={soujanyaPhoto} alt="Soujanya" className="clean-hero-photo" />
             </div>
+            
             {/* Orbiting ring */}
             <div className="blob-ring" aria-hidden />
+
+            {/* Interactive floating badges */}
+            <motion.div 
+              className="hero-floating-badge badge-top-left"
+              whileHover={{ y: -5, scale: 1.05 }}
+              transition={{ type: "spring", stiffness: 400, damping: 10 }}
+            >
+              <div className="badge-icon-wrap" style={{ background: 'rgba(124, 58, 237, 0.15)', color: '#8b5cf6' }}>
+                <Blocks size={18} />
+              </div>
+              <div className="badge-info">
+                <span className="badge-title">Full-Stack Web</span>
+                <span className="badge-sub">MERN Developer</span>
+              </div>
+            </motion.div>
+
+            <motion.div 
+              className="hero-floating-badge badge-bottom-right"
+              whileHover={{ y: -5, scale: 1.05 }}
+              transition={{ type: "spring", stiffness: 400, damping: 10 }}
+            >
+              <div className="badge-icon-wrap" style={{ background: 'rgba(14, 165, 233, 0.15)', color: '#0ea5e9' }}>
+                <Cpu size={18} />
+              </div>
+              <div className="badge-info">
+                <span className="badge-title">IoT Systems</span>
+                <span className="badge-sub">Arduino & ESP32</span>
+              </div>
+            </motion.div>
           </div>
         </motion.div>
       </div>
