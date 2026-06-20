@@ -52,22 +52,6 @@ const PROJECTS_DATA = [
     ]
   },
   {
-    title: "PolicyPro",
-    subtitle: "Insurance CRUD Database",
-    desc: "A robust Java-based database administration console engineered to perform reliable create, read, update, and delete actions on insurance profiles, schemas, and policy listings.",
-    tech: ["Java", "MySQL", "JDBC", "Console CLI"],
-    status: "Completed",
-    statusColor: "#8b5cf6",
-    url: "https://policypro.db.local",
-    github: "https://github.com/soujanya-s",
-    demo: "#",
-    highlights: [
-      "Features a strict transactional CLI interface with complete validation checks",
-      "Engineered clean database schemas with optimized query execution indexing",
-      "Adheres strictly to traditional Object-Oriented Controller architectures"
-    ]
-  },
-  {
     title: "EcoSense",
     subtitle: "Smart Environmental Monitor",
     desc: "An end-to-end data platform that processes environmental sensor telemetry and maps trends on a gorgeous, highly visual react dashboard utilizing custom gauges and trendcharts.",
@@ -1340,18 +1324,6 @@ function App() {
                         </div>
                       )}
                       {idx === 2 && (
-                        <div className="bg-art-graphic policypro-art font-mono">
-                          <div className="mesh-grid" />
-                          <div className="terminal-lines-art">
-                            <span>admin@db:~$ select *</span>
-                            <span>[INFO] Connection ok</span>
-                            <span>+----+------------+</span>
-                            <span>| 01 | SOUJANYA S |</span>
-                            <span>+----+------------+</span>
-                          </div>
-                        </div>
-                      )}
-                      {idx === 3 && (
                         <div className="bg-art-graphic ecosense-art">
                           <div className="mesh-grid" />
                           <div className="circular-dials">
@@ -1368,7 +1340,7 @@ function App() {
                           </svg>
                         </div>
                       )}
-                      {idx === 4 && (
+                      {idx === 3 && (
                         <div className="bg-art-graphic genzolver-art">
                           <div className="mesh-grid" />
                           <div className="network-nodes">
