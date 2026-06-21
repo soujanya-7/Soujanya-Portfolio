@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import soujanyaPhoto from './assets/soujanya.png';
 import ShinyText from './components/animations/ShinyText';
@@ -28,26 +28,29 @@ function TypewriterRole() {
   const [idx, setIdx] = useState(0);
   const [displayed, setDisplayed] = useState('');
   const [deleting, setDeleting] = useState(false);
-  const ref = useRef();
 
   useEffect(() => {
+    let timer;
     const target = ROLES[idx];
-    const speed = deleting ? 40 : 80;
-    ref.current = setTimeout(() => {
-      if (!deleting) {
-        setDisplayed(target.slice(0, displayed.length + 1));
-        if (displayed.length + 1 === target.length) {
-          setTimeout(() => setDeleting(true), 1500);
-        }
+    if (!deleting) {
+      if (displayed !== target) {
+        timer = setTimeout(() => {
+          setDisplayed(target.slice(0, displayed.length + 1));
+        }, 80);
       } else {
-        setDisplayed(target.slice(0, displayed.length - 1));
-        if (displayed.length === 0) {
-          setDeleting(false);
-          setIdx((p) => (p + 1) % ROLES.length);
-        }
+        timer = setTimeout(() => setDeleting(true), 1500);
       }
-    }, speed);
-    return () => clearTimeout(ref.current);
+    } else {
+      if (displayed !== '') {
+        timer = setTimeout(() => {
+          setDisplayed(target.slice(0, displayed.length - 1));
+        }, 40);
+      } else {
+        setDeleting(false);
+        setIdx((prev) => (prev + 1) % ROLES.length);
+      }
+    }
+    return () => clearTimeout(timer);
   }, [displayed, deleting, idx]);
 
   return (
@@ -61,18 +64,6 @@ function TypewriterRole() {
 
 /* ── Main Component ── */
 export default function SpotlightHero({ onNavigate }) {
-  const [tilt, setTilt] = useState({ x: 0, y: 0 });
-
-  const handleMouseMove = (e) => {
-    const { left, top, width, height } = e.currentTarget.getBoundingClientRect();
-    const x = (e.clientX - left) / width - 0.5; // range: -0.5 to 0.5
-    const y = (e.clientY - top) / height - 0.5; // range: -0.5 to 0.5
-    setTilt({ x: x * 15, y: y * -15 }); // Tilt limit: 15 degrees max
-  };
-
-  const handleMouseLeave = () => {
-    setTilt({ x: 0, y: 0 });
-  };
 
   return (
     <section className="clean-hero" id="home">
@@ -89,16 +80,6 @@ export default function SpotlightHero({ onNavigate }) {
       <div className="clean-hero-container">
         {/* ── LEFT ── */}
         <div className="clean-hero-left">
-          {/* Top Status Badge */}
-          <motion.div 
-            className="hero-badge font-mono"
-            initial={{ opacity: 0, y: -12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.8 }}
-          >
-            <span className="badge-glow-dot" />
-            <span>Available for Internships & Projects</span>
-          </motion.div>
 
           {/* Big title */}
           <h1 className="clean-hero-title">
@@ -140,31 +121,20 @@ export default function SpotlightHero({ onNavigate }) {
           </motion.div>
         </div>
 
-        {/* ── RIGHT: 3D Tilting Blob Photo ── */}
+        {/* ── RIGHT: Blob Photo ── */}
         <motion.div
           className="clean-hero-right"
           initial={{ opacity: 0, scale: 0.85 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.9, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
         >
-          <motion.div 
-            className="clean-hero-blob-wrap"
-            onMouseMove={handleMouseMove}
-            onMouseLeave={handleMouseLeave}
-            animate={{ rotateX: tilt.y, rotateY: tilt.x }}
-            transition={{ type: "spring", stiffness: 120, damping: 15 }}
-            style={{ transformStyle: 'preserve-3d', perspective: 1000 }}
-          >
-            {/* Ambient drop glow behind morphing blob */}
-            <div className="blob-glow-backdrop" />
-            
-            <div className="clean-hero-blob" style={{ transform: 'translateZ(20px)' }}>
+          <div className="clean-hero-blob-wrap">
+            <div className="clean-hero-blob">
               <img src={soujanyaPhoto} alt="Soujanya" className="clean-hero-photo" />
             </div>
-            
             {/* Orbiting ring */}
-            <div className="blob-ring" aria-hidden style={{ transform: 'translateZ(10px)' }} />
-          </motion.div>
+            <div className="blob-ring" aria-hidden />
+          </div>
         </motion.div>
       </div>
 
