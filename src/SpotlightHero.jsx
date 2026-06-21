@@ -23,7 +23,7 @@ function SplitText({ text, className, delay = 0 }) {
 }
 
 /* ── Typewriter Role ── */
-const ROLES = ['Full-Stack Developer', 'MERN Stack Engineer', 'UI/UX Enthusiast', 'Problem Solver'];
+const ROLES = ['Full-Stack Developer', 'MERN Stack Engineer', 'Problem Solver'];
 function TypewriterRole() {
   const [idx, setIdx] = useState(0);
   const [displayed, setDisplayed] = useState('');
