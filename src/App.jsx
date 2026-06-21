@@ -1507,7 +1507,6 @@ function App() {
 
           {(() => {
             const CERTS = [
-              { icon: Cpu,         title: 'Learning React',                                        issuer: 'Infosys Springboard', year: '2025', color: '#61dafb', filename: 'cert_react.png', skills: ['React.js', 'Hooks', 'State Management', 'Components'] },
               { icon: Code,        title: 'Programming with Java',                                  issuer: 'NPTEL',               year: '2025', color: '#f89820', filename: '', credentialUrl: 'https://drive.google.com/file/d/1VuVZQjMqTeRa-HlfBKHqQrxq9AKuTw7_/view', skills: ['OOPs', 'Java SE', 'Multithreading', 'Data Structures'] },
               { icon: Award,       title: 'Problem Solving (Basics)',                              issuer: 'HackerRank',          year: '2024', color: '#2ec866', filename: '', credentialUrl: 'https://www.hackerrank.com/certificates/3eec9f4f1515', skills: ['Problem Solving', 'Algorithms', 'Data Structures'] },
               { icon: Award,       title: 'SQL (Basics)',                                          issuer: 'HackerRank',          year: '2024', color: '#2ec866', filename: '', credentialUrl: 'https://www.hackerrank.com/certificates/26b329cda6ea', skills: ['SQL Queries', 'Relational Databases', 'Database Joins'] },
