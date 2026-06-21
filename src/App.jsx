@@ -75,7 +75,7 @@ const PROJECTS_DATA = [
     status: "Beta",
     statusColor: "#f59e0b",
     url: "https://genzolver.org",
-    github: "https://github.com/soujanya-s",
+    github: "https://github.com/soujanya-7/Genzolver.git",
     demo: "#",
     highlights: [
       "Integrates instant team-matching rooms with real-time feedback flows",
