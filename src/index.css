@@ -1913,7 +1913,8 @@ html.custom-cursor-active select {
    ============================================================ */
 .contact {
   position: relative;
-  background: var(--bg-secondary);
+  background: var(--bg-primary);
+  border-top: 1px solid var(--border);
   overflow: hidden;
   padding-top: 4rem;
   padding-bottom: 6rem;
