@@ -1575,105 +1575,153 @@ function App() {
       <section className="contact section" id="contact">
         <ParticlesBackground count={30} speed={0.3} color="rgba(124, 58, 237, 0.4)" />
         <div className="container" style={{ position: 'relative' }}>
+          <div className="contact-orb orb-1" />
           <div className="contact-orb orb-2" />
 
-          <div className="section-header">
-            <span className="section-tag">06. Contact</span>
-            <h2 className="section-title"><SplitText>Let's Work Together</SplitText></h2>
-            <p className="section-sub">Have a project in mind or want to collaborate? I'd love to hear from you.</p>
+          <div className="contact-split-layout">
+            {/* LEFT COLUMN: Info & Text */}
+            <div className="contact-info-col">
+              <span className="section-tag">06. Contact</span>
+              <h2 className="contact-large-title">
+                <SplitText text="Let's build something" delay={0.1} />
+                <span className="gradient-highlight-text">
+                  <SplitText text="legendary." delay={0.6} />
+                </span>
+              </h2>
+              <p className="contact-info-desc">
+                Have an idea, project, or opportunity you'd like to discuss? Drop me a message and let's turn it into reality.
+              </p>
+
+              {/* Status indicator */}
+              <div className="contact-status-indicator font-mono">
+                <span className="status-live-dot" />
+                <span>Open for internships, projects & collaborations</span>
+              </div>
+
+              {/* Contact Chips */}
+              <div className="contact-chips-column">
+                <div className="contact-premium-chip">
+                  <div className="pchip-icon-wrap email-theme">
+                    <Mail size={20} />
+                  </div>
+                  <div className="pchip-details">
+                    <span className="pchip-label font-mono">EMAIL ME</span>
+                    <span className="pchip-value">soujanya.s2023@sece.ac.in</span>
+                  </div>
+                  <button className={`pchip-copy-btn ${emailCopied ? 'copied' : ''}`} onClick={handleCopyEmail}>
+                    {emailCopied ? <Check size={16} /> : 'Copy'}
+                  </button>
+                </div>
+
+                <div className="contact-premium-chip">
+                  <div className="pchip-icon-wrap location-theme">
+                    <Globe size={20} />
+                  </div>
+                  <div className="pchip-details">
+                    <span className="pchip-label font-mono">LOCATION</span>
+                    <span className="pchip-value">Coimbatore, India</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Social Link Row */}
+              <div className="contact-social-grid">
+                <Magnet padding={12}>
+                  <a href="https://github.com/soujanya-7" target="_blank" rel="noreferrer" className="premium-social-btn github-social">
+                    <Github size={20} />
+                  </a>
+                </Magnet>
+                <Magnet padding={12}>
+                  <a href="https://linkedin.com" target="_blank" rel="noreferrer" className="premium-social-btn linkedin-social">
+                    <Linkedin size={20} />
+                  </a>
+                </Magnet>
+                <Magnet padding={12}>
+                  <a href="mailto:soujanya.s2023@sece.ac.in" className="premium-social-btn mail-social">
+                    <Mail size={20} />
+                  </a>
+                </Magnet>
+              </div>
+            </div>
+
+            {/* RIGHT COLUMN: Form Card */}
+            <div className="contact-form-col">
+              <Tilt
+                className="premium-contact-card"
+                tiltMaxAngleX={4}
+                tiltMaxAngleY={4}
+                perspective={1000}
+                scale={1.01}
+                transitionSpeed={1200}
+              >
+                <div className="premium-card-inner" onMouseMove={handleMouseMove}>
+                  <div className="premium-card-spotlight" />
+                  
+                  {formState === 'idle' && (
+                    <form className="premium-contact-form" onSubmit={handleContactSubmit}>
+                      <h3 className="form-card-title">Send a Direct Message</h3>
+                      <div className="form-input-group">
+                        <input type="text" id="heroName" name="name" required placeholder=" " autoComplete="off" className="form-input-field" />
+                        <label htmlFor="heroName" className="form-input-label font-mono">Your Name</label>
+                      </div>
+                      <div className="form-input-group">
+                        <input type="email" id="heroEmail" name="email" required placeholder=" " autoComplete="off" className="form-input-field" />
+                        <label htmlFor="heroEmail" className="form-input-label font-mono">Your Email</label>
+                      </div>
+                      <div className="form-input-group">
+                        <textarea id="heroMessage" name="message" rows="5" required placeholder=" " className="form-input-field form-textarea-field"></textarea>
+                        <label htmlFor="heroMessage" className="form-input-label font-mono">Your Message</label>
+                      </div>
+                      <button type="submit" className="premium-submit-btn">
+                        <span className="btn-glow-span" />
+                        <span className="btn-text"><ShinyText speed="2.5s">Launch Message</ShinyText></span>
+                        <ChevronRight size={18} className="btn-arrow-icon" />
+                      </button>
+                    </form>
+                  )}
+
+                  {formState === 'sending' && (
+                    <div className="premium-sending-state">
+                      <div className="sending-telemetry-loader">
+                        <div className="spinner-ring" />
+                        <div className="spinner-glow" />
+                      </div>
+                      <h3 className="sending-title">Connecting to Server...</h3>
+                      <p className="sending-subtitle font-mono">Sending secure packet payload</p>
+                      <div className="sending-progressbar">
+                        <div className="progressbar-fill" />
+                      </div>
+                    </div>
+                  )}
+
+                  {formState === 'success' && (
+                    <div className="premium-success-state">
+                      <div className="success-check-orb">
+                        <CheckCircle size={44} style={{ color: '#10b981' }} />
+                      </div>
+                      <h3 className="success-title">Message Launched!</h3>
+                      <p className="success-subtitle">Transmission received successfully. I'll get back to you shortly.</p>
+                      
+                      <div className="success-receipt font-mono">
+                        <div className="receipt-row">
+                          <span className="receipt-label">SENDER:</span>
+                          <span className="receipt-val">{formData.name}</span>
+                        </div>
+                        <div className="receipt-row">
+                          <span className="receipt-label">STATUS:</span>
+                          <span className="receipt-val text-success">DELIVERED</span>
+                        </div>
+                      </div>
+                      
+                      <button className="success-reset-btn font-mono" onClick={() => setFormState('idle')}>
+                        Send Another Packet
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </Tilt>
+            </div>
           </div>
-
-          {/* Contact Info Chips */}
-          <motion.div className="contact-chips-row" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }}>
-            <div className="contact-chip-card">
-              <div className="cchip-icon" style={{ background: 'rgba(124,58,237,0.15)' }}>
-                <Mail size={18} style={{ color: '#8b5cf6' }} />
-              </div>
-              <div className="cchip-text">
-                <span className="cchip-label font-mono">EMAIL</span>
-                <span className="cchip-val">soujanya.s2023@sece.ac.in</span>
-              </div>
-              <button className={`cchip-copy font-mono ${emailCopied ? 'copied' : ''}`} onClick={handleCopyEmail}>
-                {emailCopied ? <><Check size={14} /> Copied</> : 'Copy'}
-              </button>
-            </div>
-            <div className="contact-chip-card">
-              <div className="cchip-icon" style={{ background: 'rgba(6,182,212,0.15)' }}>
-                <Globe size={18} style={{ color: '#06b6d4' }} />
-              </div>
-              <div className="cchip-text">
-                <span className="cchip-label font-mono">LOCATION</span>
-                <span className="cchip-val">Coimbatore, India</span>
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Centered Form Card */}
-          <motion.div className="contact-form-hero" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.1 }}>
-            {formState === 'idle' && (
-              <form className="hero-form" onSubmit={handleContactSubmit}>
-                <div className="hero-form-row">
-                  <div className="hero-input-group">
-                    <label htmlFor="heroName" className="hero-label font-mono">Your Name</label>
-                    <input type="text" id="heroName" name="name" required placeholder="What should I call you?" autoComplete="off" className="hero-input" />
-                  </div>
-                  <div className="hero-input-group">
-                    <label htmlFor="heroEmail" className="hero-label font-mono">Your Email</label>
-                    <input type="email" id="heroEmail" name="email" required placeholder="Where can I reply?" autoComplete="off" className="hero-input" />
-                  </div>
-                </div>
-                <div className="hero-input-group">
-                  <label htmlFor="heroMessage" className="hero-label font-mono">Message</label>
-                  <textarea id="heroMessage" name="message" rows="5" required placeholder="Tell me about your project, idea, or just say hi..." className="hero-input hero-textarea"></textarea>
-                </div>
-                <button type="submit" className="hero-submit-btn">
-                  <span><ShinyText speed="2.5s">Send Message</ShinyText></span>
-                  <ChevronRight size={18} />
-                </button>
-              </form>
-            )}
-            {formState === 'sending' && (
-              <div className="hero-sending">
-                <div className="hero-spinner" />
-                <h3 className="hero-sending-title">Sending your message...</h3>
-                <p className="hero-sending-sub font-mono">Establishing secure connection</p>
-                <div className="hero-progress"><div className="hero-progress-fill" /></div>
-              </div>
-            )}
-            {formState === 'success' && (
-              <div className="hero-success">
-                <div className="hero-success-icon"><CheckCircle size={56} style={{ color: '#10b981' }} /></div>
-                <h3 className="hero-success-title">Message Sent Successfully!</h3>
-                <p className="hero-success-sub">Thank you for reaching out. I'll get back to you soon.</p>
-                <div className="hero-success-details">
-                  <div className="hsd-item"><span className="hsd-label font-mono">From:</span><span>{formData.name}</span></div>
-                </div>
-                <button className="hero-reset-btn font-mono" onClick={() => setFormState('idle')}>Send Another Message</button>
-              </div>
-            )}
-          </motion.div>
-
-          {/* Social Row */}
-          <motion.div className="contact-social-row" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.2 }}>
-            <Magnet padding={20}>
-              <a href="https://github.com/soujanya-7" target="_blank" rel="noreferrer" className="csocial-link">
-                <Github size={20} />
-                <span>GitHub</span>
-              </a>
-            </Magnet>
-            <Magnet padding={20}>
-              <a href="https://linkedin.com" target="_blank" rel="noreferrer" className="csocial-link">
-                <Linkedin size={20} />
-                <span>LinkedIn</span>
-              </a>
-            </Magnet>
-            <Magnet padding={20}>
-              <a href="mailto:soujanya.s2023@sece.ac.in" className="csocial-link">
-                <Mail size={20} />
-                <span>Email</span>
-              </a>
-            </Magnet>
-          </motion.div>
         </div>
       </section>
       <footer className="footer">
