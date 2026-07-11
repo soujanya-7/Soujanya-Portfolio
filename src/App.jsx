@@ -12,7 +12,7 @@ import ParticlesBackground from './components/animations/ParticlesBackground';
 import SplitText from './components/animations/SplitText';
 
 import { 
-  Mail, ChevronRight, Award,
+  Mail, ChevronRight, Award, User, MessageSquare,
   Code, Globe, Layout, Database, Blocks, Terminal, Edit3, Monitor, CheckCircle, Shield,
   ExternalLink, Activity, Check, Cpu, Layers, Lock, RefreshCw, Play, Sparkles, Heart, Clock, Server
 } from 'lucide-react';
@@ -1624,21 +1624,28 @@ function App() {
                 </div>
               </div>
 
-              {/* Social Link Row */}
+              {/* Enhanced Social Deck Grid */}
               <div className="contact-social-grid">
-                <Magnet padding={12}>
-                  <a href="https://github.com/soujanya-7" target="_blank" rel="noreferrer" className="premium-social-btn github-social">
-                    <Github size={20} />
+                <Magnet padding={15}>
+                  <a href="https://github.com/soujanya-7" target="_blank" rel="noreferrer" className="premium-social-card github-card">
+                    <div className="social-card-inner">
+                      <div className="social-icon-box"><Github size={22} /></div>
+                      <div className="social-card-info">
+                        <span className="social-platform font-mono">GITHUB</span>
+                        <span className="social-handle">@soujanya-7</span>
+                      </div>
+                    </div>
                   </a>
                 </Magnet>
-                <Magnet padding={12}>
-                  <a href="https://linkedin.com" target="_blank" rel="noreferrer" className="premium-social-btn linkedin-social">
-                    <Linkedin size={20} />
-                  </a>
-                </Magnet>
-                <Magnet padding={12}>
-                  <a href="mailto:soujanya.s2023@sece.ac.in" className="premium-social-btn mail-social">
-                    <Mail size={20} />
+                <Magnet padding={15}>
+                  <a href="https://linkedin.com" target="_blank" rel="noreferrer" className="premium-social-card linkedin-card">
+                    <div className="social-card-inner">
+                      <div className="social-icon-box"><Linkedin size={22} /></div>
+                      <div className="social-card-info">
+                        <span className="social-platform font-mono">LINKEDIN</span>
+                        <span className="social-handle">Connect</span>
+                      </div>
+                    </div>
                   </a>
                 </Magnet>
               </div>
@@ -1660,18 +1667,31 @@ function App() {
                   {formState === 'idle' && (
                     <form className="premium-contact-form" onSubmit={handleContactSubmit}>
                       <h3 className="form-card-title">Send a Direct Message</h3>
+                      
                       <div className="form-input-group">
-                        <input type="text" id="heroName" name="name" required placeholder=" " autoComplete="off" className="form-input-field" />
+                        <div className="input-icon-wrapper">
+                          <User size={18} className="input-icon" />
+                        </div>
+                        <input type="text" id="heroName" name="name" required placeholder=" " autoComplete="off" className="form-input-field with-icon" />
                         <label htmlFor="heroName" className="form-input-label font-mono">Your Name</label>
                       </div>
+                      
                       <div className="form-input-group">
-                        <input type="email" id="heroEmail" name="email" required placeholder=" " autoComplete="off" className="form-input-field" />
+                        <div className="input-icon-wrapper">
+                          <Mail size={18} className="input-icon" />
+                        </div>
+                        <input type="email" id="heroEmail" name="email" required placeholder=" " autoComplete="off" className="form-input-field with-icon" />
                         <label htmlFor="heroEmail" className="form-input-label font-mono">Your Email</label>
                       </div>
+                      
                       <div className="form-input-group">
-                        <textarea id="heroMessage" name="message" rows="5" required placeholder=" " className="form-input-field form-textarea-field"></textarea>
+                        <div className="input-icon-wrapper textarea-icon-wrapper">
+                          <MessageSquare size={18} className="input-icon" />
+                        </div>
+                        <textarea id="heroMessage" name="message" rows="5" required placeholder=" " className="form-input-field form-textarea-field with-icon"></textarea>
                         <label htmlFor="heroMessage" className="form-input-label font-mono">Your Message</label>
                       </div>
+                      
                       <button type="submit" className="premium-submit-btn">
                         <span className="btn-glow-span" />
                         <span className="btn-text"><ShinyText speed="2.5s">Launch Message</ShinyText></span>
@@ -1698,6 +1718,8 @@ function App() {
                     <div className="premium-success-state">
                       <div className="success-check-orb">
                         <CheckCircle size={44} style={{ color: '#10b981' }} />
+                        <div className="orb-burst-ring ring-1" />
+                        <div className="orb-burst-ring ring-2" />
                       </div>
                       <h3 className="success-title">Message Launched!</h3>
                       <p className="success-subtitle">Transmission received successfully. I'll get back to you shortly.</p>

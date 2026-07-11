@@ -2122,46 +2122,92 @@ html.custom-cursor-active select {
   color: #10b981;
 }
 
-/* Premium Social Buttons Grid */
+/* Enhanced Premium Social Cards Grid */
 .contact-social-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+  width: 100%;
+  max-width: 480px;
+}
+
+.premium-social-card {
+  display: block;
+  text-decoration: none;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 20px;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.social-card-inner {
+  padding: 1rem 1.25rem;
   display: flex;
+  align-items: center;
   gap: 1rem;
 }
 
-.premium-social-btn {
-  width: 48px;
-  height: 48px;
-  border-radius: 16px;
+.social-icon-box {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.06);
   color: var(--text-secondary);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
-.premium-social-btn:hover {
-  transform: translateY(-4px);
-  color: #ffffff;
+.social-card-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
 }
 
-.premium-social-btn.github-social:hover {
+.social-platform {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  letter-spacing: 1.5px;
+}
+
+.social-handle {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  transition: color 0.3s ease;
+}
+
+/* Hover effects for individual cards */
+.premium-social-card.github-card:hover {
+  border-color: rgba(36, 41, 46, 0.35);
+  background: rgba(36, 41, 46, 0.15);
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 10px 25px rgba(36, 41, 46, 0.15);
+}
+
+.premium-social-card.github-card:hover .social-icon-box {
   background: #24292e;
+  color: #ffffff;
   border-color: rgba(255, 255, 255, 0.2);
-  box-shadow: 0 5px 15px rgba(36, 41, 46, 0.4);
+  box-shadow: 0 0 15px rgba(36, 41, 46, 0.4);
 }
 
-.premium-social-btn.linkedin-social:hover {
+.premium-social-card.linkedin-card:hover {
+  border-color: rgba(0, 119, 181, 0.35);
+  background: rgba(0, 119, 181, 0.15);
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 10px 25px rgba(0, 119, 181, 0.15);
+}
+
+.premium-social-card.linkedin-card:hover .social-icon-box {
   background: #0077b5;
+  color: #ffffff;
   border-color: rgba(0, 119, 181, 0.3);
-  box-shadow: 0 5px 15px rgba(0, 119, 181, 0.4);
-}
-
-.premium-social-btn.mail-social:hover {
-  background: #ea4335;
-  border-color: rgba(234, 67, 53, 0.3);
-  box-shadow: 0 5px 15px rgba(234, 67, 53, 0.4);
+  box-shadow: 0 0 15px rgba(0, 119, 181, 0.4);
 }
 
 /* Right Column: Premium Contact Form Card */
@@ -2183,10 +2229,13 @@ html.custom-cursor-active select {
   position: relative;
 }
 
+/* Gorgeous dual-tone spotlight mix trailing the cursor */
 .premium-card-spotlight {
   position: absolute;
   inset: 0;
-  background: radial-gradient(800px circle at var(--mouse-x, 0) var(--mouse-y, 0), rgba(124, 58, 237, 0.06), transparent 40%);
+  background: 
+    radial-gradient(800px circle at var(--mouse-x, 0) var(--mouse-y, 0), rgba(124, 58, 237, 0.07), transparent 40%),
+    radial-gradient(400px circle at var(--mouse-x, 0) var(--mouse-y, 0), rgba(6, 182, 212, 0.04), transparent 50%);
   pointer-events: none;
   z-index: 0;
 }
@@ -2226,6 +2275,10 @@ html.custom-cursor-active select {
   z-index: 2;
 }
 
+.form-input-field.with-icon {
+  padding-left: 3.25rem;
+}
+
 .form-input-field:focus {
   outline: none;
   border-color: var(--accent-1);
@@ -2236,6 +2289,32 @@ html.custom-cursor-active select {
 .form-textarea-field {
   resize: none;
   min-height: 130px;
+}
+
+/* Absolute positioned icons inside inputs */
+.input-icon-wrapper {
+  position: absolute;
+  left: 1.25rem;
+  top: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  opacity: 0.4;
+  transition: all 0.3s ease;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.textarea-icon-wrapper {
+  top: 1.25rem;
+}
+
+/* Light up icons on input focus */
+.form-input-field:focus ~ .input-icon-wrapper {
+  opacity: 0.95;
+  color: var(--accent-1);
+  transform: scale(1.05);
 }
 
 /* Floating Labels style */
@@ -2251,12 +2330,21 @@ html.custom-cursor-active select {
   z-index: 3;
 }
 
+.form-input-field.with-icon ~ .form-input-label {
+  left: 3.25rem;
+}
+
 /* Shift labels on focus or when placeholder (space) is hidden */
 .form-input-field:focus ~ .form-input-label,
 .form-input-field:not(:placeholder-shown) ~ .form-input-label {
-  transform: translateY(-1.9rem) scale(0.85);
+  transform: translateY(-1.95rem) scale(0.85);
   color: var(--accent-1);
   font-weight: 600;
+}
+
+.form-input-field.with-icon:focus ~ .form-input-label,
+.form-input-field.with-icon:not(:placeholder-shown) ~ .form-input-label {
+  transform: translateY(-1.95rem) translateX(-2rem) scale(0.85);
 }
 
 /* Premium submit button */
@@ -2392,6 +2480,7 @@ html.custom-cursor-active select {
 }
 
 .success-check-orb {
+  position: relative;
   width: 76px;
   height: 76px;
   border-radius: 50%;
@@ -2408,6 +2497,29 @@ html.custom-cursor-active select {
 @keyframes popInGlow {
   0% { transform: scale(0); opacity: 0; }
   100% { transform: scale(1); opacity: 1; }
+}
+
+/* Pulsing particle check rings */
+.orb-burst-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 2px solid #10b981;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.orb-burst-ring.ring-1 {
+  animation: burstGlow 1.2s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+}
+
+.orb-burst-ring.ring-2 {
+  animation: burstGlow 1.2s cubic-bezier(0.1, 0.8, 0.3, 1) 0.2s forwards;
+}
+
+@keyframes burstGlow {
+  0% { transform: scale(0.85); opacity: 0.8; }
+  100% { transform: scale(1.65); opacity: 0; }
 }
 
 .success-title {
@@ -2510,7 +2622,9 @@ html.custom-cursor-active select {
     word-break: break-all;
   }
   .contact-social-grid {
+    grid-template-columns: 1fr;
     justify-content: center;
+    max-width: 320px;
   }
 }
 
