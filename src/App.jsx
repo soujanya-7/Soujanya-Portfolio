@@ -1592,12 +1592,6 @@ function App() {
                 Have an idea, project, or opportunity you'd like to discuss? Drop me a message and let's turn it into reality.
               </p>
 
-              {/* Status indicator */}
-              <div className="contact-status-indicator font-mono">
-                <span className="status-live-dot" />
-                <span>Open for internships, projects & collaborations</span>
-              </div>
-
               {/* Contact Chips */}
               <div className="contact-chips-column">
                 <div className="contact-premium-chip">
