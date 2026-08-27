@@ -1547,22 +1547,6 @@ function App() {
                 </div>
               </div>
 
-              {/* Availability Card */}
-              <div className="contact-glass-card">
-                <div className="contact-card-icon" style={{ background: 'rgba(16,185,129,0.12)' }}>
-                  <Clock size={20} style={{ color: '#10b981' }} />
-                </div>
-                <div className="contact-card-content">
-                  <span className="contact-card-label">LOCAL TIME</span>
-                  <span className="contact-card-value">{currentTime || '...'} IST</span>
-                </div>
-                <div className="contact-card-action">
-                  <span className="contact-status-badge">
-                    <span className="contact-live-dot" />
-                    Available
-                  </span>
-                </div>
-              </div>
 
               {/* Social Buttons */}
               <div className="contact-social-row">
