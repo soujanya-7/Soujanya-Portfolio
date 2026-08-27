@@ -1034,6 +1034,52 @@ img { max-width: 100%; display: block; }
    ============================================================ */
 .certifications { background: var(--bg-secondary); }
 
+/* ---- CERTIFICATIONS VIEW TOGGLE & GRID ---- */
+.cert-header-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.cert-view-toggle {
+  display: flex;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 4px;
+  gap: 4px;
+}
+
+.cert-toggle-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.cert-toggle-btn.active {
+  background: var(--accent-1);
+  color: #fff;
+  box-shadow: 0 4px 15px rgba(139, 92, 246, 0.35);
+}
+
+.cert-grid-layout {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-top: 3rem;
+}
+
 .cert-deck-layout {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -3895,7 +3941,7 @@ img { max-width: 100%; display: block; }
    ============================================================ */
 .skills-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
   gap: 2rem;
   max-width: 1200px;
   margin: 3rem auto 0;
