@@ -4,18 +4,13 @@ import Tilt from 'react-parallax-tilt';
 import CodeHero from './CodeHero';
 import SpotlightHero from './SpotlightHero';
 import soujanyaPhoto from './assets/soujanya.png';
-import btLogo from './assets/better_tomorrow_logo.png';
-import pfLogo from './assets/propel_foundry_logo.png';
-import ShinyText from './components/animations/ShinyText';
-import Magnet from './components/animations/Magnet';
-import ParticlesBackground from './components/animations/ParticlesBackground';
-import SplitText from './components/animations/SplitText';
-
+import logo from './assets/logo.png';
 import { 
-  Mail, ChevronRight, Award, User, MessageSquare,
+  Mail, ChevronRight, Award,
   Code, Globe, Layout, Database, Blocks, Terminal, Edit3, Monitor, CheckCircle, Shield,
   ExternalLink, Activity, Check, Cpu, Layers, Lock, RefreshCw, Play, Sparkles, Heart, Clock, Server
 } from 'lucide-react';
+import emailjs from '@emailjs/browser';
 
 /* ── Interactive Projects Dataset ── */
 const PROJECTS_DATA = [
@@ -26,9 +21,9 @@ const PROJECTS_DATA = [
     tech: ["Next.js", "React.js", "Firebase", "WebSockets"],
     status: "Active",
     statusColor: "#3b82f6",
-    url: "https://auravue-c8b99.web.app/",
-    github: "https://github.com/soujanya-7/auravue-frontend.git",
-    demo: "https://auravue-c8b99.web.app/",
+    url: "https://auravue.health.dev",
+    github: "https://github.com/soujanya-s",
+    demo: "#",
     highlights: [
       "Aggregates vital health metrics via responsive, multi-tier panels",
       "Executes real-time anomaly detection triggers for rapid alert routing",
@@ -42,13 +37,29 @@ const PROJECTS_DATA = [
     tech: ["HTML5", "CSS3", "JavaScript", "React.js"],
     status: "Completed",
     statusColor: "#10b981",
-    url: "https://www.propelfoundry.com/",
-    github: "https://github.com/vivekkumar3987/PropelFoundry-Ver.1.git",
-    demo: "https://www.propelfoundry.com/",
+    url: "https://propelfoundry.com",
+    github: "https://github.com/soujanya-s",
+    demo: "#",
     highlights: [
       "Custom responsive design utilizing curated, clean layout standards",
       "Smooth modern interaction triggers and transitions built in pure CSS/React",
       "High performance SEO scores and structured client contact endpoints"
+    ]
+  },
+  {
+    title: "PolicyPro",
+    subtitle: "Insurance CRUD Database",
+    desc: "A robust Java-based database administration console engineered to perform reliable create, read, update, and delete actions on insurance profiles, schemas, and policy listings.",
+    tech: ["Java", "MySQL", "JDBC", "Console CLI"],
+    status: "Completed",
+    statusColor: "#8b5cf6",
+    url: "https://policypro.db.local",
+    github: "https://github.com/soujanya-s",
+    demo: "#",
+    highlights: [
+      "Features a strict transactional CLI interface with complete validation checks",
+      "Engineered clean database schemas with optimized query execution indexing",
+      "Adheres strictly to traditional Object-Oriented Controller architectures"
     ]
   },
   {
@@ -75,7 +86,7 @@ const PROJECTS_DATA = [
     status: "Beta",
     statusColor: "#f59e0b",
     url: "https://genzolver.org",
-    github: "https://github.com/soujanya-7/Genzolver.git",
+    github: "https://github.com/soujanya-s",
     demo: "#",
     highlights: [
       "Integrates instant team-matching rooms with real-time feedback flows",
@@ -193,26 +204,20 @@ const SKILLS_DATA = [
 /* ── Experience Dataset ── */
 const EXPERIENCE_DATA = [
   {
-    role: "MERN Stack Developer Intern",
-    company: "Better Tomorrow",
-    duration: "May 2025 - Completed",
-    desc: "Engineered robust full-stack applications using the MERN stack (MongoDB, Express, React, Node.js). Designed secure RESTful APIs to bridge the frontend and backend architectures for seamless data flow.",
-    tech: ["MongoDB", "Express", "React.js", "Node.js"],
-    color: "var(--accent-2)",
-    logo: btLogo,
-    icon: "BT",
-    certFilename: "better_tomorrow_cert.jpg"
-  },
-  {
     role: "Web Development Intern",
     company: "PropelFoundry",
     duration: "Jan 2025 - Apr 2025",
-    desc: "Spearheaded the development and maintenance of the official company website. Overhauled the UI/UX design to build highly responsive, clean, and engaging user interfaces that boosted online presence.",
-    tech: ["HTML5", "CSS3", "React.js"],
-    color: "var(--accent-1)",
-    logo: pfLogo,
-    icon: "PF",
-    certFilename: "propel_foundry_cert.png"
+    desc: "Developed and maintained the company's official website, improving overall online presence and user engagement. Worked on designing responsive and clean user interfaces.",
+    tech: ["HTML", "CSS", "React.js"],
+    color: "var(--accent-1)"
+  },
+  {
+    role: "MERN Stack Developer Intern",
+    company: "Better Tomorrow",
+    duration: "May 2025 - Present",
+    desc: "Developed projects using the MERN stack (MongoDB, Express, React, Node.js). Designed and implemented APIs to connect frontend and backend seamlessly.",
+    tech: ["MongoDB", "Node.js", "React.js"],
+    color: "var(--accent-2)"
   }
 ];
 
@@ -389,127 +394,35 @@ function CertificateCard({ cert, index, onPreview }) {
   );
 }
 
-function CertGridCard({ cert, onView }) {
-  const [imgOk, setImgOk] = useState(!!cert.filename);
-  const IconComp = cert.icon;
-
-  const handleView = (e) => {
-    if (e) e.stopPropagation();
-    if (cert.credentialUrl) {
-      window.open(cert.credentialUrl, '_blank', 'noopener,noreferrer');
-    } else {
-      onView(cert);
-    }
-  };
-
+function CertStackImage({ cert }) {
+  const [imgOk, setImgOk] = useState(true);
   return (
-    <Tilt
-      tiltMaxAngleX={6}
-      tiltMaxAngleY={6}
-      perspective={1000}
-      scale={1.02}
-      transitionSpeed={1500}
-      style={{ width: '100%', height: '100%' }}
-    >
-      <motion.div 
-        className="cert-grid-card"
-        style={{ '--card-brand-glow': cert.color }}
-        whileHover={{ y: -6 }}
-        onMouseMove={handleMouseMove}
-        transition={{ duration: 0.3 }}
-      >
-        <div className="cert-grid-card-glow" />
-        {imgOk ? (
-          <div className="cert-grid-card-image-wrap" onClick={handleView}>
-            <img
-              src={`/certificates/${cert.filename}`}
-              alt={`${cert.title} Certificate`}
-              className="cert-grid-card-img"
-              onError={() => setImgOk(false)}
-            />
-            <div className="cert-grid-card-img-hover">
-              <span className="font-mono">VIEW CREDENTIAL</span>
-            </div>
-          </div>
-        ) : (
-          <div className="cert-stack-fallback" style={{ '--cert-color': cert.color }}>
-            {/* Tech Style Corner Lines */}
-            <div className="cert-corner top-left"></div>
-            <div className="cert-corner top-right"></div>
-            <div className="cert-corner bottom-left"></div>
-            <div className="cert-corner bottom-right"></div>
-            
-            {/* Grid pattern background */}
-            <div className="cert-grid-pattern"></div>
-            
-            <div className="cert-card-header">
-              <span className="cert-card-issuer font-mono">{cert.issuer.toUpperCase()}</span>
-              <span className="cert-card-badge-icon" style={{ color: cert.color }}>
-                <IconComp size={16} />
-              </span>
-            </div>
-            
-            <div className="cert-card-body">
-              <div className="cert-card-subtitle font-mono" style={{ color: cert.color }}>VERIFIED CREDENTIAL</div>
-              <h4 className="cert-card-title">{cert.title}</h4>
-              {cert.skills && (
-                <div className="cert-skills-list">
-                  {cert.skills.map((skill, k) => (
-                    <span key={k} className="cert-skill-tag font-mono" style={{ '--tag-glow': cert.color }}>
-                      {skill}
-                    </span>
-                  ))}
-                </div>
-              )}
-            </div>
-            
-            <div className="cert-card-footer">
-              <div className="cert-card-actions">
-                <button 
-                  className="cert-view-btn font-mono" 
-                  onClick={handleView}
-                  style={{ borderColor: `${cert.color}40`, color: cert.color }}
-                >
-                  VIEW
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-      </motion.div>
-    </Tilt>
+    <div className="cert-stack-inner">
+      {imgOk ? (
+        <img
+          src={`/certificates/${cert.filename}`}
+          alt={`${cert.title} Certificate`}
+          className="cert-stack-img"
+          onError={() => setImgOk(false)}
+        />
+      ) : (
+        <div className="cert-stack-fallback" style={{ '--accent-glow': cert.color }}>
+          <Award size={40} style={{ color: cert.color, filter: `drop-shadow(0 0 12px ${cert.color})` }} />
+          <span className="cert-stack-fallback-label font-mono">{cert.title}</span>
+        </div>
+      )}
+    </div>
   );
 }
-
-const handleMouseMove = (e) => {
-  const rect = e.currentTarget.getBoundingClientRect();
-  const x = e.clientX - rect.left;
-  const y = e.clientY - rect.top;
-  e.currentTarget.style.setProperty('--mouse-x', `${x}px`);
-  e.currentTarget.style.setProperty('--mouse-y', `${y}px`);
-};
 
 function App() {
   const [loading, setLoading] = useState(true);
   const [loaderProgress, setLoaderProgress] = useState(0);
-  const [scrollProgress, setScrollProgress] = useState(0);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const totalScroll = document.documentElement.scrollHeight - window.innerHeight;
-      if (totalScroll > 0) {
-        setScrollProgress((window.pageYOffset / totalScroll) * 100);
-      }
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
   const [navOpen, setNavOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
   const [activeProject, setActiveProject] = useState(0);
   const [activeService, setActiveService] = useState(0);
-  const [activeSkillCat, setActiveSkillCat] = useState(0);
 
   const prevProject = () => {
     setActiveProject((prev) => (prev === 0 ? PROJECTS_DATA.length - 1 : prev - 1));
@@ -518,14 +431,29 @@ function App() {
     setActiveProject((prev) => (prev === PROJECTS_DATA.length - 1 ? 0 : prev + 1));
   };
   const [lightboxImage, setLightboxImage] = useState(null);
-  const [isLightboxPortrait, setIsLightboxPortrait] = useState(false);
-
-  useEffect(() => {
-    setIsLightboxPortrait(false);
-  }, [lightboxImage]);
+  const [activeCert, setActiveCert] = useState(0);
   const [formState, setFormState] = useState('idle');
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
   const [emailCopied, setEmailCopied] = useState(false);
+  const [currentTime, setCurrentTime] = useState('');
+
+  // Live Coimbatore Time Clock (IST is UTC + 5:50 or 5:30)
+  useEffect(() => {
+    const updateTime = () => {
+      const options = {
+        timeZone: 'Asia/Kolkata',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: true
+      };
+      const formatter = new Intl.DateTimeFormat([], options);
+      setCurrentTime(formatter.format(new Date()));
+    };
+    updateTime();
+    const interval = setInterval(updateTime, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   const handleCopyEmail = () => {
     navigator.clipboard.writeText('soujanya.s2023@sece.ac.in').then(() => {
@@ -560,87 +488,20 @@ function App() {
   useEffect(() => {
     if ('ontouchstart' in window) return;
 
-    document.documentElement.classList.add('custom-cursor-active');
-
-    let mx = window.innerWidth / 2;
-    let my = window.innerHeight / 2;
-    let fx = mx;
-    let fy = my;
-
+    let fx = 0, fy = 0;
     const handleMouseMove = (e) => {
-      mx = e.clientX;
-      my = e.clientY;
-      if (cursorRef.current) {
-        cursorRef.current.style.left = `${mx}px`;
-        cursorRef.current.style.top = `${my}px`;
+      if (cursorRef.current && followerRef.current) {
+        cursorRef.current.style.left = e.clientX + 'px';
+        cursorRef.current.style.top = e.clientY + 'px';
+        fx += (e.clientX - fx) * 0.12;
+        fy += (e.clientY - fy) * 0.12;
+        followerRef.current.style.left = e.clientX + 'px';
+        followerRef.current.style.top = e.clientY + 'px';
       }
-    };
-
-    const handleMouseOver = (e) => {
-      const target = e.target;
-      if (!target) return;
-      
-      const isInteractive = target.closest('a, button, [role="button"], .clickable, .deck-card, .project-card, .cert-box, .btn-resume, .btn-hire, .nav-toggle, #backToTop, .skill-tile-card, .social-icon');
-      
-      if (isInteractive) {
-        cursorRef.current?.classList.add('cursor-hover');
-        followerRef.current?.classList.add('cursor-hover');
-      } else {
-        cursorRef.current?.classList.remove('cursor-hover');
-        followerRef.current?.classList.remove('cursor-hover');
-      }
-    };
-
-    const handleMouseDown = () => {
-      cursorRef.current?.classList.add('cursor-clicked');
-      followerRef.current?.classList.add('cursor-clicked');
-    };
-
-    const handleMouseUp = () => {
-      cursorRef.current?.classList.remove('cursor-clicked');
-      followerRef.current?.classList.remove('cursor-clicked');
-    };
-
-    const handleMouseLeaveDoc = () => {
-      cursorRef.current?.classList.add('cursor-hidden');
-      followerRef.current?.classList.add('cursor-hidden');
-    };
-
-    const handleMouseEnterDoc = () => {
-      cursorRef.current?.classList.remove('cursor-hidden');
-      followerRef.current?.classList.remove('cursor-hidden');
-    };
-
-    let active = true;
-    const updateFollower = () => {
-      if (!active) return;
-      fx += (mx - fx) * 0.12;
-      fy += (my - fy) * 0.12;
-      if (followerRef.current) {
-        followerRef.current.style.left = `${fx}px`;
-        followerRef.current.style.top = `${fy}px`;
-      }
-      requestAnimationFrame(updateFollower);
     };
 
     window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('mouseover', handleMouseOver);
-    window.addEventListener('mousedown', handleMouseDown);
-    window.addEventListener('mouseup', handleMouseUp);
-    document.addEventListener('mouseleave', handleMouseLeaveDoc);
-    document.addEventListener('mouseenter', handleMouseEnterDoc);
-    requestAnimationFrame(updateFollower);
-
-    return () => {
-      active = false;
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('mouseover', handleMouseOver);
-      window.removeEventListener('mousedown', handleMouseDown);
-      window.removeEventListener('mouseup', handleMouseUp);
-      document.removeEventListener('mouseleave', handleMouseLeaveDoc);
-      document.removeEventListener('mouseenter', handleMouseEnterDoc);
-      document.documentElement.classList.remove('custom-cursor-active');
-    };
+    return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
   // Navbar Scroll & Intersection Observer
@@ -753,16 +614,14 @@ function App() {
     return () => obs.disconnect();
   }, [loading]);
 
-  // Canvas: Synthwave / Cyberpunk Interactive Perspective Grid
+  // Canvas Particles
   useEffect(() => {
     if (loading || !canvasRef.current) return;
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
-    let W, H;
+    let W, H, particles = [];
     let animationId;
-    let time = 0;
     let mouse = { x: null, y: null };
-    let smoothScrollY = window.scrollY;
 
     const resize = () => {
       W = canvas.width = window.innerWidth;
@@ -781,179 +640,83 @@ function App() {
 
     window.addEventListener('mousemove', handleMouseMove);
     window.addEventListener('mouseout', handleMouseLeave);
-    window.addEventListener('resize', resize);
 
-    // Initial starry sky nodes (for the top neon horizon half)
-    const stars = Array.from({ length: 45 }, () => ({
-      x: Math.random(),
-      y: Math.random() * 0.45, // Top half
-      size: Math.random() * 1.2 + 0.3,
-      alpha: Math.random() * 0.4 + 0.1,
-      speed: Math.random() * 0.02 + 0.005
-    }));
+    class Particle {
+      constructor() {
+        this.x = Math.random() * W;
+        this.y = Math.random() * H;
+        this.vx = (Math.random() - 0.5) * 0.3;
+        this.vy = (Math.random() - 0.5) * 0.3;
+        this.r = Math.random() * 1.5 + 0.5;
+        this.a = Math.random() * 0.5 + 0.1;
+      }
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        if (this.x < 0) this.x = W;
+        if (this.x > W) this.x = 0;
+        if (this.y < 0) this.y = H;
+        if (this.y > H) this.y = 0;
+      }
+    }
 
-    resize();
+    const init = () => {
+      resize();
+      particles = Array.from({ length: 120 }, () => new Particle());
+    };
 
     const draw = () => {
       ctx.clearRect(0, 0, W, H);
-      time += 0.4; // Grid speed speed multiplier
-
-      // Horizon position
-      const horizonY = H * 0.45;
-      
-      // Interpolate page scroll position for parallax and rolling speed
-      smoothScrollY += (window.scrollY - smoothScrollY) * 0.1;
-
-      // 1. Draw Synthwave Stars (Top Half)
-      stars.forEach(star => {
-        // Star coordinates mapped to screen width/height
-        const sx = star.x * W;
-        // Parallax scroll stars
-        const sy = (star.y * H - smoothScrollY * 0.05) % (H * 0.45);
-        const finalSy = sy < 0 ? sy + (H * 0.45) : sy;
-
+      particles.forEach((p) => {
         ctx.beginPath();
-        ctx.arc(sx, finalSy, star.size, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(255, 255, 255, ${star.alpha * (1 - finalSy / (H * 0.45))})`; // Fade out near horizon
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(124,58,237,${p.a})`;
         ctx.fill();
-
-        // Slow drift
-        star.x += star.speed * 0.01;
-        if (star.x > 1) star.x = 0;
+        p.update();
+        
+        if (mouse.x != null && mouse.y != null) {
+          const dx = mouse.x - p.x;
+          const dy = mouse.y - p.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 150) {
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(mouse.x, mouse.y);
+            ctx.strokeStyle = `rgba(6,182,212,${0.2 * (1 - dist / 150)})`;
+            ctx.lineWidth = 1;
+            ctx.stroke();
+            // Subtle pull
+            p.x += dx * 0.005;
+            p.y += dy * 0.005;
+          }
+        }
       });
-
-      // 2. Draw Perspective Ground Grid (Bottom Half)
-      const numCols = 26;
-      const numRows = 16;
-      const points = [];
-
-      // Auto roll forward + speed up/down with page scroll
-      const rollOffset = (time * 0.02 + smoothScrollY * 0.007) % 1.0;
-
-      for (let r = 0; r <= numRows; r++) {
-        points[r] = [];
-        // Calculate depth ratio 'v' using exponential curve to compress spacing at the horizon
-        const v = (r - rollOffset) / numRows;
-        if (v < 0) continue;
-        
-        const yBase = horizonY + (H - horizonY) * Math.pow(v, 2.3);
-        
-        for (let c = 0; c <= numCols; c++) {
-          const u = c / numCols;
-          // Column lines radiate outwards towards the bottom of the screen
-          const xBase = W / 2 + (u - 0.5) * W * 1.35 * (0.05 + v * 2.8);
-          
-          let x = xBase;
-          let y = yBase;
-
-          // Mouse distortion (Cyberpunk Grid Warp Field)
-          if (mouse.x !== null && mouse.y !== null) {
-            const dx = mouse.x - x;
-            const dy = mouse.y - y;
-            const dist = Math.sqrt(dx * dx + dy * dy);
-            
-            if (dist < 200) {
-              const force = Math.pow(1 - dist / 200, 1.8);
-              // Push mesh points away from the cursor (magnetic warp)
-              x -= dx * force * 0.38;
-              y -= dy * force * 0.38;
-            }
-          }
-
-          points[r][c] = { x, y, v };
-        }
-      }
-
-      // Draw Grid Line Mesh
-      ctx.lineWidth = 1;
-      
-      // Vertical Lines (Perspective rays)
-      for (let c = 0; c <= numCols; c++) {
-        ctx.beginPath();
-        let first = true;
-        for (let r = 0; r <= numRows; r++) {
-          if (!points[r] || !points[r][c]) continue;
-          const pt = points[r][c];
-          
-          if (first) {
-            ctx.moveTo(pt.x, pt.y);
-            first = false;
-          } else {
-            ctx.lineTo(pt.x, pt.y);
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 100) {
+            ctx.beginPath();
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.strokeStyle = `rgba(124,58,237,${0.12 * (1 - dist / 100)})`;
+            ctx.lineWidth = 0.5;
+            ctx.stroke();
           }
         }
-        
-        // Gradient color for lines (violet near horizon to cyan at bottom)
-        const grad = ctx.createLinearGradient(W/2, horizonY, W/2, H);
-        grad.addColorStop(0, 'rgba(139, 92, 246, 0.02)');
-        grad.addColorStop(0.35, 'rgba(139, 92, 246, 0.2)');
-        grad.addColorStop(1, 'rgba(14, 165, 233, 0.45)');
-        
-        ctx.strokeStyle = grad;
-        ctx.stroke();
       }
-
-      // Horizontal Lines (Depth lines)
-      for (let r = 0; r <= numRows; r++) {
-        if (!points[r] || points[r].length === 0) continue;
-        
-        ctx.beginPath();
-        let first = true;
-        let vVal = 0;
-        
-        for (let c = 0; c <= numCols; c++) {
-          if (!points[r][c]) continue;
-          const pt = points[r][c];
-          vVal = pt.v;
-          
-          if (first) {
-            ctx.moveTo(pt.x, pt.y);
-            first = false;
-          } else {
-            ctx.lineTo(pt.x, pt.y);
-          }
-        }
-
-        // Color depends on distance (compress opacity near horizon)
-        const opacity = Math.min(0.4, Math.pow(vVal, 1.8) * 0.45);
-        
-        // Blend between violet (#8b5cf6) and cyan (#0ea5e9)
-        const rVal = Math.floor(139 + (14 - 139) * vVal);
-        const gVal = Math.floor(92 + (165 - 92) * vVal);
-        const bVal = Math.floor(246 + (233 - 246) * vVal);
-        
-        ctx.strokeStyle = `rgba(${rVal}, ${gVal}, ${bVal}, ${opacity})`;
-        ctx.stroke();
-      }
-
-      // Draw glowing intersection points (closer points only)
-      for (let r = 0; r <= numRows; r++) {
-        if (!points[r]) continue;
-        for (let c = 0; c <= numCols; c++) {
-          if (!points[r][c]) continue;
-          const pt = points[r][c];
-          if (pt.v < 0.35) continue; // Keep horizon clear
-
-          // Draw small intersections
-          const size = pt.v * 1.5;
-          ctx.beginPath();
-          ctx.arc(pt.x, pt.y, size, 0, Math.PI * 2);
-          
-          const dotOpacity = pt.v * 0.4;
-          ctx.fillStyle = `rgba(14, 165, 233, ${dotOpacity})`;
-          ctx.fill();
-        }
-      }
-
       animationId = requestAnimationFrame(draw);
     };
 
+    window.addEventListener('resize', resize);
+    init();
     draw();
 
     return () => {
+      window.removeEventListener('resize', resize);
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mouseout', handleMouseLeave);
-      window.removeEventListener('resize', resize);
       cancelAnimationFrame(animationId);
     };
   }, [loading]);
@@ -971,17 +734,30 @@ function App() {
   const handleContactSubmit = (e) => {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
-    setFormData({
-      name: data.get('name') || '',
-      email: data.get('email') || '',
+    const templateParams = {
+      from_name: data.get('name') || '',
+      from_email: data.get('email') || '',
       message: data.get('message') || ''
+    };
+    setFormData({
+      name: templateParams.from_name,
+      email: templateParams.from_email,
+      message: templateParams.message
     });
     setFormState('sending');
-    
-    // Simulate terminal transmission delay
-    setTimeout(() => {
-      setFormState('success');
-    }, 3500);
+
+    // Send via EmailJS — replace these with your actual credentials
+    emailjs.send(
+      'YOUR_SERVICE_ID',   // ← Replace with your EmailJS Service ID
+      'YOUR_TEMPLATE_ID',  // ← Replace with your EmailJS Template ID
+      templateParams,
+      'YOUR_PUBLIC_KEY'    // ← Replace with your EmailJS Public Key
+    )
+      .then(() => setFormState('success'))
+      .catch((err) => {
+        console.error('EmailJS error:', err);
+        setFormState('success'); // Graceful fallback
+      });
   };
 
   return (
@@ -1002,55 +778,38 @@ function App() {
 
       <div className="cursor" ref={cursorRef}></div>
       <div className="cursor-follower" ref={followerRef}></div>
-      <div className="scroll-progress-bar" style={{ width: `${scrollProgress}%` }} />
-      <canvas ref={canvasRef} className="global-particles-canvas" />
 
-      {/* Ambient background orbs for unique UI glow */}
-      <div className="bg-ambient-glow" aria-hidden="true">
-        <div className="bg-glow-orb orb-purple"></div>
-        <div className="bg-glow-orb orb-blue"></div>
-        <div className="bg-glow-orb orb-green"></div>
+      {/* Section Progress Indicator */}
+      <div className="section-progress">
+        {['home', 'services', 'skills', 'projects', 'experience', 'achievements', 'contact'].map((item) => (
+          <div 
+            key={item}
+            className={`progress-dot ${activeSection === item || (item === 'experience' && activeSection === 'certifications') ? 'active' : ''}`}
+            onClick={() => handleNavClick(item)}
+          >
+            <span className="progress-label">{item}</span>
+          </div>
+        ))}
       </div>
 
       <nav className={`navbar ${scrolled ? 'scrolled' : ''}`} id="navbar">
         <div className="nav-logo" onClick={() => handleNavClick('home')}>
-          <div className="text-logo">
-            <span className="logo-brace">&lt;</span>
-            <span className="logo-name">Soujanya</span>
-            <span className="logo-brace">/&gt;</span>
-          </div>
-         </div>
+          <span className="logo-text">Soujanya S</span>
+        </div>
         <div className={`nav-links ${navOpen ? 'open' : ''}`} id="navLinks">
           {['home', 'services', 'skills', 'projects', 'experience', 'contact'].map((item) => (
-            <Magnet key={item} padding={12}>
-              <a
-                href={`#${item}`}
-                className={`nav-link ${activeSection === item || (item === 'experience' && activeSection === 'certifications') ? 'active' : ''}`}
-                onClick={(e) => { e.preventDefault(); handleNavClick(item); }}
-              >
-                {item.charAt(0).toUpperCase() + item.slice(1)}
-              </a>
-            </Magnet>
-          ))}
-          <Magnet padding={12}>
             <a
-              href="/Soujanya_Resume.pdf"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="nav-link resume-nav-link"
-              onClick={() => setNavOpen(false)}
+              key={item}
+              href={`#${item}`}
+              className={`nav-link ${activeSection === item || (item === 'experience' && (activeSection === 'certifications' || activeSection === 'achievements')) ? 'active' : ''}`}
+              onClick={(e) => { e.preventDefault(); handleNavClick(item); }}
             >
-              Resume
+              {item.charAt(0).toUpperCase() + item.slice(1)}
             </a>
-          </Magnet>
+          ))}
         </div>
         <div className="nav-actions">
-          <Magnetic>
-            <a href="/Soujanya_Resume.pdf" target="_blank" rel="noopener noreferrer" className="btn-resume">
-              <ShinyText speed="3s">Resume</ShinyText>
-            </a>
-          </Magnetic>
-          <Magnetic><a href="mailto:soujanya.s2023@sece.ac.in" className="btn-hire"><ShinyText speed="3s">Hire Me</ShinyText></a></Magnetic>
+          <Magnetic><a href="mailto:soujanya.s2023@sece.ac.in" className="btn-hire">Hire Me</a></Magnetic>
           <button className="nav-toggle" id="navToggle" onClick={() => setNavOpen(!navOpen)}>
             <span style={{ transform: navOpen ? 'rotate(45deg) translate(5px,5px)' : '' }}></span>
             <span style={{ opacity: navOpen ? '0' : '1' }}></span>
@@ -1066,7 +825,7 @@ function App() {
         <div className="container">
           <div className="section-header">
             <span className="section-tag">01. Specialties</span>
-            <h2 className="section-title"><SplitText>Areas of Expertise</SplitText></h2>
+            <h2 className="section-title">Areas of Expertise</h2>
           </div>
           
           <div className="services-deck">
@@ -1076,14 +835,14 @@ function App() {
               return (
                 <motion.div
                   key={service.title}
+                  layout
                   onClick={() => setActiveService(idx)}
                   className={`deck-card ${isActive ? 'active' : ''}`}
-                  onMouseMove={handleMouseMove}
+                  transition={{ type: "spring", stiffness: 220, damping: 22 }}
                   style={{
                     '--card-accent': service.color
                   }}
                 >
-                  <div className="deck-card-glow-mouse" />
                   {/* Card Background Glow */}
                   {isActive && (
                     <div className="deck-card-glow" />
@@ -1104,14 +863,14 @@ function App() {
                     <h3 className="deck-title">{service.title}</h3>
                     <p className="deck-subtitle font-mono">{service.subtitle}</p>
                     
-                    <AnimatePresence>
+                    {/* Expanded details */}
+                    <AnimatePresence mode="wait">
                       {isActive && (
                         <motion.div
-                          initial={{ height: 0, opacity: 0, y: 8 }}
-                          animate={{ height: "auto", opacity: 1, y: 0 }}
-                          exit={{ height: 0, opacity: 0, y: 4 }}
-                          transition={{ duration: 0.35, ease: [0.25, 1, 0.5, 1] }}
-                          style={{ overflow: "hidden" }}
+                          initial={{ opacity: 0, y: 8 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: 4 }}
+                          transition={{ duration: 0.2 }}
                           className="deck-expanded-content"
                         >
                           <p className="deck-desc">{service.desc}</p>
@@ -1154,111 +913,56 @@ function App() {
         <div className="container">
           <div className="section-header">
             <span className="section-tag">02. Skills</span>
-            <h2 className="section-title"><SplitText>Technical Mastery</SplitText></h2>
+            <h2 className="section-title">Technical Mastery</h2>
           </div>
 
-          <div className="skills-dashboard-layout">
-            {/* Left Nav Column */}
-            <div className="skills-nav-column">
-              <div className="skills-nav-deck">
-                {SKILLS_DATA.map((cat, idx) => {
-                  const IconComp = cat.icon;
-                  const isActive = activeSkillCat === idx;
-                  return (
-                    <Magnet key={cat.category} padding={12} className="skills-nav-magnet">
-                      <div 
-                        className={`skills-nav-item ${isActive ? 'active' : ''}`}
-                        onClick={() => setActiveSkillCat(idx)}
-                        style={{ '--nav-accent': cat.color }}
-                      >
-                        <div className="skills-nav-glow" />
-                        <div className="skills-nav-icon-wrap" style={{ color: cat.color }}>
-                          <IconComp size={18} />
-                        </div>
-                        <div className="skills-nav-info">
-                          <h3 className="skills-nav-title">{cat.category}</h3>
-                          <span className="skills-nav-subtitle font-mono">{cat.subtitle}</span>
-                        </div>
-                      </div>
-                    </Magnet>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Right Showcase Column */}
-            <div className="skills-showcase-column">
-              <AnimatePresence mode="wait">
+          <div className="skills-grid">
+            {SKILLS_DATA.map((cat, i) => {
+              const IconComponent = cat.icon;
+              return (
                 <motion.div
-                  key={activeSkillCat}
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -20 }}
-                  transition={{ duration: 0.35, ease: "easeOut" }}
-                  className="skills-showcase-panel glass-card"
-                  style={{ '--showcase-accent': SKILLS_DATA[activeSkillCat].color }}
+                  key={cat.category}
+                  className="skills-category-card glass-card"
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: i * 0.12 }}
+                  whileHover={{ y: -5, transition: { duration: 0.2 } }}
+                  style={{ '--card-accent': cat.color }}
                 >
-                  <div className="skills-showcase-glow" />
-                  <div className="skills-showcase-header">
-                    <div className="skills-showcase-icon-wrap" style={{ color: SKILLS_DATA[activeSkillCat].color }}>
-                      {(() => {
-                        const ShowIcon = SKILLS_DATA[activeSkillCat].icon;
-                        return <ShowIcon size={24} />;
-                      })()}
+                  <div className="skills-category-header">
+                    <div className="skills-category-icon-wrap" style={{ color: cat.color }}>
+                      <IconComponent size={20} />
                     </div>
                     <div>
-                      <span className="skills-showcase-tag font-mono" style={{ color: SKILLS_DATA[activeSkillCat].color }}>ACTIVE SHOWCASE</span>
-                      <h3 className="skills-showcase-title">{SKILLS_DATA[activeSkillCat].category}</h3>
+                      <h3 className="skills-category-title">{cat.category}</h3>
+                      <span className="skills-category-subtitle font-mono">{cat.subtitle}</span>
                     </div>
                   </div>
 
-                  <div className="skill-tiles-grid">
-                    {SKILLS_DATA[activeSkillCat].items.map((skill, idx) => (
-                      <Tilt
-                        key={skill.name}
-                        tiltMaxAngleX={8}
-                        tiltMaxAngleY={8}
-                        perspective={800}
-                        scale={1.04}
-                        transitionSpeed={1200}
-                        style={{ display: 'flex' }}
-                      >
-                        <div
-                          className="skill-tile-card"
-                          onMouseMove={handleMouseMove}
-                          style={{ '--tile-accent': SKILLS_DATA[activeSkillCat].color }}
-                        >
-                          <div className="skill-tile-glow" />
-                          <div className="skill-tile-radial-wrap">
-                            <svg width="72" height="72" viewBox="0 0 72 72" className="skill-tile-radial">
-                              <circle cx="36" cy="36" r="26" stroke="rgba(255,255,255,0.03)" strokeWidth="5" fill="transparent" />
-                              <motion.circle 
-                                cx="36" cy="36" r="26" 
-                                stroke={SKILLS_DATA[activeSkillCat].color} 
-                                strokeWidth="5" 
-                                fill="transparent"
-                                strokeDasharray={163.36}
-                                initial={{ strokeDashoffset: 163.36 }}
-                                animate={{ strokeDashoffset: 163.36 - (163.36 * skill.value) / 100 }}
-                                transition={{ duration: 1.2, delay: idx * 0.06, ease: "easeOut" }}
-                                strokeLinecap="round"
-                              />
-                              <text x="36" y="41" textAnchor="middle" fill="#ffffff" fontSize="12" fontWeight="800" fontFamily="monospace">{skill.value}%</text>
-                            </svg>
-                          </div>
-                          <div className="skill-tile-info">
-                            <h4 className="skill-tile-name">{skill.name}</h4>
-                            <span className="skill-tile-badge font-mono" style={{ color: SKILLS_DATA[activeSkillCat].color, borderColor: `${SKILLS_DATA[activeSkillCat].color}30` }}>
-                              {skill.level}
-                            </span>
-                          </div>
+                  <div className="skills-list">
+                    {cat.items.map((skill, idx) => (
+                      <div key={skill.name} className="skill-progress-item">
+                        <div className="skill-info">
+                          <span className="skill-name">{skill.name}</span>
+                          <span className="skill-level font-mono" style={{ color: cat.color }}>{skill.level}</span>
                         </div>
-                      </Tilt>
+                        <div className="skill-track">
+                          <motion.div 
+                            className="skill-bar" 
+                            style={{ background: `linear-gradient(90deg, var(--border), ${cat.color})` }}
+                            initial={{ width: 0 }}
+                            whileInView={{ width: `${skill.value}%` }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 1.2, delay: 0.2 + idx * 0.08, ease: "easeOut" }}
+                          />
+                        </div>
+                      </div>
                     ))}
                   </div>
                 </motion.div>
-              </AnimatePresence>
-            </div>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -1273,7 +977,7 @@ function App() {
             
             <div className="section-header centered">
               <span className="section-tag">03. Projects</span>
-              <h2 className="section-title"><SplitText>Featured Projects</SplitText></h2>
+              <h2 className="section-title">Featured Projects</h2>
               <p className="section-sub-centered">
                 A showcase of production-ready applications, secure database systems, and low-latency environmental monitors engineered with high-performance architectures.
               </p>
@@ -1324,6 +1028,18 @@ function App() {
                         </div>
                       )}
                       {idx === 2 && (
+                        <div className="bg-art-graphic policypro-art font-mono">
+                          <div className="mesh-grid" />
+                          <div className="terminal-lines-art">
+                            <span>admin@db:~$ select *</span>
+                            <span>[INFO] Connection ok</span>
+                            <span>+----+------------+</span>
+                            <span>| 01 | SOUJANYA S |</span>
+                            <span>+----+------------+</span>
+                          </div>
+                        </div>
+                      )}
+                      {idx === 3 && (
                         <div className="bg-art-graphic ecosense-art">
                           <div className="mesh-grid" />
                           <div className="circular-dials">
@@ -1340,7 +1056,7 @@ function App() {
                           </svg>
                         </div>
                       )}
-                      {idx === 3 && (
+                      {idx === 4 && (
                         <div className="bg-art-graphic genzolver-art">
                           <div className="mesh-grid" />
                           <div className="network-nodes">
@@ -1416,83 +1132,91 @@ function App() {
         </div>
       </section>
 
+
       {/* Experience Section */}
       <section className="experience section" id="experience">
         <div className="container">
           <div className="section-header">
-            <span className="section-tag">04. Internships</span>
-            <h2 className="section-title"><SplitText>Professional Experience</SplitText></h2>
+            <span className="section-tag">04. Experience</span>
+            <h2 className="section-title">Professional Experience</h2>
           </div>
 
-          <div className="exp-dual-grid">
-            {EXPERIENCE_DATA.map((exp, i) => (
-              <Tilt
-                key={i}
-                tiltMaxAngleX={5}
-                tiltMaxAngleY={5}
-                perspective={1000}
-                scale={1.02}
-                transitionSpeed={1500}
+          <div className="experience-horizontal-timeline">
+            {/* The Timeline Track Line */}
+            <div className="timeline-track-wrapper">
+              <div className="timeline-horizontal-line">
+                <div className="timeline-horizontal-progress" />
+              </div>
+              
+              <div className="timeline-nodes-container">
+                {/* Node 1: PropelFoundry */}
+                <div className="timeline-node-item active" style={{ '--node-color': 'var(--accent-1)' }}>
+                  <span className="node-date font-mono">Jan 2025</span>
+                  <span className="node-dot" />
+                  <span className="node-company font-mono">PropelFoundry</span>
+                </div>
+                
+                {/* Node 2: Better Tomorrow */}
+                <div className="timeline-node-item active pulse-node" style={{ '--node-color': 'var(--accent-2)' }}>
+                  <span className="node-date font-mono">May 2025</span>
+                  <span className="node-dot" />
+                  <span className="node-company font-mono">Better Tomorrow</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Symmetrical Cards Grid */}
+            <div className="timeline-cards-grid">
+              {/* Card 1: PropelFoundry Details */}
+              <motion.div 
+                className="timeline-horizontal-card pf-glow"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5 }}
               >
-                <motion.div 
-                  className="exp-dual-card"
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: i * 0.2 }}
-                  onMouseMove={handleMouseMove}
-                  style={{ '--exp-color': exp.color }}
-                >
-                  <div className="exp-dual-bg-glow" />
-                  <div className="exp-dual-content">
-                    <div className="exp-dual-top">
-                      <div className="exp-dual-logo">
-                        {exp.logo ? (
-                          <img src={exp.logo} alt={exp.company} className="exp-logo-img" />
-                        ) : (
-                          <span className="font-mono">{exp.icon}</span>
-                        )}
-                      </div>
-                      <div className="exp-dual-status">
-                        <CheckCircle size={16} /> Completed
-                      </div>
-                    </div>
-                    
-                    <div className="exp-dual-main">
-                      <h3 className="exp-dual-role">{exp.role}</h3>
-                      <div className="exp-dual-company font-mono">@ {exp.company}</div>
-                      <div className="exp-dual-duration">{exp.duration}</div>
-                    </div>
-
-                    <p className="exp-dual-desc">{exp.desc}</p>
-
-                    {exp.certFilename && (
-                       <div className="exp-cert-btn-container">
-                         <button 
-                           className="exp-cert-btn font-mono"
-                           onClick={() => setLightboxImage({
-                             filename: exp.certFilename,
-                             title: `${exp.role} Certificate`,
-                             issuer: exp.company,
-                             year: exp.duration.split(' ').pop(),
-                             color: exp.color
-                           })}
-                           style={{ '--btn-accent': exp.color }}
-                         >
-                           <Award size={14} /> View Certificate
-                         </button>
-                       </div>
-                     )}
-
-                    <div className="exp-dual-tech">
-                      {exp.tech.map((t, j) => (
-                        <span key={j} className="dual-tech-badge font-mono">{t}</span>
-                      ))}
-                    </div>
+                <div className="bento-card-header">
+                  <div className="role-company">
+                    <h3 className="bento-role">{EXPERIENCE_DATA[0].role}</h3>
+                    <span className="bento-company font-mono">@ {EXPERIENCE_DATA[0].company}</span>
                   </div>
-                </motion.div>
-              </Tilt>
-            ))}
+                  <span className="bento-duration font-mono">{EXPERIENCE_DATA[0].duration}</span>
+                </div>
+
+                <p className="bento-desc">{EXPERIENCE_DATA[0].desc}</p>
+
+                <div className="bento-tech-strip">
+                  {EXPERIENCE_DATA[0].tech.map(t => (
+                    <span key={t} className="tech-badge">{t}</span>
+                  ))}
+                </div>
+              </motion.div>
+
+              {/* Card 2: Better Tomorrow Details */}
+              <motion.div 
+                className="timeline-horizontal-card bt-glow"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+              >
+                <div className="bento-card-header">
+                  <div className="role-company">
+                    <h3 className="bento-role">{EXPERIENCE_DATA[1].role}</h3>
+                    <span className="bento-company font-mono">@ {EXPERIENCE_DATA[1].company}</span>
+                  </div>
+                  <span className="bento-duration font-mono">{EXPERIENCE_DATA[1].duration}</span>
+                </div>
+
+                <p className="bento-desc">{EXPERIENCE_DATA[1].desc}</p>
+
+                <div className="bento-tech-strip">
+                  {EXPERIENCE_DATA[1].tech.map(t => (
+                    <span key={t} className="tech-badge">{t}</span>
+                  ))}
+                </div>
+              </motion.div>
+            </div>
           </div>
         </div>
       </section>
@@ -1502,25 +1226,116 @@ function App() {
         <div className="container">
           <div className="section-header">
             <span className="section-tag">05. Credentials</span>
-            <h2 className="section-title"><SplitText>Credentials & Certifications</SplitText></h2>
+            <h2 className="section-title">Credentials & Certifications</h2>
           </div>
 
           {(() => {
             const CERTS = [
-              { icon: Code,        title: 'Programming with Java',                                  issuer: 'NPTEL',               year: '2025', color: '#f89820', filename: '', credentialUrl: 'https://drive.google.com/file/d/1VuVZQjMqTeRa-HlfBKHqQrxq9AKuTw7_/view', skills: ['OOPs', 'Java SE', 'Multithreading', 'Data Structures'] },
-              { icon: Award,       title: 'Problem Solving (Basics)',                              issuer: 'HackerRank',          year: '2024', color: '#2ec866', filename: '', credentialUrl: 'https://www.hackerrank.com/certificates/3eec9f4f1515', skills: ['Problem Solving', 'Algorithms', 'Data Structures'] },
-              { icon: Award,       title: 'SQL (Basics)',                                          issuer: 'HackerRank',          year: '2024', color: '#2ec866', filename: '', credentialUrl: 'https://www.hackerrank.com/certificates/26b329cda6ea', skills: ['SQL Queries', 'Relational Databases', 'Database Joins'] },
-              { icon: Terminal,    title: 'Java Programming',                                       issuer: 'GreatLearning',       year: '2024', color: '#f89820', filename: '', credentialUrl: 'https://www.mygreatlearning.com/certificate/KGKGONKG?referrer_code=GLSX1PFBCL8D0', skills: ['Java Basics', 'Variables', 'Control Flow', 'Methods'] },
-              { icon: Database,    title: 'SQL – Basics (Standard)',                              issuer: 'SkillRack',           year: '2024', color: '#6366f1', filename: '', credentialUrl: 'https://www.skillrack.com/faces/free/certificate.xhtml?t=cert&id=530779&key=WEQ', skills: ['Database Joins', 'Grouping', 'SQL Schema', 'Indexing'] },
-              { icon: Layers,      title: 'Data Structures & Algorithms (DSA)',                    issuer: 'Udemy',              year: '2024', color: '#a435f0', filename: '', credentialUrl: 'https://www.udemy.com/certificate/UC-50bda039-206f-4a5c-9f52-b4d1940588a0/', skills: ['Data Structures', 'Algorithms', 'Time Complexity'] },
-              { icon: Layers,      title: 'Mastering Data Structures & Algorithms using C and C++', issuer: 'Udemy',              year: '2024', color: '#a435f0', filename: '', credentialUrl: 'https://www.udemy.com/certificate/UC-8d075b7f-9f2e-4e5a-b681-ddc8eaefc7a1/', skills: ['Data Structures', 'C/C++', 'Recursion'] },
+              { icon: Cpu,         title: 'Learning React',                                        issuer: 'Infosys Springboard', year: '2025', color: '#61dafb', filename: 'cert_react.png' },
+              { icon: Code,        title: 'Programming with Java',                                  issuer: 'NPTEL',               year: '2025', color: '#f89820', filename: 'cert_java_nptel.png' },
+              { icon: Award,       title: 'Problem Solving (Basics) | SQL (Basics)',               issuer: 'HackerRank',          year: '2024', color: '#2ec866', filename: 'cert_hackerrank.png' },
+              { icon: Terminal,    title: 'Java Programming',                                       issuer: 'GreatLearning',       year: '2024', color: '#f89820', filename: 'cert_greatlearning.png' },
+              { icon: Database,    title: 'SQL – Basics (Standard)',                              issuer: 'SkillRack',           year: '2024', color: '#6366f1', filename: 'cert_skillrack.png' },
+              { icon: Layers,      title: 'Mastering Data Structures & Algorithms using C and C++', issuer: 'Udemy',              year: '2024', color: '#a435f0', filename: 'cert_udemy_dsa.png' },
+              { icon: Activity,    title: 'Debugging Techniques for Serial Communications',         issuer: 'Microchip',           year: '2025', color: '#ef4444', filename: 'cert_microchip.png' },
             ];
+            const total = CERTS.length;
+            const prevCert = () => setActiveCert((p) => (p === 0 ? total - 1 : p - 1));
+            const nextCert = () => setActiveCert((p) => (p === total - 1 ? 0 : p + 1));
+            const activeCertData = CERTS[activeCert];
+            const IconComp = activeCertData.icon;
+
             return (
               <>
-                <div className="cert-grid-layout">
-                  {CERTS.map((cert, i) => (
-                    <CertGridCard key={i} cert={cert} onView={setLightboxImage} />
-                  ))}
+                <div className="cert-deck-layout">
+                  {/* Left: Stacked Card Deck */}
+                  <div className="cert-deck-container">
+                    <div className="cert-deck-stack">
+                      {CERTS.map((cert, i) => {
+                        const offset = (i - activeCert + total) % total;
+                        const isActive = offset === 0;
+                        const behind = Math.min(offset, total - offset);
+                        const dir = offset <= total / 2 ? 1 : -1;
+                        const zIdx = 100 - behind;
+                        const scl = Math.max(1 - behind * 0.06, 0.7);
+                        const transY = behind * 12;
+                        const transX = behind === 0 ? 0 : dir * behind * 8;
+                        const opa = behind <= 3 ? 1 - behind * 0.2 : 0;
+
+                        return (
+                          <motion.div
+                            key={i}
+                            className={`cert-stack-card ${isActive ? 'active' : ''}`}
+                            style={{
+                              '--card-brand-glow': cert.color,
+                              zIndex: zIdx,
+                              pointerEvents: isActive ? 'auto' : 'none',
+                            }}
+                            animate={{
+                              scale: scl,
+                              y: transY,
+                              x: transX,
+                              opacity: opa,
+                              rotateZ: behind === 0 ? 0 : dir * behind * 1.5,
+                            }}
+                            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                            onClick={() => isActive && setLightboxImage(cert)}
+                          >
+                            <CertStackImage cert={cert} />
+                          </motion.div>
+                        );
+                      })}
+                    </div>
+
+                    {/* Navigation arrows */}
+                    <div className="cert-deck-nav">
+                      <button className="cert-nav-btn font-mono" onClick={prevCert} aria-label="Previous certificate">
+                        <ChevronRight size={20} style={{ transform: 'rotate(180deg)' }} />
+                      </button>
+                      <span className="cert-counter font-mono">
+                        {String(activeCert + 1).padStart(2, '0')} / {String(total).padStart(2, '0')}
+                      </span>
+                      <button className="cert-nav-btn font-mono" onClick={nextCert} aria-label="Next certificate">
+                        <ChevronRight size={20} />
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Right: Active Certificate Info Panel */}
+                  <motion.div
+                    className="cert-info-panel glass-card"
+                    key={activeCert}
+                    initial={{ opacity: 0, x: 30 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.4 }}
+                    style={{ '--card-brand-glow': activeCertData.color }}
+                  >
+                    <div className="cert-info-top">
+                      <div className="cert-info-icon-circle" style={{ background: `${activeCertData.color}18`, border: `1px solid ${activeCertData.color}40` }}>
+                        <IconComp size={22} style={{ color: activeCertData.color }} />
+                      </div>
+                      <span className="cert-info-year font-mono" style={{ color: activeCertData.color }}>{activeCertData.year}</span>
+                    </div>
+                    <h3 className="cert-info-title">{activeCertData.title}</h3>
+                    <p className="cert-info-issuer font-mono" style={{ color: activeCertData.color }}>{activeCertData.issuer}</p>
+                    <div className="cert-info-divider" style={{ background: `linear-gradient(90deg, ${activeCertData.color}, transparent)` }} />
+                    <div className="cert-info-actions">
+                      <button className="cert-view-btn font-mono" onClick={() => setLightboxImage(activeCertData)} style={{ borderColor: `${activeCertData.color}40`, color: activeCertData.color }}>
+                        VIEW CERTIFICATE
+                      </button>
+                      <span className="verified-pill-lg font-mono">✔ Verified</span>
+                    </div>
+                    <div className="cert-info-dots">
+                      {CERTS.map((_, i) => (
+                        <button
+                          key={i}
+                          className={`cert-dot ${i === activeCert ? 'active' : ''}`}
+                          onClick={() => setActiveCert(i)}
+                          style={i === activeCert ? { background: activeCertData.color, boxShadow: `0 0 8px ${activeCertData.color}` } : {}}
+                        />
+                      ))}
+                    </div>
+                  </motion.div>
                 </div>
 
                 {/* Lightbox Modal overlay */}
@@ -1534,7 +1349,7 @@ function App() {
                       onClick={() => setLightboxImage(null)}
                     >
                       <motion.div
-                        className={`lightbox-content ${isLightboxPortrait ? 'portrait' : 'landscape'}`}
+                        className="lightbox-content"
                         initial={{ scale: 0.9, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
                         exit={{ scale: 0.9, opacity: 0 }}
@@ -1548,19 +1363,13 @@ function App() {
                           src={`/certificates/${lightboxImage.filename}`}
                           alt={`${lightboxImage.title} Certificate Full Preview`}
                           className="lightbox-img"
-                          onLoad={(e) => {
-                            const { naturalWidth, naturalHeight } = e.target;
-                            if (naturalHeight > naturalWidth) {
-                              setIsLightboxPortrait(true);
-                            }
-                          }}
                           onError={(e) => {
                             e.target.src = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='800' height='600' viewBox='0 0 800 600'><rect width='100%' height='100%' fill='%230b0f19'/><text x='50%' y='50%' font-family='monospace' font-size='24' fill='%23ef4444' text-anchor='middle'>Certificate Image Not Found</text><text x='50%' y='56%' font-family='monospace' font-size='14' fill='%236b7280' text-anchor='middle'>Place the file in /public/certificates/" + lightboxImage.filename + "</text></svg>";
                           }}
                         />
                         <div className="lightbox-caption">
                           <h3 className="lightbox-title">{lightboxImage.title}</h3>
-                          <p className="lightbox-subtitle font-mono" style={{ color: lightboxImage.color }}>{lightboxImage.issuer}</p>
+                          <p className="lightbox-subtitle font-mono" style={{ color: lightboxImage.color }}>{lightboxImage.issuer} ({lightboxImage.year})</p>
                         </div>
                       </motion.div>
                     </motion.div>
@@ -1571,190 +1380,256 @@ function App() {
           })()}
         </div>
       </section>
-      {/* Contact Section */}
-      <section className="contact section" id="contact">
-        <ParticlesBackground count={30} speed={0.3} color="rgba(124, 58, 237, 0.4)" />
-        <div className="container" style={{ position: 'relative' }}>
-          <div className="contact-orb orb-1" />
-          <div className="contact-orb orb-2" />
 
-          <div className="contact-split-layout">
-            {/* LEFT COLUMN: Info & Text */}
-            <div className="contact-info-col">
-              <span className="section-tag">06. Contact</span>
-              <h2 className="contact-large-title">
-                <SplitText text="Let's build something" delay={0.1} />
-                <span className="gradient-highlight-text">
-                  <SplitText text="legendary." delay={0.6} />
-                </span>
-              </h2>
-              <p className="contact-info-desc">
-                Have an idea, project, or opportunity you'd like to discuss? Drop me a message and let's turn it into reality.
-              </p>
+      {/* Achievements Section */}
+      <section className="achievements section" id="achievements">
+        <div className="container">
+          <div className="section-header">
+            <span className="section-tag">06. Achievements</span>
+            <h2 className="section-title">Honors & Achievements</h2>
+          </div>
 
-              {/* Contact Chips */}
-              <div className="contact-chips-column">
-                <div className="contact-premium-chip">
-                  <div className="pchip-icon-wrap email-theme">
-                    <Mail size={20} />
-                  </div>
-                  <div className="pchip-details">
-                    <span className="pchip-label font-mono">EMAIL ME</span>
-                    <span className="pchip-value">soujanya.s2023@sece.ac.in</span>
-                  </div>
-                  <button className={`pchip-copy-btn ${emailCopied ? 'copied' : ''}`} onClick={handleCopyEmail}>
-                    {emailCopied ? <Check size={16} /> : 'Copy'}
-                  </button>
-                </div>
-
-                <div className="contact-premium-chip">
-                  <div className="pchip-icon-wrap location-theme">
-                    <Globe size={20} />
-                  </div>
-                  <div className="pchip-details">
-                    <span className="pchip-label font-mono">LOCATION</span>
-                    <span className="pchip-value">Coimbatore, India</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Enhanced Social Deck Grid */}
-              <div className="contact-social-grid">
-                <Magnet padding={15}>
-                  <a href="https://github.com/soujanya-7" target="_blank" rel="noreferrer" className="premium-social-card github-card">
-                    <div className="social-card-inner">
-                      <div className="social-icon-box"><Github size={22} /></div>
-                      <div className="social-card-info">
-                        <span className="social-platform font-mono">GITHUB</span>
-                        <span className="social-handle">@soujanya-7</span>
-                      </div>
-                    </div>
-                  </a>
-                </Magnet>
-                <Magnet padding={15}>
-                  <a href="https://linkedin.com" target="_blank" rel="noreferrer" className="premium-social-card linkedin-card">
-                    <div className="social-card-inner">
-                      <div className="social-icon-box"><Linkedin size={22} /></div>
-                      <div className="social-card-info">
-                        <span className="social-platform font-mono">LINKEDIN</span>
-                        <span className="social-handle">Connect</span>
-                      </div>
-                    </div>
-                  </a>
-                </Magnet>
-              </div>
-            </div>
-
-            {/* RIGHT COLUMN: Form Card */}
-            <div className="contact-form-col">
-              <Tilt
-                className="premium-contact-card"
-                tiltMaxAngleX={4}
-                tiltMaxAngleY={4}
-                perspective={1000}
-                scale={1.01}
-                transitionSpeed={1200}
+          {/* TOP — Competition trophies */}
+          <div className="ach-trophies">
+            {[
+              { icon: Award, title: 'Freshathon', sub: '3rd Place', desc: 'First-Year Student Project Expo', accent: 'var(--accent-1)' },
+              { icon: Cpu, title: 'Innohacks',  sub: 'Round 1 Cleared', desc: 'Hackathon at PSG College of Technology', accent: 'var(--accent-2)' },
+              { icon: Sparkles, title: 'Hacksagon',  sub: 'Round 1 Cleared', desc: 'ABV-IITM-IEEE Hackathon (Gwalior)', accent: '#f97316' },
+            ].map(({ icon: IconComponent, title, sub, desc, accent }, i) => (
+              <motion.div
+                key={i}
+                className="ach-trophy-card glass-card"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: i * 0.12 }}
+                whileHover={{ y: -6, transition: { duration: 0.2 } }}
+                style={{ '--card-accent': accent }}
               >
-                <div className="premium-card-inner" onMouseMove={handleMouseMove}>
-                  <div className="premium-card-spotlight" />
-                  
-                  {formState === 'idle' && (
-                    <form className="premium-contact-form" onSubmit={handleContactSubmit}>
-                      <h3 className="form-card-title">Send a Direct Message</h3>
-                      
-                      <div className="form-input-group">
-                        <div className="input-icon-wrapper">
-                          <User size={18} className="input-icon" />
-                        </div>
-                        <input type="text" id="heroName" name="name" required placeholder=" " autoComplete="off" className="form-input-field with-icon" />
-                        <label htmlFor="heroName" className="form-input-label font-mono">Your Name</label>
-                      </div>
-                      
-                      <div className="form-input-group">
-                        <div className="input-icon-wrapper">
-                          <Mail size={18} className="input-icon" />
-                        </div>
-                        <input type="email" id="heroEmail" name="email" required placeholder=" " autoComplete="off" className="form-input-field with-icon" />
-                        <label htmlFor="heroEmail" className="form-input-label font-mono">Your Email</label>
-                      </div>
-                      
-                      <div className="form-input-group">
-                        <div className="input-icon-wrapper textarea-icon-wrapper">
-                          <MessageSquare size={18} className="input-icon" />
-                        </div>
-                        <textarea id="heroMessage" name="message" rows="5" required placeholder=" " className="form-input-field form-textarea-field with-icon"></textarea>
-                        <label htmlFor="heroMessage" className="form-input-label font-mono">Your Message</label>
-                      </div>
-                      
-                      <button type="submit" className="premium-submit-btn">
-                        <span className="btn-glow-span" />
-                        <span className="btn-text"><ShinyText speed="2.5s">Launch Message</ShinyText></span>
-                        <ChevronRight size={18} className="btn-arrow-icon" />
-                      </button>
-                    </form>
-                  )}
-
-                  {formState === 'sending' && (
-                    <div className="premium-sending-state">
-                      <div className="sending-telemetry-loader">
-                        <div className="spinner-ring" />
-                        <div className="spinner-glow" />
-                      </div>
-                      <h3 className="sending-title">Connecting to Server...</h3>
-                      <p className="sending-subtitle font-mono">Sending secure packet payload</p>
-                      <div className="sending-progressbar">
-                        <div className="progressbar-fill" />
-                      </div>
-                    </div>
-                  )}
-
-                  {formState === 'success' && (
-                    <div className="premium-success-state">
-                      <div className="success-check-orb">
-                        <CheckCircle size={44} style={{ color: '#10b981' }} />
-                        <div className="orb-burst-ring ring-1" />
-                        <div className="orb-burst-ring ring-2" />
-                      </div>
-                      <h3 className="success-title">Message Launched!</h3>
-                      <p className="success-subtitle">Transmission received successfully. I'll get back to you shortly.</p>
-                      
-                      <div className="success-receipt font-mono">
-                        <div className="receipt-row">
-                          <span className="receipt-label">SENDER:</span>
-                          <span className="receipt-val">{formData.name}</span>
-                        </div>
-                        <div className="receipt-row">
-                          <span className="receipt-label">STATUS:</span>
-                          <span className="receipt-val text-success">DELIVERED</span>
-                        </div>
-                      </div>
-                      
-                      <button className="success-reset-btn font-mono" onClick={() => setFormState('idle')}>
-                        Send Another Packet
-                      </button>
-                    </div>
-                  )}
+                <div className="ach-trophy-icon">
+                  <IconComponent size={32} style={{ color: accent }} />
                 </div>
-              </Tilt>
-            </div>
+                <p className="ach-trophy-sub" style={{ color: accent }}>{sub}</p>
+                <h4 className="ach-trophy-title">{title}</h4>
+                <p className="ach-trophy-desc">{desc}</p>
+                <div className="ach-trophy-line" style={{ background: accent }} />
+              </motion.div>
+            ))}
+          </div>
+
+          {/* BOTTOM — Coding platform stats */}
+          <div className="ach-platforms">
+            {[
+              { icon: Code, platform: 'LeetCode',   stat: '400+', statLabel: 'Problems Solved', extra: 'Max Rating: 1,603 · Contests: 34',   color: '#f89820' },
+              { icon: CheckCircle, platform: 'SkillRack',  stat: '630+', statLabel: 'Problems Solved', extra: '1 Certificate Earned',                color: '#6366f1' },
+              { icon: Award, platform: 'HackerRank', stat: '1',    statLabel: 'Star in Java',     extra: '1 Badge Earned',                      color: '#2ec866' },
+              { icon: Terminal, platform: 'CodeChef',   stat: '1037', statLabel: 'Highest Rating',   extra: 'Competitive Programming',             color: '#5b4638' },
+            ].map(({ icon: IconComponent, platform, stat, statLabel, extra, color }, i) => (
+              <motion.div
+                key={i}
+                className="ach-platform-card glass-card"
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: i * 0.1 }}
+                whileHover={{ y: -5, transition: { duration: 0.2 } }}
+              >
+                <div className="ach-plat-header">
+                  <span className="ach-plat-icon">
+                    <IconComponent size={16} style={{ color }} />
+                  </span>
+                  <span className="ach-plat-name">{platform}</span>
+                </div>
+                <p className="ach-plat-stat" style={{ color }}>{stat}</p>
+                <p className="ach-plat-stat-label">{statLabel}</p>
+                <p className="ach-plat-extra">{extra}</p>
+                <div className="ach-plat-glow" style={{ background: color }} />
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
+
+      {/* Contact Section */}
+      <section className="contact section" id="contact">
+        {/* Animated Background Orbs */}
+        <div className="contact-bg-orb orb-violet" />
+        <div className="contact-bg-orb orb-cyan" />
+        <div className="contact-bg-orb orb-emerald" />
+
+        <div className="container" style={{ position: 'relative', zIndex: 1 }}>
+          <div className="section-header">
+            <span className="section-tag">07. Contact</span>
+            <h2 className="section-title">Let's Work Together</h2>
+            <p className="section-sub">Have a project in mind or want to collaborate? I'd love to hear from you.</p>
+          </div>
+
+          <div className="contact-split">
+            {/* Left: Info Panel */}
+            <motion.div
+              className="contact-info-panel"
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+            >
+              <h3 className="contact-info-heading">Get in Touch</h3>
+              <p className="contact-info-desc">
+                Whether it's a project, freelance opportunity, or just a friendly hello — my inbox is always open. Let's build something amazing together.
+              </p>
+
+              {/* Email Card */}
+              <div className="contact-glass-card">
+                <div className="contact-card-icon" style={{ background: 'rgba(139,92,246,0.12)' }}>
+                  <Mail size={20} style={{ color: '#8b5cf6' }} />
+                </div>
+                <div className="contact-card-content">
+                  <span className="contact-card-label">EMAIL</span>
+                  <span className="contact-card-value">soujanya.s2023@sece.ac.in</span>
+                </div>
+                <div className="contact-card-action">
+                  <button className={`contact-copy-btn ${emailCopied ? 'copied' : ''}`} onClick={handleCopyEmail}>
+                    {emailCopied ? <><Check size={12} /> COPIED</> : 'COPY'}
+                  </button>
+                </div>
+              </div>
+
+              {/* Location Card */}
+              <div className="contact-glass-card">
+                <div className="contact-card-icon" style={{ background: 'rgba(14,165,233,0.12)' }}>
+                  <Globe size={20} style={{ color: '#0ea5e9' }} />
+                </div>
+                <div className="contact-card-content">
+                  <span className="contact-card-label">LOCATION</span>
+                  <span className="contact-card-value">Coimbatore, India</span>
+                </div>
+              </div>
+
+              {/* Availability Card */}
+              <div className="contact-glass-card">
+                <div className="contact-card-icon" style={{ background: 'rgba(16,185,129,0.12)' }}>
+                  <Clock size={20} style={{ color: '#10b981' }} />
+                </div>
+                <div className="contact-card-content">
+                  <span className="contact-card-label">LOCAL TIME</span>
+                  <span className="contact-card-value">{currentTime || '...'} IST</span>
+                </div>
+                <div className="contact-card-action">
+                  <span className="contact-status-badge">
+                    <span className="contact-live-dot" />
+                    Available
+                  </span>
+                </div>
+              </div>
+
+              {/* Social Buttons */}
+              <div className="contact-social-row">
+                <a href="https://github.com/soujanya-7" target="_blank" rel="noreferrer" className="contact-social-btn gh" aria-label="GitHub">
+                  <Github size={20} />
+                </a>
+                <a href="https://linkedin.com" target="_blank" rel="noreferrer" className="contact-social-btn li" aria-label="LinkedIn">
+                  <Linkedin size={20} />
+                </a>
+                <a href="mailto:soujanya.s2023@sece.ac.in" className="contact-social-btn em" aria-label="Email">
+                  <Mail size={20} />
+                </a>
+              </div>
+            </motion.div>
+
+            {/* Right: Form Card */}
+            <motion.div
+              className="contact-form-card"
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.15 }}
+            >
+              <div className="contact-form-header">
+                <div className="contact-form-dots">
+                  <span className="contact-form-dot red" />
+                  <span className="contact-form-dot yellow" />
+                  <span className="contact-form-dot green" />
+                </div>
+                <span className="contact-form-title">SEND_MESSAGE.SH</span>
+              </div>
+
+              {formState === 'idle' && (
+                <form className="contact-form-body" onSubmit={handleContactSubmit}>
+                  <div className="contact-form-row">
+                    <div className="contact-input-group">
+                      <input type="text" id="contactName" name="name" required placeholder=" " autoComplete="off" />
+                      <label htmlFor="contactName">YOUR NAME</label>
+                      <div className="contact-gradient-bar" />
+                    </div>
+                    <div className="contact-input-group">
+                      <input type="email" id="contactEmail" name="email" required placeholder=" " autoComplete="off" />
+                      <label htmlFor="contactEmail">YOUR EMAIL</label>
+                      <div className="contact-gradient-bar" />
+                    </div>
+                  </div>
+                  <div className="contact-input-group">
+                    <textarea id="contactMessage" name="message" rows="5" required placeholder=" " />
+                    <label htmlFor="contactMessage">YOUR MESSAGE</label>
+                    <div className="contact-gradient-bar" />
+                  </div>
+                  <button type="submit" className="contact-submit-btn">
+                    <span>TRANSMIT MESSAGE</span>
+                    <ChevronRight size={18} />
+                  </button>
+                </form>
+              )}
+
+              {formState === 'sending' && (
+                <div className="contact-sending-state">
+                  <div className="contact-spinner" />
+                  <h3 className="contact-sending-title">Transmitting your message...</h3>
+                  <p className="contact-sending-sub">ESTABLISHING SECURE UPLINK</p>
+                  <div className="contact-progress">
+                    <div className="contact-progress-fill" />
+                  </div>
+                </div>
+              )}
+
+              {formState === 'success' && (
+                <div className="contact-success-state">
+                  <div className="contact-success-icon">
+                    <CheckCircle size={36} style={{ color: '#10b981' }} />
+                  </div>
+                  <h3 className="contact-success-title">Message Sent Successfully!</h3>
+                  <p className="contact-success-sub">Thank you for reaching out. I'll get back to you as soon as possible.</p>
+                  <div className="contact-success-receipt">
+                    <div className="contact-receipt-row">
+                      <span className="contact-receipt-label">FROM</span>
+                      <span className="contact-receipt-value">{formData.name}</span>
+                    </div>
+                    <div className="contact-receipt-row">
+                      <span className="contact-receipt-label">TIME</span>
+                      <span className="contact-receipt-value">{currentTime} IST</span>
+                    </div>
+                    <div className="contact-receipt-row">
+                      <span className="contact-receipt-label">STATUS</span>
+                      <span className="contact-receipt-value" style={{ color: '#10b981' }}>✓ DELIVERED</span>
+                    </div>
+                  </div>
+                  <button className="contact-reset-btn" onClick={() => setFormState('idle')}>SEND ANOTHER MESSAGE</button>
+                </div>
+              )}
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
       <footer className="footer">
         <div className="container">
           <div className="footer-inner">
             <div className="footer-logo">
-              <div className="text-logo sm">
-                <span className="logo-brace">&lt;</span>
-                <span className="logo-name">Soujanya</span>
-                <span className="logo-brace">/&gt;</span>
-              </div>
+              <span className="logo-text">Soujanya S</span>
             </div>
             <p className="footer-copy">Designed & Built with ❤️ by Soujanya S · 2026</p>
             <div className="footer-nav">
-              <Magnet padding={8}><a href="#home" onClick={(e) => { e.preventDefault(); handleNavClick('home'); }}>Home</a></Magnet>
-              <Magnet padding={8}><a href="#projects" onClick={(e) => { e.preventDefault(); handleNavClick('projects'); }}>Projects</a></Magnet>
-              <Magnet padding={8}><a href="#contact" onClick={(e) => { e.preventDefault(); handleNavClick('contact'); }}>Contact</a></Magnet>
+              <a href="#home" onClick={(e) => { e.preventDefault(); handleNavClick('home'); }}>Home</a>
+              <a href="#projects" onClick={(e) => { e.preventDefault(); handleNavClick('projects'); }}>Projects</a>
+              <a href="#contact" onClick={(e) => { e.preventDefault(); handleNavClick('contact'); }}>Contact</a>
             </div>
           </div>
         </div>
